@@ -357,4 +357,4 @@ D5 (controles), D6 (cutscenes).
 - **Nota:** o jogo fica na raiz do projeto (não na pasta Steam); tratar como somente leitura (deny em `.claude/settings.json`)
 - **Decisões tomadas:** nenhuma
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
-- **Bloqueios:** aguardando cópia do DMC HD e ISO do GoW1. Faltam instalar: JDK 21, Ghidra, Blender, PCSX2, cmake
+- **Bloqueios:** aguardando cópia do DMC HD e ISO do GoW1. Ferramentas instaladas; REA (`npx rea-agents setup`) fica para quando o `dmc3.exe` estiver disponível
