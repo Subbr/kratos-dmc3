@@ -10,3 +10,4 @@
 - Achado: não existe `GData.afs` solto no HD; `data/dmc3/dmc3-0.nbz` é um ZIP com `GData.afs/` (4334 arquivos). Ver `docs/formats/nbz.md`.
 - ISO do GoW1 veio em `God of War.7z` (7z legítimo: só `God of War.iso` + `readme.html`, sem executável). Instalado 7-Zip; ISO extraída para `iso/gow1.iso` (NTSC-U SCUS_973.99 v1.00). readme.html não extraído.
 - Próximo: backup + downpatch/DDMK (pedir confirmação), god_of_war_browser na ISO, REA no dmc3.exe.
+- Revisão 1 do plano: pesquisa mostrou que (1) DDMK/Crimson leem `data/dmc3/GData.afs/` solto antes do nbz; (2) Crimson (zlib, ativo) é base melhor que DDMK; (3) não existe exportador público de `.mod`. CLAUDE.md §3, §4, §6, §8, §9 reescritas; decisões D7–D9 em `docs/decisoes.md`. Crimson clonado em `vendor/DMC3-Crimson`.

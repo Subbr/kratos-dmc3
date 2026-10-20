@@ -19,6 +19,9 @@ Mod para **Devil May Cry 3: Special Edition** na versão **Devil May Cry HD Coll
 
 Fases, inimigos, chefes, missões e história do DMC3 permanecem.
 
+> **Revisão 1 (2026-10-20):** plano revisto após descobrir o layout real do HD Collection (sem AFS solto) e o
+> projeto **DMC3 Crimson** (código aberto, zlib, ativo). Mudanças em §3, §4, §6, §8, §9 e decisões D7–D9.
+
 **Princípio central: não portamos nada.** O DMC3 HD roda nativo no Windows. O GoW1 serve apenas como
 **fonte de assets**, extraídos da ISO do próprio usuário. Não emulamos nem recompilamos o GoW1.
 
@@ -53,17 +56,25 @@ Fases, inimigos, chefes, missões e história do DMC3 permanecem.
 
 ## 3. Ambiente
 
-- **Windows + WSL.** O Claude Code roda no WSL. O jogo fica no lado Windows, por padrão em
-  `C:\Program Files (x86)\Steam\steamapps\common\Devil May Cry HD Collection`
-  (no WSL: `/mnt/c/Program Files (x86)/Steam/steamapps/common/Devil May Cry HD Collection`).
-  Confirmar o caminho real e gravar em `config/paths.env`.
-- Arquivo de dados do DMC3: `data/dmc3/GData.afs` (dentro da pasta do HD Collection).
-- Executável do DMC3: confirmar nome e caminho na Fase 0 (registrar em `docs/ambiente.md`).
+- **Windows + WSL.** O Claude Code roda no WSL. O jogo está **na raiz do projeto**:
+  `./Devil May Cry HD Collection/` (cópia trazida de outro HD; a pasta Steam está vazia). Caminhos de todas
+  as ferramentas em `config/paths.env`; versões e hashes em `docs/ambiente.md`.
+- **Dados do DMC3 no HD Collection** (confirmado, ver `docs/formats/nbz.md`): não existe `GData.afs` solto.
+  `data/dmc3/dmc3-0.nbz` é um **ZIP** com a pasta `GData.afs/` (4334 arquivos já separados: `pl000.pac`,
+  `pl000_00_*.pac`, `plwp_*.pac`...). Música fica em `data/dmc3/afs/sound/*.ogg`. Áudio do port usa FMOD
+  (`fmod64.dll`, `fmodstudio64.dll`).
+- **Pasta de override:** DDMK e Crimson leem `data/dmc3/GData.afs/<arquivo>` solto antes de recorrer ao
+  `.nbz` (evidência: `vendor/ddmk/Mary/File.ixx`, `FileManager::Push`/`ExtractFile`;
+  `vendor/DMC3-Crimson/src/CrimsonFileHandling.cpp`, `Paths::gameMods`). **[HIPÓTESE]** isso vale para os
+  arquivos do jogador carregados pelo próprio jogo — provar no teste T1 (Fase 0).
+- Executável: `dmc3.exe` (hash original em `docs/ambiente.md`).
 - Programas Windows são chamados a partir do WSL pelo `.exe` direto ou via `powershell.exe -Command`.
-- **Blender** (3.6+ ou 4.x) em modo headless: `blender.exe -b -P blender/scripts/<script>.py -- <args>`.
-- **Python 3.11+** para as ferramentas (`tools/.venv`). Rodar scripts que leem arquivos extraídos com `python -I`.
-- **C++ / MSVC** (Visual Studio Build Tools) para a DLL, compilada do lado Windows. Usar CMake.
-- **Ghidra + JDK 21** para o REA.
+- **Blender 5.2.2** headless: `"$BLENDER_EXE" -b -P blender/scripts/<script>.py -- <args>`.
+- **Python 3.12** para as ferramentas (`tools/.venv`). Rodar scripts que leem arquivos extraídos com `python -I`.
+- **C++ / MSVC 14.44 + CMake 3.31** (VS 2022 Build Tools), compilado do lado Windows.
+- **Ghidra 12.1.4 + JDK 21** em `vendor/` (WSL) para o REA.
+- **7-Zip** (Windows) para listar/extrair `.7z`, `.iso` e `.nbz`.
+- **ISO do GoW1:** `iso/gow1.iso`, NTSC-U `SCUS_973.99` v1.00, DVD dupla camada.
 
 ---
 
@@ -74,15 +85,19 @@ Baixar em `vendor/` (gitignored). Não copiar código de projetos sem licença p
 | Ferramenta | Para quê | Origem / licença |
 |---|---|---|
 | Devil May Cry HD Collection | Base jogável | Steam |
-| **DDMK** (serpentiem) | Carregador de mods e hooks. O módulo `Mary/` (DMC3) tem estruturas do ator já mapeadas: `Mary/Actor.ixx`, `Mary/File.ixx`, `Mary/Vars.ixx`, `Scripts/dmc3_create_data.js` (offsets de structs), enums `MOTION_GROUP_DANTE::*`. Exige downpatch (`hdc_patches` + `xdelta3`, ver README do DDMK) | github.com/serpentiem/ddmk — zlib |
-| Crimson (Berthrage & C-Team) | Overhaul de gameplay, referência e alternativa ao DDMK | Nexus Mods |
-| **god_of_war_browser** (mogaika) | Extrai o GoW1 direto da ISO: modelos (`mdl`, `mesh` → glTF/FBX), animações (`anm`), texturas (`txr`), UI/HUD (`flp`), banco de som (`sbk`, a verificar), objetos (`obj`). Uso: `-iso "<ISO>" -ps ps2 -gowversion 1`, interface web em `http://127.0.0.1:8000/` | github.com/mogaika/god_of_war_browser — **sem arquivo de licença**: usar só como ferramenta |
-| **DMC3-Blender-Import-Addon** (HansLichtner) | Importa `.mod` (modelos), `.scm` (cenário) e `.mot` (animações) no Blender. **Só importa.** Código (`DMC3/model.py`, `DMC3/motion.py`, `common/io.py`) é a base para escrevermos o exportador | github.com/HansLichtner/DMC3-Blender-Import-Addon — MIT |
-| **REA** (morluto) | MCP de engenharia reversa. Usar **somente no executável do DMC3** (PE x86_64) com Ghidra. **Não aceita ELF de PS2** (R5900 é recusado). Instalação: `npx rea-agents setup` no WSL | github.com/morluto/rea — MIT |
-| ghidra-emotionengine-reloaded | Só se precisarmos ler o ELF do GoW1 como referência de comportamento (timings, alcance da corrente) | github.com/chaoticgd/ghidra-emotionengine-reloaded |
+| **DMC3 Crimson** (Berthrage & C-Team) | **Base do código do mod (D7).** Sucessor ativo do DDMK, mesmo núcleo (`src/` em C++/CMake). Já traz: troca de personagem/arma/estilo, **golpes novos**, **HUD próprio com pacotes em `Crimson\huds`**, sons próprios em `Crimson\sound`, roda de armas, leitura da pasta de override. `Research/` tem tabelas do Cheat Engine, ReClass, FakePDB e notas de RE (efeitos, sons, crazy combos) | github.com/berthrage/DMC3-Crimson — zlib. Release 0.5a (2026-05-27) |
+| DDMK (serpentiem) | **Referência.** Parado; Crimson é o sucessor. Mantido para consulta (`Mary/Vars.ixx`, `Scripts/dmc3_create_data.js`, enums `MOTION_GROUP_DANTE::*`). Downpatch só se o Crimson exigir | github.com/serpentiem/ddmk — zlib |
+| **god_of_war_browser** (mogaika) | Extrai o GoW1 direto da ISO: modelos (`mdl`, `mesh` → glTF/FBX), animações (`anm`), texturas (`txr`), UI/HUD (`flp`), som (`sbk`, a verificar). Uso: `-iso "<ISO>" -ps ps2 -gowversion 1`, web em `http://127.0.0.1:8000/`. Release beta4 em `vendor/gowb_release/`; se faltar algo, compilar do fonte (Go) | github.com/mogaika/god_of_war_browser — **sem licença**: só como ferramenta |
+| **DMC3-Blender-Import-Addon** (HansLichtner) | Importa `.mod`, `.scm`, `.mot` (e texturas `tm2`→dds) no Blender. **Só importa.** Base do nosso exportador (`DMC3/model.py` 788 linhas, `DMC3/motion.py`) | github.com/HansLichtner/DMC3-Blender-Import-Addon — MIT (fork de deshayu/DMC3HDC-Import-Tools e igrbn/DMC1-3_Blender_Tools) |
+| DMC-3-HDC .pac Unpacker | Referência de formato PAC (scripts Python 2 antigos com GUI) | Nexus Mods (DMC HD Collection, mod 438) |
+| REA (morluto) | MCP de engenharia reversa no `dmc3.exe` com Ghidra. Usar os símbolos do FakePDB do Crimson | github.com/morluto/rea — MIT |
+| ghidra-emotionengine-reloaded | Só se precisarmos ler o ELF do GoW1 (timings, alcance da corrente) | github.com/chaoticgd/ghidra-emotionengine-reloaded |
 | PCSX2 | Rodar o GoW1 original para gravar referência de golpes, timings e HUD | pcsx2.net |
-| xdelta3 | Downpatch do DDMK e nossos patches | romhacking.net |
-| Ferramentas da comunidade DMC3 (fórum Infernal Warks, créditos ao modder "Che") | Possível exportador/injetor de modelos já existente — **investigar na Fase 0** | — |
+| xdelta3 | Patches por arquivo na distribuição | github.com/jmacd/xdelta-gpl |
+
+**Pesquisa feita (2026-10-20):** não existe ferramenta pública que **exporte** `.mod` do DMC3. Trocas de
+modelo da comunidade (tutorial "Model Swapping" do Infernal Warks) só trocam modelos que já estão no jogo, ou
+são de mods cujo processo não é público. O exportador continua sendo o gate crítico (Fase 2).
 
 ---
 
@@ -98,7 +113,7 @@ kratos-dmc3/
 │   ├── ambiente.md            # versões, hashes, caminhos confirmados
 │   ├── LOG.md                 # diário de testes
 │   ├── decisoes.md            # registro de decisões (D1, D2...)
-│   ├── formats/               # um .md por formato: afs.md, pac.md, mod.md, mot.md, gow-*.md
+│   ├── formats/               # um .md por formato: nbz.md, pac.md, mod.md, mot.md, gow-*.md
 │   ├── re/                    # achados de engenharia reversa do executável (endereço + evidência)
 │   └── design/
 │       ├── moveset-gow1.md    # levantamento completo dos golpes do Kratos
@@ -108,10 +123,10 @@ kratos-dmc3/
 │   ├── moveset.yaml           # golpe GoW1 -> slot/motion do DMC3
 │   ├── weapons.yaml           # arma/magia GoW1 -> arma/estilo do DMC3
 │   └── files.yaml             # arquivo do DMC3 -> substituto
-├── tools/                     # Python: afs.py, pac.py, mod_export.py, mot_export.py, inventory.py
+├── tools/                     # Python: pac.py, nbz_inventory.py, mod_export.py, mot_export.py
 ├── blender/
 │   └── scripts/               # retarget, re-skin, export headless
-├── dll/                       # C++ (CMake): hooks de gameplay e HUD
+├── dll/crimson/               # submódulo: nosso fork do DMC3 Crimson (modo Kratos)
 ├── build/
 │   └── make_patch.py          # gera patches xdelta a partir de work/
 ├── tests/                     # testes de round-trip e de parsers
@@ -126,14 +141,19 @@ kratos-dmc3/
 
 O Kratos entra no jogo por três camadas independentes:
 
-1. **Dados (assets)** — substituição de arquivos dentro de `GData.afs`: modelo do Dante (arquivos `pl000*`),
-   modelo de Devil Trigger, armas (`plwp_*.pac`, ex.: `plwp_sword.pac` = Rebellion), animações (`.mot`),
-   texturas, texturas do HUD e sons. Exige: unpack/repack de AFS e PAC, exportador `.mod` e `.mot`.
-2. **Código (DLL)** — DLL própria carregada junto ao DDMK (ou fork do módulo `Mary`), com hooks para o que
-   dados não resolvem: barra de magia, magias com efeito próprio (petrificação, almas teleguiadas),
-   agarrão, alcance da corrente, regras do Rage, HUD desenhado por cima, ajustes de hitbox.
-3. **Cutscenes (vídeo)** — no HD Collection grande parte das cutscenes são vídeos pré-renderizados (WMV).
-   Trocar o modelo não muda os vídeos. Tratadas à parte na Fase 9.
+1. **Dados (assets) — pasta de override (D8).** Os `.pac` substitutos (modelo `pl000*`, Devil Trigger,
+   armas `plwp_*.pac`, motions `pl000_00_*.pac`, texturas, HUD, sons) vão soltos em
+   `data/dmc3/GData.afs/`. **Não reempacotamos o `.nbz`**, e o jogo volta ao original apagando a pasta.
+   Plano B, se T1 falhar: gerar um `.nbz` novo (ZIP) com os arquivos trocados, numa cópia. Ferramentas
+   necessárias: `pac.py` (unpack/repack de PAC), exportador `.mod` e `.mot`. AFS sai do escopo.
+2. **Código — fork do Crimson (D7).** Branch própria do Crimson com um "modo Kratos" de flags
+   ligáveis em config. Aproveitamos o que ele já tem: sistema de golpes novos, HUD customizável, sons
+   próprios, troca de arma/estilo, roda de armas, ImGui. Escrevemos só o que falta: barra de magia,
+   magias (petrificação, almas teleguiadas), agarrão, alcance da corrente, regras do Rage.
+   O fork mora em `dll/crimson/` como submódulo git apontando para o nosso fork (não copiamos o código para
+   dentro do repo principal).
+3. **Cutscenes (vídeo)** — muitas cutscenes do HD são vídeos (`data/dmc3/Video`?). Trocar modelo não muda
+   os vídeos. Fase 9.
 
 ---
 
@@ -221,82 +241,83 @@ contador de hits. Duas etapas:
 ## 8. Fases
 
 Cada fase tem **entregável** e **critério de aceite**. Não avance sem cumprir o critério ou sem registrar
-por que foi aceito diferente.
+por que foi aceito diferente. Ordem pensada para provar cedo os dois riscos que podem matar o projeto:
+carregar arquivos trocados (T1) e exportar `.mod` (Fase 2).
 
-### Fase 0 — Setup e reconhecimento
-- Criar repositório, `.gitignore`, `config/paths.env`, estrutura de pastas e `docs/`.
-- Confirmar caminhos e versões; calcular SHA-256 do executável e de `GData.afs`; registrar em `docs/ambiente.md`.
-- Instalar DDMK com downpatch; confirmar que o jogo abre e roda com ele.
-- Copiar `GData.afs` para `work/`.
-- Inventário: listar todo o conteúdo do AFS (nomes, tamanhos, tipos) → `docs/formats/afs.md` e
-  `extracted/dmc3/inventory.csv`. Identificar arquivos do Dante, das armas, das animações e do HUD.
-- Contar cutscenes que são vídeo versus em motor → `docs/design/cutscenes.md`.
-- Rodar o god_of_war_browser na ISO do GoW1; exportar o Kratos (modelo com esqueleto) e 3 animações para
-  glTF/FBX em `extracted/gow1/`; abrir no Blender.
-- Pesquisar ferramentas existentes de exportação/injeção de modelos para DMC3 (fórum Infernal Warks,
-  créditos "Che", mods como "Jin Kazama Tekken 4 outfit", "DMC 2 Mod pack", "DMC4 Rebellion").
-- Instalar REA + Ghidra; abrir o executável do DMC3 e confirmar que a análise funciona.
-- **Aceite:** ambiente documentado com hashes; inventário do AFS; Kratos aberto no Blender com esqueleto;
-  REA analisando o executável; relatório sobre ferramentas existentes de exportação.
+### Fase 0 — Setup e reconhecimento (em andamento)
+- ✅ Estrutura do repo, `.gitignore`, `config/paths.env`, ferramentas instaladas, hashes do jogo e da ISO.
+- Backup de `dmc3.exe`, `dmcLauncher.exe` e `dmc3-0.nbz` em `work/backup/` com hash.
+- Instalar o **Crimson 0.5a** e confirmar que o jogo abre (registrar se exigiu downpatch e o hash do exe
+  resultante — esse hash passa a ser o "travado").
+- **Teste T1 (override):** copiar um `.pac` de outro modelo que já existe no jogo (ex.: outra roupa do
+  Dante) com o nome `pl000.pac` para `data/dmc3/GData.afs/` → Dante aparece trocado na Missão 1.
+  Testar também com uma motion (`pl000_00_*.pac`) e uma arma (`plwp_sword.pac`). Resultado em `docs/LOG.md`.
+- Inventário do `.nbz` → `extracted/dmc3/inventory.csv` + `docs/formats/nbz.md` (nomes, tamanhos, tipo pela
+  assinatura). Identificar arquivos do Dante, armas, motions, HUD, efeitos e sons.
+- god_of_war_browser na ISO: exportar o Kratos (modelo + esqueleto + texturas) e 3 animações para glTF em
+  `extracted/gow1/`; abrir no Blender headless e contar ossos/vértices.
+- Contar cutscenes em vídeo vs. em motor → `docs/design/cutscenes.md`.
+- REA + Ghidra no `dmc3.exe`, carregando os símbolos do FakePDB do Crimson.
+- **Aceite:** T1 com resultado registrado; inventário; Kratos aberto no Blender com esqueleto; REA analisando
+  o exe com símbolos.
 
-### Fase 1 — Pipeline de arquivos
-- `tools/afs.py` (unpack/repack) e `tools/pac.py` (unpack/repack), com testes em `tests/`.
-- **Aceite:** repack sem alterações gera arquivo idêntico byte a byte (ou, se o formato não permitir, o jogo
-  carrega a cópia reempacotada e roda uma missão sem diferença). Documentado em `docs/formats/`.
+### Fase 1 — PAC
+- `tools/pac.py` (unpack/repack) com testes em `tests/`, documentado em `docs/formats/pac.md`.
+- Mapear o conteúdo de `pl000.pac` (modelo, texturas `tm2/ptx`, física do casaco etc.) e de `plwp_*.pac`.
+- **Aceite:** repack sem alterações idêntico byte a byte; o mesmo arquivo reempacotado carrega pela pasta
+  de override sem diferença.
 
-### Fase 2 — Exportador de modelo `.mod` — **GATE CRÍTICO**
-- Usar ferramenta existente encontrada na Fase 0 **ou** escrever `tools/mod_export.py` / exportador Blender
-  a partir do importador (`DMC3/model.py`).
-- **Aceite:** importar o modelo do Dante, exportar sem mudanças, reinjetar e o jogo exibir o Dante igual;
-  depois, uma alteração simples (ex.: mover vértices) aparecer in-game.
-- Se falhar: parar e reavaliar o projeto com o LG antes de seguir.
+### Fase 2 — Exportador `.mod` — **GATE CRÍTICO**
+- Exportador Blender a partir de `DMC3/model.py` (MIT). Começar pelo round-trip do Dante.
+- **Aceite:** importar o Dante, exportar sem mudanças → arquivo idêntico (ou equivalente provado in-game);
+  depois mover vértices e ver a mudança in-game. Descobrir e documentar limites (ossos por vértice,
+  vértices por malha, número de texturas).
+- Se falhar: parar e reavaliar com o LG.
 
 ### Fase 3 — Kratos visual (MVP)
-- Script Blender: re-skin da malha do Kratos no **esqueleto do Dante** (nomes, contagem e ordem de ossos do
-  `.mod` original). Ossos do casaco do Dante: deixar sem pesos ou usar em detalhes (saiote, correntes).
-- Respeitar limites do formato (ossos por vértice, vértices por malha, texturas) descobertos na Fase 2.
-- Substituir modelo de jogo do Dante e modelo de Devil Trigger (Kratos com efeito de Rage).
-- **Aceite:** jogar as Missões 1 a 3 com o Kratos, animações do Dante funcionando, sem crash e sem
-  deformação grave.
+- Re-skin da malha do Kratos no **esqueleto do Dante** (nomes, contagem e ordem de ossos do `.mod`). Ossos
+  do casaco: sem pesos ou usados no saiote. Texturas do Kratos convertidas para o formato do DMC3.
+- Substituir modelo do Dante e modelo de Devil Trigger (Kratos com efeito de Rage), pela pasta de override.
+- **Aceite:** Missões 1 a 3 com o Kratos, animações do Dante funcionando, sem crash e sem deformação grave.
 
 ### Fase 4 — Armas visuais
-- Blades of Chaos no slot decidido em D1; Blade of Artemis no slot Rebellion; texturas.
-- **Aceite:** as duas armas aparecem corretas nas mãos em idle, combo e troca de arma.
+- Blades of Chaos no slot de D1; Blade of Artemis no slot Rebellion; texturas.
+- **Aceite:** as duas armas corretas nas mãos em idle, combo e troca de arma.
 
 ### Fase 5 — Animações e golpes
 - Levantamento do moveset (seção 7.3) e gravação de referência no PCSX2.
-- Exportador `.mot` (a partir de `DMC3/motion.py`), com round-trip igual ao da Fase 2.
-- Retarget das animações do GoW1 para o esqueleto do Dante, mantendo a duração de cada motion substituída.
-- Substituir primeiro: idle, corrida, pulo, combo básico das Blades; depois os especiais.
-- **Aceite:** combo básico e 3 especiais com animação do Kratos, acertando inimigos no tempo certo.
+- Exportador `.mot` (a partir de `DMC3/motion.py`), com round-trip.
+- Retarget GoW1 → esqueleto do Dante mantendo a duração de cada motion substituída.
+- Ordem: idle, corrida, pulo, combo básico das Blades; depois especiais.
+- Golpes sem slot equivalente: estudar como o Crimson adiciona "New Moves" e reaproveitar esse caminho.
+- **Aceite:** combo básico e 3 especiais com animação do Kratos, acertando no tempo certo.
 
-### Fase 6 — Gameplay via DLL (REA)
-- Estudar o executável com REA + Ghidra, partindo das estruturas do DDMK. Cada achado em `docs/re/`
-  com endereço, evidência e hash do executável.
-- Implementar na DLL: barra de magia e consumo; efeitos de Medusa's Gaze e Army of Hades; agarrão;
-  alcance da corrente das Blades; ajustes do Rage; ajustes de hitbox dos golpes novos.
-- **Aceite:** cada mecânica testada isoladamente numa missão, com flag para ligar/desligar na DLL.
+### Fase 6 — Gameplay no fork do Crimson
+- Partir do `Research/` e do código do Crimson; REA só para o que não estiver mapeado. Achados em `docs/re/`.
+- Implementar com flag cada uma: barra de magia e consumo; Medusa's Gaze; Army of Hades; agarrão; alcance da
+  corrente; regras do Rage; hitboxes dos golpes novos.
+- **Aceite:** cada mecânica testada isoladamente numa missão, ligável/desligável.
 
 ### Fase 7 — HUD
-- Etapa 1: troca de texturas. Etapa 2: overlay pela DLL (seção 7.5).
+- Etapa 1: **pacote de HUD do Crimson** (`Crimson\huds`) com a arte do GoW1 extraída dos `flp/txr`
+  — verificar o formato dos pacotes. Etapa 2: elementos que não existem (barra de magia, contador de hits)
+  no `CrimsonHUD` do fork.
 - **Aceite:** HUD do GoW1 completo (vida, magia, Rage, orbs, hits) sem restos do HUD do DMC3.
 
 ### Fase 8 — Áudio e texto
-- Extrair e converter sons do GoW1; descobrir o formato de áudio do DMC3 HD; substituir SFX e vozes de
-  combate; renomear textos de interface e loja.
+- Extrair sons do GoW1; descobrir como o port toca SFX (FMOD + `snd_*.pac`?) e como o Crimson injeta sons
+  (`Crimson\sound`); trocar SFX e vozes de combate; renomear textos de interface e loja.
 - **Aceite:** combate soa como GoW1; nenhum "Dante" em menus, loja ou HUD.
 
 ### Fase 9 — Cutscenes
-Escolha registrada como **D6**:
-- (a) manter as cutscenes originais com o Dante;
-- (b) troca de personagem nos vídeos com IA, cena a cena (risco: consistência entre cenas);
-- (c) re-renderizar no Blender, se os dados de animação das cenas existirem nos arquivos (o jogo traz
-  modelos e motions de "demo", ex.: `demo_pl000_00_3.pac`) — verificar.
-- **Aceite:** definido junto com a decisão.
+Igual à proposta anterior: **D6** entre (a) manter, (b) troca por IA nos vídeos, (c) re-render no Blender
+a partir de `demo_pl000_*.pac` — verificar se os dados de cena existem.
 
 ### Fase 10 — Empacotamento e campanha completa
-- `build/make_patch.py` gera patches `xdelta3` + script de instalação que extrai assets da ISO do usuário.
-- Playtest das 20 missões, checklist em `docs/playtest.md` (crash, animação, HUD, áudio, progressão).
+- Distribuição = build do fork do Crimson + script que lê o `.nbz` e a ISO **do usuário** e gera os
+  arquivos da pasta de override (patches `xdelta3` por arquivo onde houver base no DMC3; conversão direta
+  da ISO para o que vier do GoW1). Nenhum asset hospedado.
+- Playtest das 20 missões, checklist em `docs/playtest.md`.
 - **Aceite:** campanha completa jogável do início ao fim com o Kratos.
 
 ---
@@ -305,16 +326,19 @@ Escolha registrada como **D6**:
 
 | Risco | Impacto | Mitigação |
 |---|---|---|
-| Não existir forma de exportar `.mod` | Bloqueia o projeto | Fase 2 é gate; escrever exportador a partir do importador |
-| Limites de ossos/vértices do formato | Kratos simplificado | Descobrir limites na Fase 2; decimar malha |
-| Animações do GoW quebrarem hitboxes | Golpes não acertam | Manter duração original; ajustes finos via DLL |
-| Endereços mudarem com update da Steam | DLL quebra | Hash travado; downpatch do DDMK |
-| Cutscenes em vídeo | Dante continua na história | Decisão D6 na Fase 9 |
-| Formato de som desconhecido | Atraso na Fase 8 | Investigar cedo, em paralelo |
-| Questões legais | Derrubada do mod | Regras 2 e 3 da seção 2 |
+| Não existir forma de exportar `.mod` (confirmado: não há ferramenta pública) | Bloqueia o projeto | Fase 2 é gate; escrever a partir do importador MIT |
+| Pasta de override não valer para os arquivos do jogador | Volta a precisar reempacotar | T1 na Fase 0; plano B = novo `.nbz` (ZIP) |
+| Crimson já trazer `pl000.pac`/arquivos próprios na pasta de override (há relatos de conflito pl000 × Crimson) | Nossos arquivos colidem com os dele | Listar o que o Crimson instala; mesclar ou desligar a opção que usa o arquivo |
+| Crimson mudar muito o gameplay | Kratos com mecânicas de DMC4/5 | Usar Game Mode "Vanilla" como base; desligar recursos sem relação |
+| Atualização do Crimson quebrar o fork | Retrabalho | Fork travado numa tag; rebase só quando valer a pena |
+| Limites de ossos/vértices do formato | Kratos simplificado | Descobrir na Fase 2; decimar malha |
+| Animações do GoW quebrarem hitboxes | Golpes não acertam | Manter duração original; ajustes no fork |
+| Update da Steam mudar o exe | Endereços quebram | Hash travado; cópia do jogo fora da Steam |
+| Cutscenes em vídeo | Dante na história | D6 na Fase 9 |
+| Questões legais | Derrubada do mod | Regras 2 e 3 |
 
 **Decisões pendentes:** D1 (slot das Blades), D2 (estilos), D3 (recarga da magia), D4 (níveis de arma),
-D5 (controles), D6 (cutscenes).
+D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`).
 
 ---
 
@@ -342,8 +366,8 @@ D5 (controles), D6 (cutscenes).
 
 - Python: tipagem, `pathlib`, sem caminhos fixos no código (ler de `config/paths.env`); testes com `pytest`.
 - Scripts do Blender rodam headless e recebem argumentos depois de `--`.
-- C++: C++20, CMake, MSVC; toda funcionalidade da DLL com flag de ligar/desligar em arquivo `.ini`.
-- Commits pequenos, em português, no formato `tipo(escopo): descrição` (ex.: `feat(afs): repack com round-trip`).
+- C++: segue o estilo do Crimson no fork (C++20, CMake, MSVC); toda funcionalidade do modo Kratos com flag de ligar/desligar na config.
+- Commits pequenos, em português, no formato `tipo(escopo): descrição` (ex.: `feat(pac): repack com round-trip`).
 - Documente formatos enquanto descobre, não depois.
 - Ao final de cada sessão: atualizar `docs/LOG.md` e a seção **Estado atual**.
 
@@ -351,11 +375,10 @@ D5 (controles), D6 (cutscenes).
 
 ## 12. Estado atual
 
-- **Fase:** 0 — em andamento
-- **Último passo concluído:** estrutura do repo, `.gitignore`, `config/paths.env`, permissões do agente; `vendor/` com DDMK 2.7.3 (+ hdc_patches), god_of_war_browser beta4 (win32), DMC3-Blender-Import-Addon, xdelta3 3.1.0 (exe)
-- **Próxima tarefa:** backup do dmc3.exe/dmcLauncher.exe em `work/backup/` + downpatch e DDMK (com confirmação do LG); inventário do `dmc3-0.nbz`; god_of_war_browser na ISO; REA no dmc3.exe
-- **Nota:** o jogo fica na raiz do projeto (não na pasta Steam); tratar como somente leitura (deny em `.claude/settings.json`)
-- **Decisões tomadas:** nenhuma
+- **Fase:** 0 — em andamento (plano revisado, Revisão 1)
+- **Último passo concluído:** ferramentas instaladas; ISO do GoW1 em `iso/gow1.iso`; hashes registrados;
+  pesquisa de ferramentas; plano revisado (Crimson como base, pasta de override, sem AFS)
+- **Próxima tarefa:** backup → instalar Crimson → T1 (override) → inventário do nbz → god_of_war_browser → REA
+- **Decisões tomadas:** D7 (base Crimson), D8 (pasta de override), D9 (jogo na raiz do projeto, fora da Steam)
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
-- **Achado:** no HD, `GData.afs` é uma pasta dentro do ZIP `data/dmc3/dmc3-0.nbz` (ver `docs/formats/nbz.md`); a Fase 1 deve tratar zip + pac, não AFS.
-- **Bloqueios:** nenhum. Ferramentas instaladas; REA (`npx rea-agents setup`) fica para quando o `dmc3.exe` estiver disponível
+- **Bloqueios:** nenhum
