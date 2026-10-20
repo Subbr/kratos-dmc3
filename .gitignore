@@ -1,0 +1,26 @@
+# Assets da Sony/Capcom nunca entram no git
+/Devil May Cry HD Collection/
+/iso/
+extracted/
+work/
+build/out/
+vendor/
+tools/.venv/
+*.iso
+*.bin
+*.afs
+*.pac
+*.mod
+*.mot
+*.scm
+*.wad
+*.pak
+*.toc
+*.wmv
+*.dds
+*.wav
+*.vag
+*.ogg
+assets/**/*.png
+__pycache__/
+.claude/settings.local.json
