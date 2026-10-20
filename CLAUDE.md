@@ -353,8 +353,9 @@ D5 (controles), D6 (cutscenes).
 
 - **Fase:** 0 — em andamento
 - **Último passo concluído:** estrutura do repo, `.gitignore`, `config/paths.env`, permissões do agente; `vendor/` com DDMK 2.7.3 (+ hdc_patches), god_of_war_browser beta4 (win32), DMC3-Blender-Import-Addon, xdelta3 3.1.0 (exe)
-- **Próxima tarefa:** LG copia o DMC HD para `./Devil May Cry HD Collection/` e o dump da ISO do GoW1 para `./iso/gow1.iso`; depois hashes, backup, downpatch + DDMK, inventário do AFS
+- **Próxima tarefa:** backup do dmc3.exe/dmcLauncher.exe em `work/backup/` + downpatch e DDMK (com confirmação do LG); inventário do `dmc3-0.nbz`; god_of_war_browser na ISO; REA no dmc3.exe
 - **Nota:** o jogo fica na raiz do projeto (não na pasta Steam); tratar como somente leitura (deny em `.claude/settings.json`)
 - **Decisões tomadas:** nenhuma
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
-- **Bloqueios:** aguardando cópia do DMC HD e ISO do GoW1. Ferramentas instaladas; REA (`npx rea-agents setup`) fica para quando o `dmc3.exe` estiver disponível
+- **Achado:** no HD, `GData.afs` é uma pasta dentro do ZIP `data/dmc3/dmc3-0.nbz` (ver `docs/formats/nbz.md`); a Fase 1 deve tratar zip + pac, não AFS.
+- **Bloqueios:** nenhum. Ferramentas instaladas; REA (`npx rea-agents setup`) fica para quando o `dmc3.exe` estiver disponível

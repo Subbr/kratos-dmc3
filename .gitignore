@@ -24,3 +24,5 @@ tools/.venv/
 assets/**/*.png
 __pycache__/
 .claude/settings.local.json
+*.7z
+*.nbz
