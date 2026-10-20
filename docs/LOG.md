@@ -19,3 +19,4 @@
 - Inventário do nbz: `tools/nbz_inventory.py` → `extracted/dmc3/inventory.csv` (4333 arquivos; .pac com magic `PAC` 3513 / `PNST` 212; HUD = `id100.pac`).
 - god_of_war_browser compilado do fonte (beta4 não tem `-iso`). Kratos exportado do `R_HERO0.WAD` para glTF com 111 ossos, 7418 vértices e 251 animações com nome; importado no Blender 5.2 headless (`blender/scripts/inspect_gltf.py`). Ver `docs/formats/gow-wad.md`.
 - REA adiado até o exe final (os endereços dependem do hash).
+- Cutscenes: 30 .webm em `data/dmc3/Video` (12 de missão). O resto da história deve rodar no motor [HIPÓTESE]. Ver `docs/design/cutscenes.md`.
