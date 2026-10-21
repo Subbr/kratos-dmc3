@@ -375,14 +375,15 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Fase:** 0 — em andamento (plano revisado, Revisão 1)
+- **Fase:** 3 — início (Fases 0–2 concluídas, exceto REA)
 - **Último passo concluído:** ferramentas instaladas; ISO do GoW1 em `iso/gow1.iso`; hashes registrados;
   pesquisa de ferramentas; plano revisado (Crimson como base, pasta de override, sem AFS)
 - **Feito na Fase 0:** backup; Crimson extraído (patch do exe pendente); inventário do nbz; Kratos (R_HERO0) no Blender com 111 ossos e 251 animações
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10)
 - **Fase 1:** `tools/pac.py` com round-trip 100%
 - **T1:** passou (override funciona para o jogador). Config de teste: Vanilla Mode, Classic, Fixed Camera
-- **Próxima tarefa:** Fase 2 — exportador `MOD` (round-trip do Dante); REA no exe travado em paralelo
+- **Fase 2:** gate vencido. `tools/mod.py` com round-trip em 6474/6474 MODs; T2 (cabeça escalada) aparece in-game
+- **Próxima tarefa:** Fase 3 — texturas (item 000 + SHW), mapear os 24 ossos do Dante, transferir a malha do Kratos para o esqueleto do Dante
 - **Decisões tomadas:** D7 (base Crimson), D8 (pasta de override), D9 (jogo na raiz do projeto, fora da Steam)
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
 - **Bloqueios:** nenhum
