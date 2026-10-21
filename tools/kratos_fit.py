@@ -191,6 +191,13 @@ def split(d: dict, max_verts: int) -> list[dict]:
     return [{k: v[i:i + step] for k, v in d.items()} for i in range(0, n, step)]
 
 
+def empty_object(template: mod.Object, at: np.ndarray) -> mod.Object:
+    """Objeto com 3 vértices e nenhum triângulo (todos com o bit de reinício)."""
+    d = {"pos": [tuple(at)] * 3, "nrm": [(0.0, 1.0, 0.0)] * 3, "uv": [(0, 0)] * 3,
+         "bones": [bytes([0, 4, 0, 0])] * 3, "w": [0x8000 | 31] * 3}
+    return make_object(template, 0, d)
+
+
 def make_object(template: mod.Object, tex_idx: int, d: dict) -> mod.Object:
     pts = np.array(d["pos"])
     center = (pts.min(0) + pts.max(0)) / 2
@@ -216,19 +223,25 @@ def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = 
 
 def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
-         left_weapon: Path | None = None) -> None:
+         left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(glb)
     body = mod.Model.parse((base_dir / "001.MOD").read_bytes())
     dj, _ = dante_joints(body)
+    reserve = len(body.objects) if reserve is None else reserve
     groups, T, target = build_meshes(g, cfg, dj)
     extra = []
     if left_weapon:  # lâmina da mão esquerda: vai no corpo, presa ao lWeapIH, com textura no slot seguinte
         weapon = Glb(left_weapon)
         add_held_weapon(groups, g, T, target, weapon, "lWeapIH", len(g.j["images"]))
+        if both_hands:  # GoW1: as lâminas nunca vão para as costas; a da direita também fica no corpo
+            add_held_weapon(groups, g, T, target, weapon, "rWeapIH", len(g.j["images"]))
         extra.append(weapon)
     template = body.objects[0]
     body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
+    # o jogo liga/desliga objetos do Dante pelo índice (ex.: camisa na Missão 1; a coxa direita no objeto 5
+    # sumia): os índices do Dante viram objetos vazios e o Kratos começa depois deles
+    body.objects = [empty_object(template, dj[1])] * reserve + body.objects
     body.gaps = []
     body.tail = body.runtime_tail()
     body.auto_index_ptr = True
@@ -266,5 +279,7 @@ if __name__ == "__main__":
     ap.add_argument("--no-textures", action="store_true")
     ap.add_argument("--keep-coat", action="store_true")
     ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
+    ap.add_argument("--both-hands", action="store_true", help="com --left-weapon: a mesma arma também no rWeapIH")
+    ap.add_argument("--reserve", type=int, help="objetos vazios no início (padrão: quantos o Dante tem)")
     a = ap.parse_args()
-    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon)
+    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands)
