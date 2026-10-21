@@ -62,3 +62,6 @@
 - Agni & Rudra (`plwp_2sword.pac`): 3 ossos; cada espada num osso (1 e 2), um por mão. O motor suporta arma com peça em cada mão.
 - Artemis gerada para o slot Agni & Rudra no osso 1 (a outra espada some): `work/install/artemis_v1/plwp_2sword.pac`. Não instalada: a Agni & Rudra só é obtida no fim da Missão 3.
 - R_PERM.WAD tem `MDL_HUD` e os orbs (health/magic/weapon) → fonte da Fase 7.
+- **T6 aplicado (temporário):** Blade of Artemis no slot Rebellion, só para ver o modelo in-game. Depois volta `work/install/blades_v1/plwp_sword.pac`.
+- **T6 PASSOU (2026-10-21):** Blade of Artemis no slot Rebellion aparece nas costas, é sacada e golpeia normalmente. Tamanho conferido nos modelos do GoW1: `athenablade` mede 38,5 unidades de comprimento e o Kratos 37,2 de altura (bounding box dos glb). Como os dois usam a mesma escala (4,8), a proporção in-game é a do GoW1. A lâmina esquerda das Blades continua na mão (esperado: está no modelo do corpo). `plwp_sword.pac` restaurado para `work/install/blades_v1/` (sha `d4b477e3…`).
+- Próximo: prova de ponta a ponta da Fase 5 (uma animação do Kratos no lugar de uma motion do Dante), antes de mais polimento visual.
