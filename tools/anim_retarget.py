@@ -9,7 +9,7 @@ A rotação local (pai⁻¹ · filho) vira ângulos de Euler XYZ (R = Rz·Ry·Rx
 DMC3/motion.py, [INFERIDO]). O quadril (osso 1) recebe a translação da pelve do Kratos.
 
 Uso: python -I tools/anim_retarget.py <kratos.glb> <animação> <pl000_00_N.pac base> <índice> <saida.pac>
-         [--frames N]  (padrão: mantém a duração da motion original)
+         [--frames N]  (padrão: mantém a duração da motion original)  [--timing stretch|natural]
 """
 from __future__ import annotations
 
@@ -30,6 +30,7 @@ from gltf import Glb  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 C = kratos_fit.ROT_Y180
 HIP, PELVIS_SRC = 1, "pelvis"
+ROOT_MOTION_BONE = 0
 
 
 def _quat_to_mat(q: np.ndarray) -> np.ndarray:
@@ -120,7 +121,11 @@ class KratosAnim:
         return cache[node]
 
 
-def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, base: mot.Motion) -> mot.Motion:
+def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, base: mot.Motion,
+             timing: str = "stretch") -> mot.Motion:
+    """timing: "stretch" = a animação inteira ocupa os frames da motion base; "natural" = 60 fps do
+    GoW1 (o glb tem tempo em segundos) e o último quadro fica parado até o fim da motion base.
+    Tracks do osso 0 (deslocamento do personagem no golpe) vêm da motion base sem mudança."""
     dj, parent = kratos_fit.dante_joints(body)
     T, _ = kratos_fit.fit_transforms(g, cfg, dj)
     skin = g.j["skins"][0]
@@ -144,7 +149,7 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     prev: dict[int, np.ndarray] = {}
     order = [body.skeleton.order[i] for i in range(n)]
     for f in range(frames):
-        t = anim.duration * f / max(frames - 1, 1)
+        t = anim.duration * f / max(frames - 1, 1) if timing == "stretch" else min(f / 60.0, anim.duration)
         cache: dict = {}
         W = [np.eye(3)] * n
         for d in order:  # ordem do esqueleto: pai antes do filho
@@ -169,6 +174,7 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     out = mot.Motion(bytearray(base.header))
     out.frames = float(frames - 1)  # o cabeçalho guarda o último frame (chaves de 0 a N)
     out.tracks = [mot.Track.hermite(b, ch, v) for (b, ch), v in values.items()]
+    out.tracks += [t for t in base.tracks if t.bone == ROOT_MOTION_BONE]
     return out
 
 
@@ -181,6 +187,7 @@ def main() -> None:
     ap.add_argument("out", type=Path)
     ap.add_argument("--body", type=Path, default=ROOT / "extracted/dmc3/unpacked/pl000/001.MOD")
     ap.add_argument("--frames", type=int)
+    ap.add_argument("--timing", choices=("stretch", "natural"), default="stretch")
     a = ap.parse_args()
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(a.glb)
@@ -188,7 +195,7 @@ def main() -> None:
     p = pac.Pac.parse(a.base_pac.read_bytes())
     base = mot.Motion.parse(p.entries[a.index])
     frames = a.frames or int(round(base.frames)) + 1
-    new = retarget(g, a.anim, body, cfg, frames, base)
+    new = retarget(g, a.anim, body, cfg, frames, base, a.timing)
     p.entries[a.index] = new.build(pad=True)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_bytes(p.build())

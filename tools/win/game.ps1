@@ -65,6 +65,29 @@ function Focus {
   $script:Handle = $p.MainWindowHandle; return $p.MainWindowHandle
 }
 
+function Shot([IntPtr]$h, [string]$path) {
+  $r = New-Object Inp+RECT; [Inp]::GetClientRect($h, [ref]$r) | Out-Null
+  $pt = New-Object Inp+POINT; [Inp]::ClientToScreen($h, [ref]$pt) | Out-Null
+  $w = $r.R - $r.L; $ht = $r.B - $r.T
+  $bmp = New-Object System.Drawing.Bitmap $w, $ht
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $g.CopyFromScreen($pt.X, $pt.Y, 0, 0, (New-Object System.Drawing.Size $w, $ht))
+  $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+  $g.Dispose(); $bmp.Dispose()
+  return "${w}x${ht}"
+}
+
+function Keys([string]$seq) {
+  foreach ($tok in $seq.Split(" ", [StringSplitOptions]::RemoveEmptyEntries)) {
+    $name, $ms = $tok.Split(":")
+    if ($name -eq "wait") { Start-Sleep -Milliseconds ([int]$ms); continue }
+    $hold = if ($ms) { [int]$ms } else { 80 }
+    $k = $Scan[$name]; if (-not $k) { throw "tecla desconhecida: $name" }
+    [Inp]::Key([uint16]$k[0], $k[1], $false); Start-Sleep -Milliseconds $hold
+    [Inp]::Key([uint16]$k[0], $k[1], $true); Start-Sleep -Milliseconds 150
+  }
+}
+
 switch ($Action) {
   "start" {
     if (Get-Process dmc3 -ErrorAction SilentlyContinue) { "já rodando"; break }
@@ -75,25 +98,19 @@ switch ($Action) {
   "shot" {
     # só a área da janela do jogo, e só com ela em primeiro plano (nunca captura outras janelas)
     $h = Focus | Select-Object -Last 1
-    $r = New-Object Inp+RECT; [Inp]::GetClientRect($h, [ref]$r) | Out-Null
-    $pt = New-Object Inp+POINT; [Inp]::ClientToScreen($h, [ref]$pt) | Out-Null
-    $w = $r.R - $r.L; $ht = $r.B - $r.T
-    $bmp = New-Object System.Drawing.Bitmap $w, $ht
-    $g = [System.Drawing.Graphics]::FromImage($bmp)
-    $g.CopyFromScreen($pt.X, $pt.Y, 0, 0, (New-Object System.Drawing.Size $w, $ht))
-    $bmp.Save($Arg, [System.Drawing.Imaging.ImageFormat]::Png)
-    "${w}x${ht} -> $Arg"
+    "$(Shot $h $Arg) -> $Arg"
+  }
+  "burst" {
+    # "<teclas>|<capturas>|<intervalo ms>|<prefixo do arquivo>": aperta as teclas e captura em sequência
+    $seq, $n, $ms, $prefix = $Arg.Split("|")
+    $h = Focus | Select-Object -Last 1
+    Keys $seq
+    for ($i = 0; $i -lt [int]$n; $i++) { Shot $h ("{0}_{1:d2}.png" -f $prefix, $i) | Out-Null; Start-Sleep -Milliseconds ([int]$ms) }
+    "ok"
   }
   "keys" {
     Focus | Out-Null
-    foreach ($tok in $Arg.Split(" ", [StringSplitOptions]::RemoveEmptyEntries)) {
-      $name, $ms = $tok.Split(":")
-      if ($name -eq "wait") { Start-Sleep -Milliseconds ([int]$ms); continue }
-      $hold = if ($ms) { [int]$ms } else { 80 }
-      $k = $Scan[$name]; if (-not $k) { throw "tecla desconhecida: $name" }
-      [Inp]::Key([uint16]$k[0], $k[1], $false); Start-Sleep -Milliseconds $hold
-      [Inp]::Key([uint16]$k[0], $k[1], $true); Start-Sleep -Milliseconds 150
-    }
+    Keys $Arg
     "ok"
   }
   "click" {

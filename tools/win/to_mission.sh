@@ -11,13 +11,21 @@ powershell.exe -Command "Start-Sleep 3; Get-Process dmcLauncher -ErrorAction Sil
 g start
 powershell.exe -Command "Start-Sleep 22"
 g keys "enter:300 wait:4000"            # aviso de salvamento -> título (cursor em LOAD GAME)
-g keys "enter:300 wait:4000"            # -> tela LOAD
+g keys "enter:300 wait:4000"            # -> tela LOAD (prévia do slot)
+dialog() { tools/win/step.sh "" load_dialog >/dev/null; tools/.venv/bin/python -I tools/win/load_slot.py work/shots/load_dialog.png dialog; }
+g keys "k:300 wait:2000"                # entra no modo de escolha ("Please specify a file to load")
+[ "$(dialog)" != none ] && g keys "l:300 wait:1500"   # se já abriu o diálogo, cancela
 for _ in $(seq 11); do                  # lista circular; a posição inicial varia
   tools/win/step.sh "" load_slot >/dev/null
   [ "$(tools/.venv/bin/python -I tools/win/load_slot.py work/shots/load_slot.png)" = "${SLOT:-2}" ] && break
   g keys "d:250 wait:1200"
 done
-g keys "k:300 wait:2000 a:300 wait:800 k:300 wait:6000"   # confirma, "Yes" (padrão "No"), carrega
+[ "$(tools/.venv/bin/python -I tools/win/load_slot.py work/shots/load_slot.png)" = "${SLOT:-2}" ] || { echo "slot ${SLOT:-2} não selecionado" >&2; exit 1; }
+g keys "k:300 wait:2500"                # abre "OK to load this file?" (padrão "No")
+for _ in 1 2 3 4; do [ "$(dialog)" != none ] && break; g keys "wait:1000"; done
+for _ in 1 2 3; do [ "$(dialog)" = yes ] && break; [ "$(dialog)" = none ] && break; g keys "a:300 wait:1000"; done
+[ "$(dialog)" = yes ] || { echo "diálogo de load não chegou em Yes" >&2; exit 1; }
+g keys "k:300 wait:6000"
 g keys "enter:300 wait:8000"            # "Load Successful" -> Mission Select
 g keys "k:300 wait:8000"                # missão do save -> menu da missão (cursor em Customize)
 g keys "a:300 wait:900 k:300 wait:15000" # Mission Start
