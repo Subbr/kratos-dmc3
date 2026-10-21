@@ -50,3 +50,6 @@
 - **Kratos v3 instalado.**
 - `mod.py`: o parse detecta se o arquivo segue a regra original do ponteiro de índices (o Crimson reserva mais espaço por malha) e preserva o valor lido quando não segue. Round-trip de novo 100% (jogo + Crimson). v3 regenerado: o casaco mantém os ponteiros do Crimson.
 - **T3 / Kratos v3 PASSOU (2026-10-20):** Kratos visível in-game no lugar do Dante, com texturas corretas, animando com o esqueleto do Dante e sem crash. Polimentos pendentes (print do LG): peça da canela solta/deslocada numa perna, rosto com aparência estranha (sombra/normais?), revisar deformação nas animações.
+- Fase 4: armas do GoW1 em `R_WPN{nível}_{roupa}.WAD`. `maiblade` = Blade of Chaos nível 1; `maigodblade` = nível máximo (textura de fogo). A Blade of Artemis ainda não foi localizada.
+- Rebellion (`plwp_sword.pac` do Crimson): 4 objetos, 2 ossos, todos os vértices no osso 1, lâmina em +Z e cabo na origem. `tools/weapon_fit.py`: arma do GoW1 com escala 4,8, giro de 180° em Y e 90° no eixo da lâmina.
+- **T4 aplicado:** Blade of Chaos no lugar da Rebellion (só a mão direita). Backup do `plwp_sword.pac` do Crimson em `work/backup/crimson_override/`.

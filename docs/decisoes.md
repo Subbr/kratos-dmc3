@@ -29,3 +29,7 @@
 - **Evidência:** o resultado tem o mesmo tamanho e o mesmo adler32 do alvo declarado no patch oficial do Crimson.
 - **Launcher:** não usamos o launcher patcheado. O jogo será aberto pelo `dmc3.exe` direto, com
   `steam_appid.txt` = 631510 [HIPÓTESE: funciona sem o launcher; testar].
+
+## D1 — Blades of Chaos no slot Rebellion (2026-10-20, LG)
+- **Escolha:** Blades of Chaos substituem a Rebellion (`plwp_sword*.pac`), arma inicial. O Kratos começa com elas, como no GoW1, e herda o moveset mais completo.
+- **Consequência:** a Rebellion é de uma mão. A lâmina da mão esquerda precisa de outra solução (presa ao modelo do corpo ou a outra peça). Blade of Artemis vai para outro slot (Agni & Rudra ou similar), a definir.

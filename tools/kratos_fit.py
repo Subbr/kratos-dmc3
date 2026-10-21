@@ -140,21 +140,25 @@ def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> dict[int, dict]:
                 bones, q = quantize3(dw)
                 B.append(bytes([0] + [4 * b for b in bones]))
                 Q.append(q[0] | q[1] << 5 | q[2] << 10)
-            grp = groups[cfg["textures"][mat]]
-            for tri in idx:
-                a0, b0, c0 = (int(x) for x in tri)
-                # mantém a orientação majoritária do Dante: triângulo na posição par da strip, CCW em relação às normais
-                fn = np.cross(P[b0] - P[a0], P[c0] - P[a0])
-                if np.dot(fn, N[a0] + N[b0] + N[c0]) < 0:
-                    b0, c0 = c0, b0
-                for k, v in enumerate((a0, b0, c0)):
-                    grp["pos"].append(tuple(P[v]))
-                    grp["nrm"].append(tuple(N[v]))
-                    u, w = float(uv[v][0]), float(uv[v][1])
-                    grp["uv"].append((int(np.clip(round(u * 4096), -32768, 32767)), int(np.clip(round(w * 4096), -32768, 32767))))
-                    grp["bones"].append(B[v])
-                    grp["w"].append(Q[v] | (0x8000 if k < 2 else 0))
+            add_triangles(groups[cfg["textures"][mat]], idx, P, N, uv, B, Q)
     return groups
+
+
+def add_triangles(grp: dict, idx, P, N, uv, B, Q) -> None:
+    """Grava cada triângulo como uma strip de 3 vértices (os 2 primeiros com o bit de reinício)."""
+    for tri in idx:
+        a0, b0, c0 = (int(x) for x in tri)
+        # mantém a orientação majoritária do Dante: triângulo na posição par da strip, CCW em relação às normais
+        fn = np.cross(P[b0] - P[a0], P[c0] - P[a0])
+        if np.dot(fn, N[a0] + N[b0] + N[c0]) < 0:
+            b0, c0 = c0, b0
+        for k, v in enumerate((a0, b0, c0)):
+            grp["pos"].append(tuple(P[v]))
+            grp["nrm"].append(tuple(N[v]))
+            u, w = float(uv[v][0]), float(uv[v][1])
+            grp["uv"].append((int(np.clip(round(u * 4096), -32768, 32767)), int(np.clip(round(w * 4096), -32768, 32767))))
+            grp["bones"].append(B[v])
+            grp["w"].append(Q[v] | (0x8000 if k < 2 else 0))
 
 
 def split(d: dict, max_verts: int) -> list[dict]:
