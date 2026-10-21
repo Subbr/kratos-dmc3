@@ -26,3 +26,5 @@
 - Depot de 2018 completo (267 arquivos; vídeos .wmv em vez de .webm). `testzip` do nbz ok; dados iguais aos de 2026, exceto 5 `msg_*.pac`.
 - Pasta do jogo trocada: 2026+Crimson → `work/backup/game_2026/`; build de 2018 → `./Devil May Cry HD Collection/`. Backup do exe/launcher de 2018 em `work/backup/game_2018/`. Exe com ASLR desligado gerado em `work/install/dmc3.exe` (confere com o alvo do Crimson).
 - Pendente: escrever na pasta do jogo (Crimson + exe), bloqueado pela regra de proteção em `.claude/settings.json` → pedir ao LG.
+- Crimson instalado pelo LG na build de 2018 (exe ASLR off conferido, `steam_appid.txt`). Aguardando teste de abertura.
+- Fase 1: `tools/pac.py` + `tests/test_pac.py`. Round-trip byte a byte em 3725/3725 .pac (alinhamento 8 ou 16 por arquivo). Ver `docs/formats/pac.md`.

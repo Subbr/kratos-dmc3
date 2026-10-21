@@ -379,7 +379,9 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Último passo concluído:** ferramentas instaladas; ISO do GoW1 em `iso/gow1.iso`; hashes registrados;
   pesquisa de ferramentas; plano revisado (Crimson como base, pasta de override, sem AFS)
 - **Feito na Fase 0:** backup; Crimson extraído (patch do exe pendente); inventário do nbz; Kratos (R_HERO0) no Blender com 111 ossos e 251 animações
-- **Próxima tarefa:** LG baixa o exe antigo (download_depot) → aplicar patch do Crimson → T1 → REA. Em paralelo: Fase 1 (`tools/pac.py`) e contagem de cutscenes
+- **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10)
+- **Fase 1:** `tools/pac.py` com round-trip 100%
+- **Próxima tarefa:** LG testa abrir o jogo → T1 (override) → REA. Em paralelo: Fase 2 (estudar `MOD` com o `model.py` do addon e o dmc3-vergil-re)
 - **Decisões tomadas:** D7 (base Crimson), D8 (pasta de override), D9 (jogo na raiz do projeto, fora da Steam)
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
-- **Bloqueios:** exe atual (update Steam set/2026, 6.790.632 bytes) incompatível com o patch do Crimson. LG precisa baixar a build antiga oficial com `download_depot 631510 631511 7469687047717691926` no console da Steam. Não usar `hdc_patches_2026` (exe não verificável).
+- **Bloqueios:** nenhum (aguardando teste de abertura do jogo com Crimson pelo LG)
