@@ -108,7 +108,7 @@ def quantize3(weights: dict[int, float]) -> tuple[list[int], list[int]]:
     return bones, q
 
 
-def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> dict[int, dict]:
+def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> tuple[dict[int, dict], list[np.ndarray], list[int]]:
     T, target = fit_transforms(g, cfg, dj)
     groups: dict[int, dict] = defaultdict(lambda: defaultdict(list))
     for ni, nd in enumerate(g.j["nodes"]):
@@ -141,7 +141,30 @@ def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> dict[int, dict]:
                 B.append(bytes([0] + [4 * b for b in bones]))
                 Q.append(q[0] | q[1] << 5 | q[2] << 10)
             add_triangles(groups[cfg["textures"][mat]], idx, P, N, uv, B, Q)
-    return groups
+    return groups, T, target
+
+
+def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int], weapon: Glb,
+                    joint_name: str, tex_idx: int) -> None:
+    """Prende uma arma (glb estático) ao osso de arma do Kratos (ex.: lWeapIH): pose do osso no GoW1 →
+    mesmo ajuste do osso → peso total no osso do Dante correspondente."""
+    joints = g.j["skins"][0]["joints"]
+    k = next(i for i, n in enumerate(joints) if g.name(n) == joint_name)
+    w = g.world(joints[k])
+    t = T[k]
+    lin = t[:3, :3] @ ROT_Y180 @ w[:3, :3]
+    off = t[:3, :3] @ (ROT_Y180 @ w[:3, 3]) + t[:3, 3]
+    bone = bytes([0, 4 * target[k], 0, 0])
+    for nd in weapon.j["nodes"]:
+        if "mesh" not in nd:
+            continue
+        for p in weapon.j["meshes"][nd["mesh"]]["primitives"]:
+            a = p["attributes"]
+            P = weapon.accessor(a["POSITION"]).astype(np.float64) @ lin.T + off
+            N = weapon.accessor(a["NORMAL"]).astype(np.float64) @ np.linalg.inv(lin)
+            N /= np.linalg.norm(N, axis=1, keepdims=True).clip(1e-9)
+            idx = weapon.accessor(p["indices"]).reshape(-1, 3) if "indices" in p else np.arange(len(P)).reshape(-1, 3)
+            add_triangles(groups[tex_idx], idx, P, N, weapon.accessor(a["TEXCOORD_0"]), [bone] * len(P), [31] * len(P))
 
 
 def add_triangles(grp: dict, idx, P, N, uv, B, Q) -> None:
@@ -176,11 +199,13 @@ def make_object(template: mod.Object, tex_idx: int, d: dict) -> mod.Object:
     return mod.Object(template.ukn, bytes(4), 0, bytes(28), (*center, radius), [mesh])
 
 
-def textures_block(g: Glb, template_block: tex.TextureBlock) -> bytes:
+def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = ()) -> bytes:
+    """Texturas do glb (na ordem das imagens) + a primeira imagem de cada glb extra."""
     made = []
-    for im in g.j["images"]:
-        bv = g.j["bufferViews"][im["bufferView"]]
-        data = g.bin[bv.get("byteOffset", 0):bv.get("byteOffset", 0) + bv["byteLength"]]
+    sources = [(g, im) for im in g.j["images"]] + [(e, e.j["images"][0]) for e in extra]
+    for src, im in sources:
+        bv = src.j["bufferViews"][im["bufferView"]]
+        data = src.bin[bv.get("byteOffset", 0):bv.get("byteOffset", 0) + bv["byteLength"]]
         buf = io.BytesIO()
         Image.open(io.BytesIO(data)).convert("RGBA").save(buf, format="DDS", pixel_format="DXT5")
         made.append(tex.make_texture(buf.getvalue(), template_block.textures[0].descriptor))
@@ -190,12 +215,18 @@ def textures_block(g: Glb, template_block: tex.TextureBlock) -> bytes:
 
 
 def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
-         use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True) -> None:
+         use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
+         left_weapon: Path | None = None) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(glb)
     body = mod.Model.parse((base_dir / "001.MOD").read_bytes())
     dj, _ = dante_joints(body)
-    groups = build_meshes(g, cfg, dj)
+    groups, T, target = build_meshes(g, cfg, dj)
+    extra = []
+    if left_weapon:  # lâmina da mão esquerda: vai no corpo, presa ao lWeapIH, com textura no slot seguinte
+        weapon = Glb(left_weapon)
+        add_held_weapon(groups, g, T, target, weapon, "lWeapIH", len(g.j["images"]))
+        extra.append(weapon)
     template = body.objects[0]
     body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
     body.gaps = []
@@ -214,7 +245,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
             (work / "pac" / "012.MOD").write_bytes(coat.build())
         if use_textures:
             block = tex.TextureBlock.parse((base_dir / "000._").read_bytes())
-            (work / "pac" / "000._").write_bytes(textures_block(g, block))
+            (work / "pac" / "000._").write_bytes(textures_block(g, block, extra))
         out_pac.parent.mkdir(parents=True, exist_ok=True)
         pac.repack(work / "pac", out_pac)
     finally:
@@ -234,5 +265,6 @@ if __name__ == "__main__":
     ap.add_argument("--no-body", action="store_true")
     ap.add_argument("--no-textures", action="store_true")
     ap.add_argument("--keep-coat", action="store_true")
+    ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
     a = ap.parse_args()
-    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat)
+    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon)

@@ -53,3 +53,7 @@
 - Fase 4: armas do GoW1 em `R_WPN{nível}_{roupa}.WAD`. `maiblade` = Blade of Chaos nível 1; `maigodblade` = nível máximo (textura de fogo). A Blade of Artemis ainda não foi localizada.
 - Rebellion (`plwp_sword.pac` do Crimson): 4 objetos, 2 ossos, todos os vértices no osso 1, lâmina em +Z e cabo na origem. `tools/weapon_fit.py`: arma do GoW1 com escala 4,8, giro de 180° em Y e 90° no eixo da lâmina.
 - **T4 aplicado:** Blade of Chaos no lugar da Rebellion (só a mão direita). Backup do `plwp_sword.pac` do Crimson em `work/backup/crimson_override/`.
+- **T4 PASSOU (2026-10-21):** Blade of Chaos na mão direita, bem orientada, também nas costas quando guardada. Pendências: o rastro (trail) do golpe usa o comprimento da Rebellion e parece uma espada maior; Ebony & Ivory visíveis no quadril; dedos da mão esquerda parecem separados da palma.
+- `lWeapIH` (osso da arma na mão esquerda do Kratos) fica na palma. `kratos_fit.py --left-weapon`: a lâmina vai no modelo do corpo, posicionada pela pose do `lWeapIH`, com o mesmo ajuste do osso, peso no osso 13 do Dante e textura no 4º slot. Prévia em `work/preview/fit_v4.png`.
+- `tools/hide_models.py`: esconde todos os MODs de um PAC. Aplicado ao `plwp_gun.pac` (Ebony & Ivory), com backup do original do Crimson.
+- **T5 aplicado:** Kratos v4 (com a lâmina esquerda) + pistolas escondidas.
