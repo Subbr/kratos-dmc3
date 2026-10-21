@@ -36,3 +36,7 @@
 - Fase 2: `tools/mod.py` lê e reconstrói do zero 6474/6474 MODs do jogo + 2 do Crimson, byte a byte. Ver `docs/formats/mod.md`.
 - **T2 aplicado:** `pl000.pac` do Crimson com cabeça e cabelo (objetos 10–16) escalados 1,5× a partir de (0, 169, 0), gerado por `mod.py` + `pac.py` (sha256 `fa385ce9…`). Aguardando teste in-game (Missão 2+).
 - **T2 PASSOU (2026-10-20):** Dante com cabeça e cabelo 1,5× maiores in-game, sem crash e sem malha quebrada. Leve deformação, provavelmente nos vértices do pescoço com peso dividido. Conclusão: as posições do MOD estão em espaço do modelo (pose de bind) [INFERIDO: se fossem locais ao osso, a escala em torno de (0,169,0) teria deslocado a cabeça inteira]. **Gate da Fase 2 vencido.** `pl000.pac` do Crimson restaurado.
+- Fase 3: `tools/tex.py` (bloco de texturas: round-trip em 5667/5667; descritor gerado = original), `tools/gltf.py`, `tools/kratos_fit.py` + `mapping/skeleton_kratos_dante.yaml`. O casaco do Dante é o `012.MOD` (33 ossos, física `pl000_02.clt`); o corpo é o `001.MOD` (24 ossos).
+- Ajuste: cada osso do Kratos recebe uma transformação (translação, rotação de direção e esticamento) que leva o seu segmento ao osso equivalente do Dante (escala 4,8; giro de 180° em Y). Os 111 ossos viram 24. Triângulos gravados um a um (strip com reinício). Texturas 256×256 em DXT5 com 1 mip. Casaco colapsado num ponto.
+- Prévia em `work/preview/fit_v1.png`: Kratos em pose T alinhado ao Dante.
+- **T3 aplicado:** `work/install/kratos_v1/pl000.pac` no override. Aguardando teste in-game.

@@ -1,0 +1,43 @@
+# Kratos (GoW1, R_HERO0 "hero", 111 ossos) -> Dante (DMC3 pl000 MOD, 24 ossos).
+# Lado: depois de girar o Kratos 180° em Y, os ossos "l*" ficam em +x, como os ossos 10-13/19-22 do Dante.
+# Cada entrada: osso do Kratos -> [osso do Dante, filho no Kratos que dá a direção, filho no Dante que dá a direção]
+# Direção nula = o osso só é transladado (sem girar nem esticar).
+# Ossos não listados herdam a transformação do ancestral listado mais próximo
+# (dedos -> mão, saiote -> pelve, lâminas das costas -> peito, correntes -> mão).
+scale: 4.8
+weights_target:   # osso do Kratos -> osso do Dante que recebe o peso, quando difere da transformação
+  main: 14
+bones:
+  main:        [14, null, null]
+  pelvis:      [14, null, null]
+  vertebrae2:  [2, vertebrae4, 3]
+  vertebrae3:  [2, vertebrae4, 3]
+  vertebrae4:  [3, neck, 4]
+  neck:        [4, head, 5]
+  head:        [5, null, null]
+  lClavicle:   [10, lHumerus, 11]
+  lHumerus:    [11, lRadius, 12]
+  lRadius:     [12, lWrist, 13]
+  lWrist:      [13, lMiddleF1, null]
+  rClavicle:   [6, rHumerus, 7]
+  rHumerus:    [7, rRadius, 8]
+  rRadius:     [8, rWrist, 9]
+  rWrist:      [9, rMiddleF1, null]
+  lFemur:      [19, lTibia, 20]
+  lTibia:      [20, lMetatarsal, 21]
+  lMetatarsal: [21, lPhalanges, 22]
+  lPhalanges:  [22, null, null]
+  rFemur:      [15, rTibia, 16]
+  rTibia:      [16, rMetatarsal, 17]
+  rMetatarsal: [17, rPhalanges, 18]
+  rPhalanges:  [18, null, null]
+  rightBladeBack: [3, null, null]
+  leftBladeBack:  [3, null, null]
+textures:   # material do GoW1 -> índice da textura no bloco (ordem das imagens do glb: maiF03, maiF01, maiF02)
+  MAT_Skirt: 0
+  MAT_maiFcll: 0
+  MAT_maiFskinl2: 0
+  MAT_maiFskinh: 1
+  MAT_maiFskinh2: 2
+  MAT_maiFclh: 2
+skip_materials: [MAT_ClothCollisionMat]
