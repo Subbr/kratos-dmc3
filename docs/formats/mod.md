@@ -18,9 +18,11 @@ Para cada objeto, nesta ordem, cada seção alinhada em 16:
      ossos 4 bytes [?, b0*4, b1*4, b2*4], pesos u16 (3×5 bits + bit15 = reinício da triangle strip)
 Esqueleto (alinhado em 16): i32 offsets relativos (hier, order, child, transforms);
      arrays de boneCount bytes alinhados em 4; transforms alinhado em 16, 32 bytes por osso
-Cauda: preenchimento (0x12 repetido no pl000 original).
+Cauda: área de trabalho em tempo de execução (ver abaixo).
 ```
-- `uk` aponta para dados de outras malhas: offset obsoleto (PS2?), preservado sem uso [HIPÓTESE].
+- **Ponteiro de índices** (i64 em +0x40 do cabeçalho da malha, o antigo `uk`): relativo ao próprio cabeçalho, aponta para o trecho da malha na cauda: `início da cauda + Σ align16(6 × (vc − 2)) das malhas anteriores − endereço do cabeçalho`. Confirmado em 6474/6474. Com 0, a malha fica invisível (v2).
+- **Cauda** = área de trabalho onde o jogo converte strips em índices: Σ align16(6 × (vc − 2)), preenchida com 0x12. Sem ela, crash ao carregar (v1).
+- O Crimson reserva mais espaço por malha. O parser preserva os ponteiros lidos quando não seguem a regra original.
 - Faces: triangle strips; o bit 15 do peso marca o vértice que não fecha triângulo.
 - Até 3 ossos por vértice (pesos de 5 bits).
 - Exceções preservadas como bytes crus (`gaps`): 12 modelos de menu (`id430*`, `id470`) e os MODs do Crimson,

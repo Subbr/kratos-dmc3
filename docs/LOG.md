@@ -49,3 +49,4 @@
 - Casaco: colapsar posições não funciona (a física de tecido reposiciona). Agora todos os vértices do 012 recebem o bit de reinício → zero triângulos.
 - **Kratos v3 instalado.**
 - `mod.py`: o parse detecta se o arquivo segue a regra original do ponteiro de índices (o Crimson reserva mais espaço por malha) e preserva o valor lido quando não segue. Round-trip de novo 100% (jogo + Crimson). v3 regenerado: o casaco mantém os ponteiros do Crimson.
+- **T3 / Kratos v3 PASSOU (2026-10-20):** Kratos visível in-game no lugar do Dante, com texturas corretas, animando com o esqueleto do Dante e sem crash. Polimentos pendentes (print do LG): peça da canela solta/deslocada numa perna, rosto com aparência estranha (sombra/normais?), revisar deformação nas animações.

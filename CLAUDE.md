@@ -383,7 +383,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Fase 1:** `tools/pac.py` com round-trip 100%
 - **T1:** passou (override funciona para o jogador). Config de teste: Vanilla Mode, Classic, Fixed Camera
 - **Fase 2:** gate vencido. `tools/mod.py` com round-trip em 6474/6474 MODs; T2 (cabeça escalada) aparece in-game
-- **Próxima tarefa:** Fase 3 — texturas (item 000 + SHW), mapear os 24 ossos do Dante, transferir a malha do Kratos para o esqueleto do Dante
+- **Fase 3:** Kratos v3 in-game (`tools/kratos_fit.py`). Regras críticas do MOD: cauda = área de trabalho e ponteiro de índices por malha (ver docs/formats/mod.md)
+- **Próxima tarefa:** polimento da Fase 3 (peça da canela, rosto, deformações), depois Devil Trigger e Fase 4 (armas)
 - **Decisões tomadas:** D7 (base Crimson), D8 (pasta de override), D9 (jogo na raiz do projeto, fora da Steam)
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
 - **Bloqueios:** nenhum
