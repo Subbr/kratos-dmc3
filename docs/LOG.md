@@ -57,3 +57,4 @@
 - `lWeapIH` (osso da arma na mão esquerda do Kratos) fica na palma. `kratos_fit.py --left-weapon`: a lâmina vai no modelo do corpo, posicionada pela pose do `lWeapIH`, com o mesmo ajuste do osso, peso no osso 13 do Dante e textura no 4º slot. Prévia em `work/preview/fit_v4.png`.
 - `tools/hide_models.py`: esconde todos os MODs de um PAC. Aplicado ao `plwp_gun.pac` (Ebony & Ivory), com backup do original do Crimson.
 - **T5 aplicado:** Kratos v4 (com a lâmina esquerda) + pistolas escondidas.
+- **T5 PASSOU (2026-10-21):** duas Blades of Chaos (direita = slot Rebellion; esquerda presa à mão no modelo do corpo) e pistolas invisíveis. A lâmina direita vai para as costas quando guardada; a esquerda fica sempre na mão.
