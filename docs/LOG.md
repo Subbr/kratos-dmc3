@@ -84,3 +84,7 @@
 - `mapping/motions.yaml` + `tools/build_motions.py`: tabela motion do Dante → animação do Kratos, gera os `pl000_00_N.pac`. `tools/motion_sheet.py`: folha de quadros (motions do jogo ou do GoW1) para identificar golpes. Índices e evidências em `docs/formats/mot.md`.
 - Corrigido: o item 10 da BASE é "levantar do chão" (tinha recebido a parada no T7b); voltou ao original.
 - **T10 aplicado (teste do LG):** corrida (`walkBlend2`), aterrissagem (`land`), pose no ar (`jumpAir`), rolamentos com a mira travada (`evadeLeft/Right`), Stinger (`dash`), lançador (`blockLauncher`, índice inferido), mais o combo do T9. sha `0734635b…` (00_0) e `de83709d…` (00_3).
+- **T10 (LG, 2026-10-21):** corrida ok; golpes acertam no tempo certo; lançador com a pose certa, mas não lança o inimigo e o dano parece estranho; desliza ao começar a andar devagar.
+- Deslize: o item 1 da BASE é a **caminhada** (pés alternam, osso 0 TZ +214), não parada; recebia `idleCombat` desde o T7b → agora `walkBlend1`.
+- Lançador: o golpe para cima do Dante (#13) é no quadro 24 e o do `blockLauncher` no 41 (maior velocidade da mão). [HIPÓTESE] o acerto segue a arma presa à mão, então golpe fora de tempo erra a janela de lançar. `anim_retarget --timing strike`: alinha o quadro de maior velocidade da mão do Kratos ao do Dante (antes dele o tempo é ajustado, depois segue a 60 fps). Aplicado ao lançador (#13) e ao Stinger (#16); combos mantidos em `natural` (aprovados no teste).
+- **T11 aplicado:** caminhada + lançador e Stinger alinhados.

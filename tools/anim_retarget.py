@@ -14,6 +14,7 @@ Uso: python -I tools/anim_retarget.py <kratos.glb> <animação> <pl000_00_N.pac 
 from __future__ import annotations
 
 import argparse
+import struct
 import sys
 from pathlib import Path
 
@@ -123,10 +124,37 @@ class KratosAnim:
         return cache[node]
 
 
+HAND = 9  # mão direita do Dante (a arma do slot fica nela)
+
+
+def _fk(mo: mot.Motion, f: float, body: mod.Model, parent: list[int]) -> dict[int, np.ndarray]:
+    """Posição de cada osso no quadro f (espaço do modelo, sem o deslocamento do osso 0)."""
+    s = body.skeleton
+    off = [np.array(struct.unpack_from("<3f", t)) for t in s.transforms]
+    W, P = {}, {}
+    for b in (s.order[i] for i in range(len(parent))):
+        r = rot_xyz(*[mo.track(b, "r" + c).sample(f) if mo.track(b, "r" + c) else 0.0 for c in "xyz"])
+        tt = [mo.track(b, "t" + c) for c in "xyz"] if b != 0 else [None] * 3
+        t = np.array([q.sample(f) if q else off[b][k] for k, q in enumerate(tt)]) if any(tt) else off[b]
+        p = parent[b]
+        W[b], P[b] = (r, t) if p < 0 else (W[p] @ r, P[p] + W[p] @ t)
+    return P
+
+
+def strike_frame(mo: mot.Motion, body: mod.Model, parent: list[int], frames: int) -> int:
+    """Quadro do golpe: maior velocidade da mão direita entre o 3º quadro e 70% da motion."""
+    pos = [_fk(mo, f, body, parent)[HAND] for f in range(frames)]
+    speed = [np.linalg.norm(pos[f + 1] - pos[f]) for f in range(frames - 1)]
+    lim = max(int(len(speed) * 0.7), 4)
+    return 3 + int(np.argmax(speed[3:lim]))
+
+
 def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, base: mot.Motion,
              timing: str = "stretch") -> mot.Motion:
     """timing: "stretch" = a animação inteira ocupa os frames da motion base; "natural" = 60 fps do
-    GoW1 (o glb tem tempo em segundos) e o último quadro fica parado até o fim da motion base.
+    GoW1 (o glb tem tempo em segundos) e o último quadro fica parado até o fim da motion base;
+    "strike" = 60 fps, mas o quadro do golpe (maior velocidade da mão) cai no mesmo quadro do golpe do
+    Dante (antes dele o tempo é esticado/encolhido; depois segue a 60 fps).
     Tracks do osso 0 (deslocamento do personagem no golpe) vêm da motion base sem mudança."""
     dj, parent = kratos_fit.dante_joints(body)
     T, _ = kratos_fit.fit_transforms(g, cfg, dj)
@@ -142,6 +170,15 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     F = {d: _polar_rotation(T[k][:3, :3]) for d, k in src.items()}
     anim = KratosAnim(g, anim_name)
     s = float(cfg["scale"])
+    if timing == "strike":
+        nat = max(int(anim.duration * 60) + 1, 2)
+        sk = strike_frame(retarget(g, anim_name, body, cfg, nat, base, "natural"), body, parent, nat) / 60.0
+        sd = strike_frame(base, body, parent, frames)
+        when = lambda f: min(f * sk / sd if f <= sd else sk + (f - sd) / 60.0, anim.duration) if sd else min(f / 60.0, anim.duration)
+    elif timing == "natural":
+        when = lambda f: min(f / 60.0, anim.duration)
+    else:
+        when = lambda f: anim.duration * f / max(frames - 1, 1)
     k_pelvis = names.index(PELVIS_SRC)
     pelvis_bind = C @ np.linalg.inv(ibm[k_pelvis])[:3, 3]
 
@@ -151,7 +188,7 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     prev: dict[int, np.ndarray] = {}
     order = [body.skeleton.order[i] for i in range(n)]
     for f in range(frames):
-        t = anim.duration * f / max(frames - 1, 1) if timing == "stretch" else min(f / 60.0, anim.duration)
+        t = when(f)
         cache: dict = {}
         W = [np.eye(3)] * n
         for d in order:  # ordem do esqueleto: pai antes do filho
@@ -189,7 +226,7 @@ def main() -> None:
     ap.add_argument("out", type=Path)
     ap.add_argument("--body", type=Path, default=ROOT / "extracted/dmc3/unpacked/pl000/001.MOD")
     ap.add_argument("--frames", type=int)
-    ap.add_argument("--timing", choices=("stretch", "natural"), default="stretch")
+    ap.add_argument("--timing", choices=("stretch", "natural", "strike"), default="stretch")
     a = ap.parse_args()
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(a.glb)

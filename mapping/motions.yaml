@@ -4,7 +4,7 @@
 # Evidência de cada índice em docs/formats/mot.md (seção "Índices conhecidos").
 pl000_00_0:   # BASE
   0:  {anim: idleCombat, timing: stretch}    # parada
-  1:  {anim: idleCombat, timing: stretch}    # parada (variação)
+  1:  {anim: walkBlend1, timing: stretch}    # caminhada (pés alternam, osso 0 TZ +214)
   58: {anim: idleCombat, timing: stretch}    # parada (variação)
   2:  {anim: walkBlend2, timing: stretch}    # corrida (Crimson: "playerRunning" = motion 2/51/30)
   51: {anim: walkBlend2, timing: stretch}    # corrida (variação)
@@ -20,5 +20,6 @@ pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   5:  {anim: combo3C, timing: natural}       # combo 1, golpe 3
   6:  {anim: combo3D, timing: natural}       # combo 2, golpe 2 (CrimsonFX.cpp:468)
   7:  {anim: combo3E, timing: natural}       # combo 2, golpe 3
-  16: {anim: dash, timing: natural}          # Stinger nível 1 (CrimsonDetours.cpp:449)
-  13: {anim: blockLauncher, timing: natural} # [INFERIDO pela pose] High Time (lançador)
+  16: {anim: dash, timing: strike}           # Stinger nível 1 (CrimsonDetours.cpp:449)
+  13: {anim: blockLauncher, timing: strike}  # High Time (lançador): pose e teste T10
+# timing strike: o quadro de maior velocidade da mão do Kratos cai no mesmo quadro do golpe do Dante
