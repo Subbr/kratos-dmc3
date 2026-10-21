@@ -52,3 +52,10 @@ def test_roundtrip_all_mods():
             fails[reason] += 1
             examples.setdefault(reason, name)
     assert not fails, f"{sum(fails.values())}/{total} falhas: {dict(fails)} ex.: {examples}"
+
+
+def test_runtime_tail_rule():
+    for name, data in _mods():
+        m = mod.Model.parse(data)
+        if m.skeleton:
+            assert len(m.runtime_tail()) == len(m.tail), name

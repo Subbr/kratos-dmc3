@@ -61,7 +61,7 @@ class Model:
     header: bytes              # bytes 0x08..0x40 com contagens e offset do esqueleto zerados
     objects: list[Object]
     skeleton: Skeleton | None
-    tail: bytes                # preenchimento após o esqueleto (0x12 repetido no Dante)
+    tail: bytes                # área de trabalho após o esqueleto (ver runtime_tail)
     bone_count: int = 0
     # Bytes exatos entre o fim da seção anterior e cada seção, na ordem de escrita.
     # None = só zeros de alinhamento (o normal). Conteúdo só em 12 modelos de menu e nos MODs do Crimson.
@@ -155,6 +155,12 @@ class Model:
         child = _align(order + bc, 4)
         trans = _align(child + bc)
         return hier, order, child, trans
+
+    def runtime_tail(self, fill: int = 0x12) -> bytes:
+        """Área que o jogo usa para converter as strips em índices: Σ align16(6 × (vértices − 2)) por malha.
+        Regra confirmada em 6474/6474 MODs; sem ela o jogo trava ao carregar o modelo (T3)."""
+        size = sum(_align(6 * max(m.vert_count - 2, 0)) for o in self.objects for m in o.meshes)
+        return bytes([fill]) * size
 
     # ---------------------------------------------------------------- escrita
     def build(self) -> bytes:

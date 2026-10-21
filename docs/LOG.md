@@ -40,3 +40,7 @@
 - Ajuste: cada osso do Kratos recebe uma transformação (translação, rotação de direção e esticamento) que leva o seu segmento ao osso equivalente do Dante (escala 4,8; giro de 180° em Y). Os 111 ossos viram 24. Triângulos gravados um a um (strip com reinício). Texturas 256×256 em DXT5 com 1 mip. Casaco colapsado num ponto.
 - Prévia em `work/preview/fit_v1.png`: Kratos em pose T alinhado ao Dante.
 - **T3 aplicado:** `work/install/kratos_v1/pl000.pac` no override. Aguardando teste in-game.
+- **T3 FALHOU:** crash logo após a cutscene inicial da missão. Isolando: T3a = só texturas do Kratos (modelo do Crimson); T3b = só o corpo do Kratos dividido em malhas de ≤900 vértices (20 objetos), texturas do Crimson, casaco colapsado. T3a instalado.
+- T3a PASSOU: texturas do Kratos (DXT5, 1 mip, descritor gerado) carregam sem crash no modelo do Dante. Causa do crash do T3 está na geometria. T3b instalado.
+- **Causa provável do crash do T3:** a cauda do MOD não é lixo. É a área de trabalho onde o jogo converte strips em índices: tamanho = Σ align16(6 × (vértices − 2)) por malha (confirmado em 6474/6474 MODs). O T3 foi sem cauda e com 3× mais vértices. `Model.runtime_tail()` + teste. Variante B (sem cauda) pulada.
+- **Kratos v2 instalado:** corpo em 20 objetos (≤900 vértices por malha), cauda correta, texturas do Kratos, casaco colapsado.

@@ -157,6 +157,13 @@ def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> dict[int, dict]:
     return groups
 
 
+def split(d: dict, max_verts: int) -> list[dict]:
+    """Divide um grupo em pedaços de até max_verts vértices (múltiplo de 3: um triângulo por 3 vértices)."""
+    step = max_verts - max_verts % 3
+    n = len(d["pos"])
+    return [{k: v[i:i + step] for k, v in d.items()} for i in range(0, n, step)]
+
+
 def make_object(template: mod.Object, tex_idx: int, d: dict) -> mod.Object:
     pts = np.array(d["pos"])
     center = (pts.min(0) + pts.max(0)) / 2
@@ -178,16 +185,17 @@ def textures_block(g: Glb, template_block: tex.TextureBlock) -> bytes:
     return tex.TextureBlock(made).build()
 
 
-def main(glb: Path, base_dir: Path, out_pac: Path) -> None:
+def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
+         use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(glb)
     body = mod.Model.parse((base_dir / "001.MOD").read_bytes())
     dj, _ = dante_joints(body)
     groups = build_meshes(g, cfg, dj)
     template = body.objects[0]
-    body.objects = [make_object(template, t, groups[t]) for t in sorted(groups)]
+    body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
     body.gaps = []
-    body.tail = b""
+    body.tail = body.runtime_tail()
     coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
     for o in coat.objects:  # casaco do Dante: colapsa num ponto (some sem mexer na física de tecido)
         for m in o.meshes:
@@ -195,16 +203,31 @@ def main(glb: Path, base_dir: Path, out_pac: Path) -> None:
     work = Path(tempfile.mkdtemp())
     try:
         shutil.copytree(base_dir, work / "pac", dirs_exist_ok=True)
-        (work / "pac" / "001.MOD").write_bytes(body.build())
-        (work / "pac" / "012.MOD").write_bytes(coat.build())
-        block = tex.TextureBlock.parse((base_dir / "000._").read_bytes())
-        (work / "pac" / "000._").write_bytes(textures_block(g, block))
+        if use_body:
+            (work / "pac" / "001.MOD").write_bytes(body.build())
+        if collapse_coat:
+            (work / "pac" / "012.MOD").write_bytes(coat.build())
+        if use_textures:
+            block = tex.TextureBlock.parse((base_dir / "000._").read_bytes())
+            (work / "pac" / "000._").write_bytes(textures_block(g, block))
         out_pac.parent.mkdir(parents=True, exist_ok=True)
         pac.repack(work / "pac", out_pac)
     finally:
         shutil.rmtree(work)
-    print(f"{out_pac}: {out_pac.stat().st_size} bytes; objetos {[(t, len(groups[t]['pos'])) for t in sorted(groups)]}")
+    print(f"{out_pac}: {out_pac.stat().st_size} bytes; {len(body.objects)} objetos; corpo={use_body} "
+          f"texturas={use_textures} casaco_colapsado={collapse_coat}")
 
 
 if __name__ == "__main__":
-    main(Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]))
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("glb", type=Path)
+    ap.add_argument("base", type=Path)
+    ap.add_argument("out", type=Path)
+    ap.add_argument("--max-verts", type=int, default=900)
+    ap.add_argument("--no-body", action="store_true")
+    ap.add_argument("--no-textures", action="store_true")
+    ap.add_argument("--keep-coat", action="store_true")
+    a = ap.parse_args()
+    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat)
