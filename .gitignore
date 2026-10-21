@@ -26,3 +26,6 @@ __pycache__/
 .claude/settings.local.json
 *.7z
 *.nbz
+
+# fork do Crimson: repositório próprio (branch kratos); vira submódulo quando existir o fork no GitHub
+dll/crimson/
