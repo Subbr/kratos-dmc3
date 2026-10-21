@@ -48,3 +48,4 @@
 - **Achado:** reserved[1] da malha (o antigo "uk") é o ponteiro relativo do cabeçalho da malha até o seu trecho de índices na cauda: `início da cauda + Σ align16(6 × (vc − 2)) anteriores − endereço do cabeçalho`. Recalculado pelo `mod.py` e conferido em 6474/6474 MODs (+ 2 do Crimson). Com 0, o jogo lê índices errados e não desenha.
 - Casaco: colapsar posições não funciona (a física de tecido reposiciona). Agora todos os vértices do 012 recebem o bit de reinício → zero triângulos.
 - **Kratos v3 instalado.**
+- `mod.py`: o parse detecta se o arquivo segue a regra original do ponteiro de índices (o Crimson reserva mais espaço por malha) e preserva o valor lido quando não segue. Round-trip de novo 100% (jogo + Crimson). v3 regenerado: o casaco mantém os ponteiros do Crimson.

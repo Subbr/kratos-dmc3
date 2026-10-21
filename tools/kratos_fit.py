@@ -196,6 +196,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
     body.gaps = []
     body.tail = body.runtime_tail()
+    body.auto_index_ptr = True
     coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
     for o in coat.objects:  # casaco do Dante: nenhum vértice fecha triângulo (some sem mexer na física de tecido)
         for m in o.meshes:

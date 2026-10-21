@@ -120,7 +120,18 @@ class Model:
             tail_start = skel_off + trans + 32 * bc
         model = cls(magic, version, bytes(header), objects, skeleton, b[tail_start:], bone_count)
         model.gaps = model._gaps_from(b)
+        # arquivos de outras ferramentas (ex.: Crimson) reservam mais espaço por malha: preserva o valor lido
+        model.auto_index_ptr = False
+        model.auto_index_ptr = model.build() != b and cls._with_auto_ptrs(model) == b
         return model
+
+    @staticmethod
+    def _with_auto_ptrs(model: "Model") -> bytes:
+        model.auto_index_ptr = True
+        try:
+            return model.build()
+        finally:
+            model.auto_index_ptr = False
 
     def _sections(self, b: bytes) -> list[tuple[int, int]]:
         """(offset, tamanho) de cada seção no arquivo, na ordem em que build() escreve."""
