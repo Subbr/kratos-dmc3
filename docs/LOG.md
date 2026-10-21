@@ -58,3 +58,7 @@
 - `tools/hide_models.py`: esconde todos os MODs de um PAC. Aplicado ao `plwp_gun.pac` (Ebony & Ivory), com backup do original do Crimson.
 - **T5 aplicado:** Kratos v4 (com a lâmina esquerda) + pistolas escondidas.
 - **T5 PASSOU (2026-10-21):** duas Blades of Chaos (direita = slot Rebellion; esquerda presa à mão no modelo do corpo) e pistolas invisíveis. A lâmina direita vai para as costas quando guardada; a esquerda fica sempre na mão.
+- **Blade of Artemis localizada:** objeto `athenablade` em `ATHN08C.WAD` (espada grande com guarda em cruz; textura de rastro `Blade_swordtrailTex`). Os `sword1` de ATHN07/08 são espadas de cenário (estátuas). `maigodblade` = Blades of Chaos no nível máximo, não Artemis.
+- Agni & Rudra (`plwp_2sword.pac`): 3 ossos; cada espada num osso (1 e 2), um por mão. O motor suporta arma com peça em cada mão.
+- Artemis gerada para o slot Agni & Rudra no osso 1 (a outra espada some): `work/install/artemis_v1/plwp_2sword.pac`. Não instalada: a Agni & Rudra só é obtida no fim da Missão 3.
+- R_PERM.WAD tem `MDL_HUD` e os orbs (health/magic/weapon) → fonte da Fase 7.
