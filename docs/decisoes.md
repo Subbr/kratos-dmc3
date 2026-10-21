@@ -15,7 +15,7 @@
 - **Evidência:** DDMK `Mary/File.ixx` (`FileManager::Push` abre `data\dmc3\GData.afs\<nome>` antes de extrair
   do `.nbz`); Crimson `src/CrimsonFileHandling.cpp` (`Paths::gameMods`); relatos da comunidade de que a pasta
   sobrescreve o `.nbz`.
-- **Status:** [HIPÓTESE] para os arquivos do jogador carregados pelo jogo — validar no teste T1.
+- **Status:** **confirmado pelo T1** (2026-10-20): `pl000.pac` na pasta de override troca o modelo do Dante in-game.
 - **Plano B:** gerar novo `.nbz` (ZIP) numa cópia.
 
 ## D9 — Jogo na raiz do projeto, fora da Steam (2026-10-20)

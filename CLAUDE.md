@@ -65,8 +65,8 @@ Fases, inimigos, chefes, missões e história do DMC3 permanecem.
   (`fmod64.dll`, `fmodstudio64.dll`).
 - **Pasta de override:** DDMK e Crimson leem `data/dmc3/GData.afs/<arquivo>` solto antes de recorrer ao
   `.nbz` (evidência: `vendor/ddmk/Mary/File.ixx`, `FileManager::Push`/`ExtractFile`;
-  `vendor/DMC3-Crimson/src/CrimsonFileHandling.cpp`, `Paths::gameMods`). **[HIPÓTESE]** isso vale para os
-  arquivos do jogador carregados pelo próprio jogo — provar no teste T1 (Fase 0).
+  `vendor/DMC3-Crimson/src/CrimsonFileHandling.cpp`, `Paths::gameMods`). **Confirmado pelo T1:** vale para o
+  modelo do jogador (`pl000.pac`). Missão 1 tem Dante sem camisa; testar modelo a partir da Missão 2.
 - Executável: `dmc3.exe` (hash original em `docs/ambiente.md`).
 - Programas Windows são chamados a partir do WSL pelo `.exe` direto ou via `powershell.exe -Command`.
 - **Blender 5.2.2** headless: `"$BLENDER_EXE" -b -P blender/scripts/<script>.py -- <args>`.
@@ -381,7 +381,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Feito na Fase 0:** backup; Crimson extraído (patch do exe pendente); inventário do nbz; Kratos (R_HERO0) no Blender com 111 ossos e 251 animações
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10)
 - **Fase 1:** `tools/pac.py` com round-trip 100%
-- **Próxima tarefa:** LG testa abrir o jogo → T1 (override) → REA. Em paralelo: Fase 2 (estudar `MOD` com o `model.py` do addon e o dmc3-vergil-re)
+- **T1:** passou (override funciona para o jogador). Config de teste: Vanilla Mode, Classic, Fixed Camera
+- **Próxima tarefa:** Fase 2 — exportador `MOD` (round-trip do Dante); REA no exe travado em paralelo
 - **Decisões tomadas:** D7 (base Crimson), D8 (pasta de override), D9 (jogo na raiz do projeto, fora da Steam)
 - **Decisões pendentes:** D1, D2, D3, D4, D5, D6
-- **Bloqueios:** nenhum (aguardando teste de abertura do jogo com Crimson pelo LG)
+- **Bloqueios:** nenhum
