@@ -22,7 +22,7 @@ def _align(n: int, a: int = 16) -> int:
 class Mesh:
     tex: int
     pad: bytes                 # 12 bytes após vertCount/tex (zeros nos arquivos vistos)
-    reserved: tuple[int, int, int]  # 3 × i64 após os 5 offsets: zero, uk (offset obsoleto?), zero
+    reserved: tuple[int, int, int]  # 3 × i64 após os 5 offsets: zero, ponteiro de índices (recalculado), zero
     positions: list[tuple[float, float, float]]
     normals: list[tuple[float, float, float]]
     uvs: list[tuple[int, int]]          # s16, escala 1/4096
@@ -66,6 +66,8 @@ class Model:
     # Bytes exatos entre o fim da seção anterior e cada seção, na ordem de escrita.
     # None = só zeros de alinhamento (o normal). Conteúdo só em 12 modelos de menu e nos MODs do Crimson.
     gaps: list[bytes | None] = field(default_factory=list)
+    # True: build() recalcula o ponteiro de índices de cada malha (reserved[1]); False: grava o valor lido
+    auto_index_ptr: bool = True
 
     # ---------------------------------------------------------------- leitura
     @classmethod
@@ -213,5 +215,18 @@ class Model:
             blob[trans:] = b"".join(s.transforms)
             skel_off = put(bytes(blob))
             struct.pack_into("<q", out, 0x20, skel_off)
+        if self.auto_index_ptr:
+            self._write_index_ptrs(out, len(out))
         out.extend(self.tail)
         return bytes(out)
+
+    def _write_index_ptrs(self, out: bytearray, tail_start: int) -> None:
+        """reserved[1] de cada malha = ponteiro relativo (a partir do cabeçalho da malha) para o seu trecho
+        na área de trabalho: início da cauda + Σ align16(6 × (vértices − 2)) das malhas anteriores."""
+        cursor = tail_start
+        for i, obj in enumerate(self.objects):
+            (mesh_off,) = struct.unpack_from("<q", out, HEADER_SIZE + i * OBJECT_SIZE + 8)
+            for m, mesh in enumerate(obj.meshes):
+                hdr = mesh_off + m * MESH_SIZE
+                struct.pack_into("<q", out, hdr + 0x40, cursor - hdr)
+                cursor += _align(6 * max(mesh.vert_count - 2, 0))

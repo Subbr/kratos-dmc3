@@ -44,3 +44,7 @@
 - T3a PASSOU: texturas do Kratos (DXT5, 1 mip, descritor gerado) carregam sem crash no modelo do Dante. Causa do crash do T3 está na geometria. T3b instalado.
 - **Causa provável do crash do T3:** a cauda do MOD não é lixo. É a área de trabalho onde o jogo converte strips em índices: tamanho = Σ align16(6 × (vértices − 2)) por malha (confirmado em 6474/6474 MODs). O T3 foi sem cauda e com 3× mais vértices. `Model.runtime_tail()` + teste. Variante B (sem cauda) pulada.
 - **Kratos v2 instalado:** corpo em 20 objetos (≤900 vértices por malha), cauda correta, texturas do Kratos, casaco colapsado.
+- **v2:** sem crash (a cauda resolveu), mas o corpo ficou invisível e o casaco apareceu como um pano flutuando.
+- **Achado:** reserved[1] da malha (o antigo "uk") é o ponteiro relativo do cabeçalho da malha até o seu trecho de índices na cauda: `início da cauda + Σ align16(6 × (vc − 2)) anteriores − endereço do cabeçalho`. Recalculado pelo `mod.py` e conferido em 6474/6474 MODs (+ 2 do Crimson). Com 0, o jogo lê índices errados e não desenha.
+- Casaco: colapsar posições não funciona (a física de tecido reposiciona). Agora todos os vértices do 012 recebem o bit de reinício → zero triângulos.
+- **Kratos v3 instalado.**

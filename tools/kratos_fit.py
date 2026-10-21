@@ -197,9 +197,9 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     body.gaps = []
     body.tail = body.runtime_tail()
     coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
-    for o in coat.objects:  # casaco do Dante: colapsa num ponto (some sem mexer na física de tecido)
+    for o in coat.objects:  # casaco do Dante: nenhum vértice fecha triângulo (some sem mexer na física de tecido)
         for m in o.meshes:
-            m.positions = [(0.0, 116.0, 0.0)] * m.vert_count
+            m.weights = [w | 0x8000 for w in m.weights]
     work = Path(tempfile.mkdtemp())
     try:
         shutil.copytree(base_dir, work / "pac", dirs_exist_ok=True)
@@ -215,7 +215,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     finally:
         shutil.rmtree(work)
     print(f"{out_pac}: {out_pac.stat().st_size} bytes; {len(body.objects)} objetos; corpo={use_body} "
-          f"texturas={use_textures} casaco_colapsado={collapse_coat}")
+          f"texturas={use_textures} casaco_oculto={collapse_coat}")
 
 
 if __name__ == "__main__":
