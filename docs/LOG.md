@@ -20,3 +20,9 @@
 - god_of_war_browser compilado do fonte (beta4 não tem `-iso`). Kratos exportado do `R_HERO0.WAD` para glTF com 111 ossos, 7418 vértices e 251 animações com nome; importado no Blender 5.2 headless (`blender/scripts/inspect_gltf.py`). Ver `docs/formats/gow-wad.md`.
 - REA adiado até o exe final (os endereços dependem do hash).
 - Cutscenes: 30 .webm em `data/dmc3/Video` (12 de missão). O resto da história deve rodar no motor [HIPÓTESE]. Ver `docs/design/cutscenes.md`.
+- `download_depot 631510 631511 7469687047717691926` (LG) baixa a build de **lançamento** (PE timestamp 2018-03-23): `dmc3.exe` 6.356.432 bytes, sha256 `4ae4bb5c…40c0a0`; `dmcLauncher.exe` 1.111.504 bytes. O patch do Crimson não aplica nela (a origem esperada tem 6.567.320 bytes, uma build intermediária).
+- **Achado (evidência):** o `dmc3.exe` final do Crimson = exe de 2018 com `DllCharacteristics` 0x8160 → 0x8120 (bit DYNAMIC_BASE/ASLR desligado), checksum PE inalterado. Tamanho (6.356.432) e adler32 (0x7D3B3019) iguais ao alvo declarado em `__new_diff_dmc3.exe.bin`. Candidato em `work/exe_chain/dmc3_crimson_candidate.exe`.
+- Launcher: o alvo do Crimson (1.115.776 bytes, adler32 BE2F9BE2) é igual ao launcher do DDMK 2.7.3; não deriva do launcher de 2018.
+- Depot de 2018 completo (267 arquivos; vídeos .wmv em vez de .webm). `testzip` do nbz ok; dados iguais aos de 2026, exceto 5 `msg_*.pac`.
+- Pasta do jogo trocada: 2026+Crimson → `work/backup/game_2026/`; build de 2018 → `./Devil May Cry HD Collection/`. Backup do exe/launcher de 2018 em `work/backup/game_2018/`. Exe com ASLR desligado gerado em `work/install/dmc3.exe` (confere com o alvo do Crimson).
+- Pendente: escrever na pasta do jogo (Crimson + exe), bloqueado pela regra de proteção em `.claude/settings.json` → pedir ao LG.

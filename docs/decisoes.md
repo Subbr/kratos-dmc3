@@ -22,3 +22,10 @@
 - **Escolha:** usar a cópia em `./Devil May Cry HD Collection/`.
 - **Por quê:** a pasta da Steam está vazia; uma cópia fora da Steam não recebe updates, e isso trava o hash
   do exe.
+
+## D10 — Build de 2018 + exe com ASLR desligado (2026-10-20)
+- **Escolha:** usar a build de lançamento oficial (depot 631511, manifest 7469687047717691926) e gerar o exe
+  do Crimson desligando só o bit DYNAMIC_BASE, em vez de aplicar patches de terceiros.
+- **Evidência:** o resultado tem o mesmo tamanho e o mesmo adler32 do alvo declarado no patch oficial do Crimson.
+- **Launcher:** não usamos o launcher patcheado. O jogo será aberto pelo `dmc3.exe` direto, com
+  `steam_appid.txt` = 631510 [HIPÓTESE: funciona sem o launcher; testar].
