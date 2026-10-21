@@ -84,7 +84,9 @@ class KratosAnim:
 
     def __init__(self, g: Glb, name: str):
         self.g = g
-        anim = next((a for a in g.j["animations"] if a["name"] in (name, f"hero {name}")), None)
+        # nomes do glb: "hero <nome>", alguns com outro prefixo (ex.: "hero lk berWalkBlend0")
+        anim = next((a for a in g.j["animations"] if a["name"] in (name, f"hero {name}")), None) or \
+            next((a for a in g.j["animations"] if a["name"].split()[-1] == name), None)
         if anim is None:
             raise KeyError(f"animação {name!r} não encontrada")
         self.channels = {}

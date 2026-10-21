@@ -34,3 +34,20 @@ zeros até alinhar o fim em 16 (12181/12181)
   rotação local absoluta do osso.
 - Dante idle: osso 1 (quadril) só TX/TY/TZ; ossos 2–23 só RX/RY/RZ; osso 0 nada.
 - Ordem de Euler: **XYZ, R = Rz·Ry·Rx** [INFERIDO do importador; a prova é o T7].
+
+## Índices conhecidos
+| arquivo | índice | o que é | evidência |
+|---|---|---|---|
+| pl000_00_0 | 0, 1, 3, 11, 58 | paradas (variações) | pose (folha `tools/motion_sheet.py`); 0 confirmado in-game (T7b) |
+| pl000_00_0 | 2, 51 | corrida | `CrimsonGameplay.cpp:4480` (`playerRunning`: motion 2/51/30) |
+| pl000_00_0 | 4 / 5 / 9 | salto vertical / para a frente / para trás (osso 0 TY até ~270) | trilha do osso 0 |
+| pl000_00_0 | 6 | aterrissagem (15 f) | pose [INFERIDO] |
+| pl000_00_0 | 7 / 8 | rolamento esquerda / direita (osso 0 TX +350 / −350) | trilha do osso 0 |
+| pl000_00_0 | 10 | levantar do chão | pose |
+| pl000_00_0 | 16 | no ar, braços abertos (6 f) | pose [INFERIDO] |
+| pl000_00_3 | 0, 1 | guarda com a arma | pose; in-game (T9) |
+| pl000_00_3 | 3, 4, 5 | combo 1 | `CrimsonFX.cpp:467`; in-game (T9) |
+| pl000_00_3 | 6, 7 | combo 2 (golpes 2 e 3) | `CrimsonFX.cpp:468` |
+| pl000_00_3 | 13 | lançador (High Time) | pose [INFERIDO] |
+| pl000_00_3 | 16 | Stinger nível 1 | `CrimsonDetours.cpp:449` |
+| pl000_00_3 | 17, 18, 19 | Drive | `CrimsonGameplay.cpp:5418` |
