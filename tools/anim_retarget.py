@@ -168,7 +168,7 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
 
     out = mot.Motion(bytearray(base.header))
     out.frames = float(frames - 1)  # o cabeçalho guarda o último frame (chaves de 0 a N)
-    out.tracks = [mot.Track.linear(b, ch, v) for (b, ch), v in values.items()]
+    out.tracks = [mot.Track.hermite(b, ch, v) for (b, ch), v in values.items()]
     return out
 
 

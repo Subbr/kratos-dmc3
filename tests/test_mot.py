@@ -58,3 +58,11 @@ def test_linear_track_roundtrip():
     assert [k[0] for k in keys] == [0, 1, 2, 3]
     assert all(abs(k[1] - v) < 1e-3 for k, v in zip(keys, values))
     assert abs(t.sample(1.5) - (-0.375)) < 1e-3
+
+
+def test_hermite_track_roundtrip():
+    values = [0.0, 0.5, -1.25, 3.0, 3.0]
+    t = mot.Track.hermite(2, "rx", values)
+    assert all(abs(k[1] - v) < 1e-3 for k, v in zip(t.decode(), values))
+    assert abs(t.sample(3.0) - 3.0) < 1e-3
+    assert mot.Track(*[getattr(t, f) for f in ("bone", "channel", "comp", "start", "key_count", "params", "body")]).build() == t.build()

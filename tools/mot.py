@@ -63,8 +63,27 @@ class Track:
         return keys[-1][1]
 
     @classmethod
+    def hermite(cls, bone: int, channel: str, values: list[float]) -> "Track":
+        """Track nova HERMITE_I16 (a única que o Dante usa), uma chave por frame; tangentes = diferença
+        central em unidades por frame; bit 15 do tempo ligado em todas as chaves, como no jogo."""
+        n = len(values)
+        tan = [(values[min(i + 1, n - 1)] - values[max(i - 1, 0)]) / max(min(i + 1, n - 1) - max(i - 1, 0), 1)
+               for i in range(n)]
+
+        def quant(xs: list[float]) -> tuple[float, float, list[int]]:
+            lo, rng = min(xs), max(xs) - min(xs)
+            return lo, rng, [round((x - lo) / rng * 65535) if rng else 0 for x in xs]
+
+        vmin, vrange, qv = quant(values)
+        tmin, trange, qt = quant(tan)
+        body = b"".join(struct.pack("<4H", 0x8000 | f, v, t, t) for f, (v, t) in enumerate(zip(qv, qt)))
+        params = struct.pack("<6f", vmin, vrange, tmin, trange, tmin, trange)
+        return cls(bone, channel, HERMITE_I16, 0, n, params, body)
+
+    @classmethod
     def linear(cls, bone: int, channel: str, values: list[float]) -> "Track":
-        """Track nova LINEAR_I16 com uma chave por frame (bit 15 do tempo ligado, como no jogo)."""
+        """Track nova LINEAR_I16 com uma chave por frame. [NÃO USAR NO JOGADOR] o Dante só usa HERMITE_I16 e
+        nas poucas tracks LINEAR_I16 do jogo o bit 15 do tempo fica desligado; o T7 com este tipo falhou."""
         vmin, vmax = min(values), max(values)
         vrange = vmax - vmin
         q = [round((v - vmin) / vrange * 65535) if vrange else 0 for v in values]
