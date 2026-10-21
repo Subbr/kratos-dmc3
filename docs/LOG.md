@@ -33,3 +33,5 @@
 - Crimson tem `pl000.pac` próprio (552.496 B, sha256 `be0b5417…`) ≠ original (1.335.280 B). Backup em `work/backup/crimson_override/`.
 - **T1 aplicado:** `pl015.pac` (Dante DMC1, versão do Crimson) copiado como `pl000.pac` no override. Aguardando teste in-game.
 - **T1 PASSOU (2026-10-20):** com `pl015.pac` copiado como `pl000.pac` em `data/dmc3/GData.afs/`, o Dante aparece com o visual do DMC1 na Missão 2 (Vanilla Mode, Classic, Fixed Camera). Na Missão 1 o Dante fica sem camisa, então ela não serve para testar o modelo. `pl000.pac` do Crimson restaurado depois do teste (sha256 `be0b5417…`).
+- Fase 2: `tools/mod.py` lê e reconstrói do zero 6474/6474 MODs do jogo + 2 do Crimson, byte a byte. Ver `docs/formats/mod.md`.
+- **T2 aplicado:** `pl000.pac` do Crimson com cabeça e cabelo (objetos 10–16) escalados 1,5× a partir de (0, 169, 0), gerado por `mod.py` + `pac.py` (sha256 `fa385ce9…`). Aguardando teste in-game (Missão 2+).
