@@ -28,3 +28,7 @@
 - Pendente: escrever na pasta do jogo (Crimson + exe), bloqueado pela regra de proteção em `.claude/settings.json` → pedir ao LG.
 - Crimson instalado pelo LG na build de 2018 (exe ASLR off conferido, `steam_appid.txt`). Aguardando teste de abertura.
 - Fase 1: `tools/pac.py` + `tests/test_pac.py`. Round-trip byte a byte em 3725/3725 .pac (alinhamento 8 ou 16 por arquivo). Ver `docs/formats/pac.md`.
+- Jogo abre com Crimson (tela de Game Mode). Escolha do LG: **Vanilla Mode**.
+- Permissões (pelo LG, `tools/apply_settings_override.py`): liberada escrita só em `data/dmc3/GData.afs/` e `Crimson/`; resto da pasta do jogo continua bloqueado.
+- Crimson tem `pl000.pac` próprio (552.496 B, sha256 `be0b5417…`) ≠ original (1.335.280 B). Backup em `work/backup/crimson_override/`.
+- **T1 aplicado:** `pl015.pac` (Dante DMC1, versão do Crimson) copiado como `pl000.pac` no override. Aguardando teste in-game.
