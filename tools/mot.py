@@ -137,6 +137,12 @@ class Motion:
         struct.pack_into("<f", self.header, 0x0C, n)
         struct.pack_into("<f", self.header, 0x14, n)
 
+    @property
+    def play_start(self) -> float:
+        """Quadro em que o jogo começa a tocar a motion (0x08, cópia em 0x10). Combo da Rebellion: 3/4 = 23,
+        3/5 = 40, 3/7 = 75 — o que vem antes não aparece (T18, traço da DLL)."""
+        return struct.unpack_from("<f", self.header, 0x08)[0]
+
     @classmethod
     def parse(cls, b: bytes) -> "Motion":
         if b[4:8] != b"MOT\0":

@@ -118,3 +118,28 @@
 - **T17 aplicado:** motions_v5.
 - **T17 (LG, 2026-10-22):** loop e correntes ok; o fio das lâminas está virado para cima; alguns golpes não acertam; o resto ok.
 - Sessão encerrada com estado salvo em CLAUDE.md §12 e `docs/re/jogador.md`. Próximo: girar a lâmina 180° no eixo do comprimento; acerto dos golpes; testes automáticos pelo agente.
+
+## 2026-10-22 — T18 (agente, testes automáticos)
+- Fio das lâminas: `kratos_fit --flip-edge` gira cada lâmina 180° no eixo do comprimento (Z local do `maiblade.glb`;
+  `ROT_Z180`). Kratos v10. Comparação v9 × v10 de frente: `work/shots/t18_fio_v9_v10.png` (v9: gancho largo para
+  cima; v10: para baixo/fora). As motions não mudam com o v10 (offsets das lâminas iguais).
+- Teste de acerto automático: `tools/win/combo_test.sh <nome>` (Missão 3, chama os inimigos, 8 combos) +
+  `tools/win/damage_report.py`. DLL `logDamage`: registra troca de motion e cada queda de `hitPointsHells`.
+  Para o Kratos não morrer: `playerReceivedDmgMult = 0` durante o teste (o `infiniteHP` do Crimson é "Disable All
+  Damage" e zera o dano dos inimigos também). Config original restaurada no fim.
+- Achado 1: só o 3/5 (combo 1, golpe 3) e o 3/7 não acertavam. Dante 3/5: 4 de 4 execuções com dano; Kratos com motions v5/v7: 5 danos em ~52 execuções (somando as variações de DLL).
+  Teste cruzado (Kratos em tudo, 3/5 do Dante): 3/5 acerta 3/3 → a causa é a animação do 3/5.
+- Achado 2: MOT 0x08 = `play_start`, o jogo começa a tocar ali (3/5 = 40, 3/7 = 75). O golpe do Kratos
+  (`timing: natural`, quadros 20–38) nunca aparecia; a mão ficava parada na janela de acerto. Ver docs/formats/mot.md.
+- Achado 3: volume de acerto = 3 esferas (raio 40) presas à matriz `ator + 0x80E40`, não à matriz de desenho da
+  arma. Ver docs/re/jogador.md. Escrever a posição das esferas no gancho não muda o dano (teste do ímã).
+- Correção: `timing: strike` começa em `play_start`, golpe do Kratos no quadro do golpe do Dante, preparação no
+  máximo 2× mais rápida. Combo 3–7 passa para `strike`. motions_v8 (só `pl000_00_3` muda).
+- Resultado (3/5): v8 acerta quando há inimigo a menos de ~60 da esfera (3 de 4 casos; v8_1 sem inimigo perto);
+  3/7 acertou pela 1ª vez. Totais por rodada 13–20, faixa do Dante (16–23).
+- `chainSpheres` (esferas ao longo da corrente): 10/19 contra 5/14 sem, dentro do ruído, e o ímã indica que a escrita
+  não vale → **desligado**, [HIPÓTESE] não confirmada. `chainHitbox` agora orienta o cabo pela corrente (efeito no
+  acerto não provado: as esferas seguem 0x80E40). `leftHitbox` liga a esquerda com margem de 20.
+- Instalado: Kratos v10, motions_v8, Crimson.dll do fork (chainHitbox + leftHitbox).
+- Próximo: alcance da corrente no acerto — repetir o ímã na matriz `ator + 0x80E40` com motions_v8 (mão em
+  movimento); se o dano seguir, esticar as esferas pela corrente escrevendo nessa matriz.

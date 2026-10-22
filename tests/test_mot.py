@@ -66,3 +66,13 @@ def test_hermite_track_roundtrip():
     assert all(abs(k[1] - v) < 1e-3 for k, v in zip(t.decode(), values))
     assert abs(t.sample(3.0) - 3.0) < 1e-3
     assert mot.Track(*[getattr(t, f) for f in ("bone", "channel", "comp", "start", "key_count", "params", "body")]).build() == t.build()
+
+
+def test_play_start_combo_rebellion():
+    """0x08 = quadro em que o jogo começa a tocar a motion (T18): combo da Rebellion no pl000_00_3."""
+    if not NBZ.exists():
+        pytest.skip("dmc3-0.nbz não encontrado")
+    with zipfile.ZipFile(NBZ) as z:
+        p = pac.Pac.parse(z.read("GData.afs/pl000_00_3.pac"))
+    starts = {i: mot.Motion.parse(p.entries[i]).play_start for i in (3, 4, 5, 6, 7)}
+    assert starts == {3: 0.0, 4: 23.0, 5: 40.0, 6: 23.0, 7: 75.0}

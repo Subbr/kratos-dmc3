@@ -19,6 +19,31 @@ Ferramenta: REA 6.7.0 + Ghidra 12.1.4 (`tools/rea_bridge.py` + `tools/rea_q.sh`,
   osso 1 = cabo), que o **acerto** usa; o **desenho** da arma não usa essa matriz (T12/T13: nada mudou na tela).
 - status: confirmado (log `logs/kratos.txt`)
 
+## Volume de acerto dos golpes (T18)
+- endereço: gancho do Crimson `InterceptingCollisions` (`CrimsonDetours.cpp`, chamado de `dmc3.exe+2CCC98` antes de
+  gravar o raio); `KratosMode::OnCollision` registra cada `CollisionDataMetadata`.
+- hash do executável: `e454272e…dd082`
+- evidência (`logs/kratos.txt`, testes t18_dante3/t18_v7d): nos golpes da Rebellion aparecem volumes com
+  `sourceMatrixAddr − ator = 0x80E40` (raio 40) e, no combo 2 golpe 2, 0x80F40 (raio 30). Os demais volumes existem o
+  tempo todo (corpo, outros atores). São 3 esferas por quadro a ~0, ~22 e ~100 ao longo do eixo da "espada" da
+  matriz de origem. `matrix1` (0x30) = cópia da matriz de origem; `hitboxPos` (0x130) = `pos2[0]` = `pos2[2]` =
+  posição atual; `pos2[1]` = posição no quadro anterior.
+- a matriz de origem **não** é a matriz de desenho da arma (`weaponCDraw[0]`, ator + 0x118800…) nem os ossos do corpo;
+  [HIPÓTESE] é a matriz lógica da arma (tabela de encaixe × mão, T13).
+- escrever `hitboxPos`/`pos2` no gancho **não** gerou dano (ímã: esferas a 0–7 do inimigo, 3/5 sem dano), e mover a
+  matriz de origem no OnTick também não, mas esse teste foi com a mão parada (motions_v7) → inconclusivo.
+- o dano exige a mão em movimento dentro da janela do golpe: o 3/5 com a animação do Dante e o resto do Kratos
+  acerta 3/3; com a do Kratos começando no quadro errado, 0 (ver `docs/formats/mot.md`, `play_start`).
+- status: confirmado (offset, campos, esferas); [HIPÓTESE] (origem = matriz lógica; exigência de varredura).
+
+## Vida dos inimigos e rotação do jogador (T18)
+- lista de inimigos: `*(dmc3.exe+0xC90E28)[8]` → `EnemyVectorData` (`Actor.cpp`, `CreateEnemyActor`);
+  `metadata[i].baseAddr` = `EnemyActorData`. Hells (`PRIDE_1`…`HELL_VANGUARD`): vida em `hitPointsHells` (0x2E5C).
+- `PlayerActorData::rotation` (u16): frente = (sin θ, 0, cos θ), θ = rot·2π/65536. Evidência: rot 0 anda em +z;
+  rot 13551 (74,4°) avança (+97, +27) e atan2(97, 27) = 74,4°.
+- OnTick (`TriggerOnTickFuncs`) roda **2 vezes por quadro** de motion [INFERIDO]: o dano do Dante cai em
+  play_start + ticks/2 = quadro do golpe (3/3: 0 + 27/2 ≈ 14 → 15; 3/4: 23 + 24/2 = 35 → 35; 3/5: 40 + 40/2 = 60 → 61).
+
 ## Ordem do quadro (inferida)
 - `TriggerOnTickFuncs` do Crimson (gancho `dmc3.exe+4F23B`, contagem de tempo de jogo) roda depois do desenho:
   escrever a matriz lógica da arma ali muda o acerto do quadro seguinte, mas não o desenho (T12).

@@ -141,13 +141,16 @@ def _fk(mo: mot.Motion, f: float, body: mod.Model, parent: list[int]) -> dict[in
     return P
 
 
-def strike_frame(mo: mot.Motion, body: mod.Model, parent: list[int], frames: int) -> int:
-    """Quadro do golpe: maior velocidade da mão direita entre o 3º quadro e 70% da motion."""
+def strike_frame(mo: mot.Motion, body: mod.Model, parent: list[int], frames: int, first: int = 0) -> int:
+    """Quadro do golpe: maior velocidade da mão direita entre o 3º quadro depois de first e 70% da motion."""
     pos = [_fk(mo, f, body, parent)[HAND] for f in range(frames)]
     speed = [np.linalg.norm(pos[f + 1] - pos[f]) for f in range(frames - 1)]
-    lim = max(int(len(speed) * 0.7), 4)
-    return 3 + int(np.argmax(speed[3:lim]))
+    a = first + 3
+    lim = max(int(len(speed) * 0.7), a + 1)
+    return a + int(np.argmax(speed[a:lim]))
 
+
+MAX_WINDUP_SPEED = 2.0  # timing strike: a preparação do golpe toca no máximo 2× mais rápida que no GoW1
 
 LOOP_BLEND = 20  # quadros finais que convergem para o primeiro (animação em loop)
 
@@ -173,7 +176,8 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     """timing: "stretch" = a animação inteira ocupa os frames da motion base; "natural" = 60 fps do
     GoW1 (o glb tem tempo em segundos) e o último quadro fica parado até o fim da motion base;
     "strike" = 60 fps, mas o quadro do golpe (maior velocidade da mão) cai no mesmo quadro do golpe do
-    Dante (antes dele o tempo é esticado/encolhido; depois segue a 60 fps).
+    Dante (antes dele o tempo é esticado/encolhido; depois segue a 60 fps). O começo da animação vai no
+    quadro em que o jogo começa a tocar a motion (play_start; antes dele, a primeira pose).
     Tracks do osso 0 (deslocamento do personagem no golpe) vêm da motion base sem mudança."""
     dj, parent = kratos_fit.dante_joints(body)
     T, _ = kratos_fit.fit_transforms(g, cfg, dj)
@@ -192,8 +196,10 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
     if timing == "strike":
         nat = max(int(anim.duration * 60) + 1, 2)
         sk = strike_frame(retarget(g, anim_name, body, cfg, nat, base, "natural"), body, parent, nat) / 60.0
-        sd = strike_frame(base, body, parent, frames)
-        when = lambda f: min(f * sk / sd if f <= sd else sk + (f - sd) / 60.0, anim.duration) if sd else min(f / 60.0, anim.duration)
+        st = int(base.play_start)
+        sd = strike_frame(base, body, parent, frames, st)
+        k0 = max(sk - MAX_WINDUP_SPEED * (sd - st) / 60.0, 0.0)  # preparação longa demais: começa mais tarde
+        when = lambda f: min(k0 + max(f - st, 0) * (sk - k0) / (sd - st) if f <= sd else sk + (f - sd) / 60.0, anim.duration)
     elif timing == "natural":
         when = lambda f: min(f / 60.0, anim.duration)
     else:

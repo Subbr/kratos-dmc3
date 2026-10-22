@@ -25,6 +25,8 @@ from gltf import Glb  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 ROT_Y180 = np.diag([-1.0, 1.0, -1.0])
+# lâmina do GoW1: comprimento no Z local, fio no Y; 180° no Z vira o fio sem mover o cabo (T17: fio para cima)
+ROT_Z180 = np.diag([-1.0, -1.0, 1.0])
 
 
 def dante_joints(model: mod.Model) -> tuple[np.ndarray, list[int]]:
@@ -145,14 +147,15 @@ def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> tuple[dict[int, dict], li
 
 
 def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int], weapon: Glb,
-                    joint_name: str, tex_idx: int, bone_override: int | None = None) -> np.ndarray:
+                    joint_name: str, tex_idx: int, bone_override: int | None = None,
+                    flip_edge: bool = False) -> np.ndarray:
     """Prende uma arma (glb estático) ao osso de arma do Kratos (ex.: lWeapIH): pose do osso no GoW1 →
     mesmo ajuste do osso → peso total no osso do Dante correspondente."""
     joints = g.j["skins"][0]["joints"]
     k = next(i for i, n in enumerate(joints) if g.name(n) == joint_name)
     w = g.world(joints[k])
     t = T[k]
-    lin = t[:3, :3] @ ROT_Y180 @ w[:3, :3]
+    lin = t[:3, :3] @ ROT_Y180 @ w[:3, :3] @ (ROT_Z180 if flip_edge else np.eye(3))
     off = t[:3, :3] @ (ROT_Y180 @ w[:3, 3]) + t[:3, 3]
     bone = bytes([0, 4 * (target[k] if bone_override is None else bone_override), 0, 0])
     for nd in weapon.j["nodes"]:
@@ -319,7 +322,7 @@ def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = 
 def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
          left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False,
-         blade_bones: bool = False) -> None:
+         blade_bones: bool = False, flip_edge: bool = False) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     if blade_bones:
         cfg = blade_cfg(cfg)
@@ -333,10 +336,10 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     if left_weapon:  # lâmina da mão esquerda: vai no corpo, presa ao lWeapIH, com textura no slot seguinte
         weapon = Glb(left_weapon)
         grips["lWeapIH"] = add_held_weapon(groups, g, T, target, weapon, "lWeapIH", len(g.j["images"]),
-                                           BLADE_BONES["lWeapIH"][0] if blade_bones else None)
+                                           BLADE_BONES["lWeapIH"][0] if blade_bones else None, flip_edge)
         if both_hands:  # GoW1: as lâminas nunca vão para as costas; a da direita também fica no corpo
             grips["rWeapIH"] = add_held_weapon(groups, g, T, target, weapon, "rWeapIH", len(g.j["images"]),
-                                               BLADE_BONES["rWeapIH"][0] if blade_bones else None)
+                                               BLADE_BONES["rWeapIH"][0] if blade_bones else None, flip_edge)
         extra.append(weapon)
     template = body.objects[0]
     if blade_bones and left_weapon:
@@ -386,6 +389,8 @@ if __name__ == "__main__":
     ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
     ap.add_argument("--both-hands", action="store_true", help="com --left-weapon: a mesma arma também no rWeapIH")
     ap.add_argument("--blade-bones", action="store_true", help="lâminas nos ossos 23 (dir.) e 4 (esq.), reaproveitados")
+    ap.add_argument("--flip-edge", action="store_true", help="gira as lâminas 180° no eixo do comprimento")
     ap.add_argument("--reserve", type=int, help="objetos vazios no início (padrão: quantos o Dante tem)")
     a = ap.parse_args()
-    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones)
+    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones,
+         a.flip_edge)

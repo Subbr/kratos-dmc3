@@ -12,7 +12,8 @@ Base de campos: DMC3-Blender-Import-Addon (MIT), `DMC3/motion.py`; corrigido/est
 ## Layout
 ```
 0x00 u32 header_size (0x50 no Dante)    0x04 "MOT\0"
-0x0C f32 último frame (= 0x14)           0x18 u16 ?  0x1A u16 ?
+0x08 f32 play_start (0x10: cópia, quase sempre igual)   0x0C f32 último frame (= 0x14)
+0x18 u16 ?  0x1A u16 ?
 0x1C u16 número de ossos (24)            0x1E u16[ossos] máscara de canais por osso
      bits: 0x100 TX 0x080 TY 0x040 TZ 0x020 RX 0x010 RY 0x008 RZ 0x004 SX 0x002 SY 0x001 SZ
 header_size: u32 número de tracks (= total de bits das máscaras, 12181/12181)
@@ -28,6 +29,12 @@ zeros até alinhar o fim em 16 (12181/12181)
 | 3 hermite i16 | f32 min, range ×3 (valor, entrada, saída) | u16 tempo, valor, entrada, saída | 245971 |
 | 7 ? | ? | ~4 bytes (preservado cru) | 12 (só `m07_b00.pac`) |
 
+- **play_start (0x08)**: quadro em que o jogo começa a tocar a motion; o que vem antes não aparece. 116 das 433
+  motions do jogador têm play_start > 0. Combo da Rebellion: 3/3 = 0, 3/4 = 23, 3/5 = 40, 3/6 = 23, 3/7 = 75;
+  lançador 3/13 = 21, Stinger 3/16 = 20. Evidência (T18): traço da DLL no 3/5 do Kratos (lâmina esquerda já fora no
+  tick 0, fim da janela da lâmina direita no tick 80 = quadro 40 + 80/2) e o dano do Dante caindo em
+  play_start + ticks/2 = quadro do golpe. `mot.Motion.play_start`; `anim_retarget --timing strike` começa a
+  animação do Kratos nele.
 - Valor i16: `v × range / 65535 + min`. Tempo: bits 0–14 = frame (60 fps), bit 15 ligado nas chaves vistas.
 - Rotação em **radianos**, local ao pai. Translação em unidades do modelo (quadril do Dante ≈ 113).
 - Pose de repouso do esqueleto do Dante: só offsets, **sem rotação** (pose T). Logo a rotação da motion é a
