@@ -171,3 +171,15 @@
 - Teste (`combo_test.sh t20_v9air` com 8× "pulo + ataque"): 3/10 tocou 7×, **13 danos**, alcance mediano 160;
   capturas sem pose quebrada (`work/shots/t20_air_zoom.png`).
 - Aerial Rave (combo no ar) não saiu pelas teclas automáticas (pulo curto/tempo); fica para depois.
+
+## 2026-10-22 — T21 (agente): rolamento no estilo Trickster
+- O save está no estilo **Trickster**: L (botão B) toca a motion **23/0** (grupo 23 = TRICKSTER, `Vars.hpp`), o dash.
+  Pelo §7.1 o Trickster é o rolamento do GoW1.
+- `pl000_00_23` 0–3 (dash frente/trás/esquerda/direita, osso 0 com 400 de deslocamento) = `evadeFront/Back/Left/Right`
+  (`timing: natural`; a 23/0 toca inteira: 117 ticks = 58 quadros). motions_v10 (só `pl000_00_23` muda).
+- Captura a cada 40 ms (`work/shots/t21_d_zoom.png`): o Kratos rola para a frente (encolhido, pernas para cima,
+  levanta) e volta à guarda; as duas camadas de motion (`motionData[0]` e `[1]`) tocam a 23/0.
+- **Crash** (2×, `Crimson.dll+0x3084b1`, dumps em `%LOCALAPPDATA%\CrashDumps`): leitura de inimigo já liberado na
+  varredura do `logDamage` quando a missão reinicia. Só acontecia com o log de teste ligado. Correção: `ReadEnemy` com
+  SEH (`__try/__except`) em todas as varreduras; removido o diagnóstico de contagem do T18. Sem crash depois.
+- Log de troca de motion agora traz a duração da anterior (`after`, ticks) e a camada 1.

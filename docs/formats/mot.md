@@ -57,5 +57,6 @@ zeros até alinhar o fim em 16 (12181/12181)
 | pl000_00_3 | 6, 7 | combo 2 (golpes 2 e 3) | `CrimsonFX.cpp:468` |
 | pl000_00_3 | 13 | lançador (High Time) | pose [INFERIDO] |
 | pl000_00_3 | 10 | golpe aéreo para baixo (pulo + ataque), termina em pé | log `play motion` + folha (T20) |
+| pl000_00_23 | 0, 1, 2, 3 | Trickster dash frente / trás / +x (esquerda) / −x (direita), 400 no osso 0 | log `play motion` (L) + trilha (T21) |
 | pl000_00_3 | 16 | Stinger nível 1 | `CrimsonDetours.cpp:449` |
 | pl000_00_3 | 17, 18, 19 | Drive | `CrimsonGameplay.cpp:5418` |

@@ -25,3 +25,8 @@ pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   13: {anim: blockLauncher, timing: strike}  # High Time (lançador): pose e teste T10
   10: {anim: airImpale+airImpaleLand, timing: strike}  # golpe aéreo para baixo até o chão (pulo + ataque; T20)
 # timing strike: o quadro de maior velocidade da mão do Kratos cai no mesmo quadro do golpe do Dante
+pl000_00_23:  # TRICKSTER (estilo do save; L = ação de estilo): dash vira o rolamento do GoW1 (§7.1, T21)
+  0:  {anim: evadeFront, timing: natural}    # dash para a frente (osso 0 TZ +400)
+  1:  {anim: evadeBack, timing: natural}     # para trás (TZ -400)
+  2:  {anim: evadeLeft, timing: natural}     # esquerda (TX +400, mesmo sentido do 0/7)
+  3:  {anim: evadeRight, timing: natural}    # direita (TX -400)
