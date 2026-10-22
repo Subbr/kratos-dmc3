@@ -107,3 +107,9 @@
 - `kratos_fit.py`: corrente = tubo de 4 lados da mão até o encaixe, peso (1−t) na mão e t no osso da lâmina (estica junto). Kratos v8.
 - DLL `chainHitbox`: soma à matriz lógica da arma do slot o deslocamento do osso 24 em relação ao repouso (offset · mão) → o acerto acompanha a lâmina direita.
 - **T15 aplicado:** v8 + motions_v3 (37 arquivos) + DLL com chainHitbox + arma do slot escondida.
+- **T15 FALHOU (2026-10-21):** crash ao carregar o save. Dump: escrita em 0xFA a partir de `dmc3.exe+0x30F902`. REA (Ghidra): `FUN_14030f850(esqueleto, modelo, nós)` monta um nó por osso até `modelo+0xEA` (número de ossos do MOD); a lista de nós vem de `FUN_1401ef040` e fica no ator em +0x1880/+0x1940/+0x1A00/+0x1AC0, espaçadas 0xC0 = **24 ponteiros por modelo**. Com 26 ossos os ossos 24/25 invadem a lista seguinte (no T14 funcionou por acaso, corrompendo os nós do modelo de DT). **Limite: 24 ossos no modelo do jogador.**
+- Jogo restaurado ao estado seguro: Kratos v5 (24 ossos, lâminas no corpo), motions_v2 (00_0, 00_3), demais motions do Crimson, KratosMode desligado.
+- Ossos reaproveitados (limite de 24): **23** (ponta da cabeça, 0 vértices) = lâmina direita, filho de 9; **4** (pescoço) = lâmina esquerda, filho de 13; cabeça (5) filha do peito (3) com offset = offset4 + offset5; pesos do pescoço → peito. Ordem do esqueleto refeita (pai antes do filho). `kratos_fit.blade_cfg` / `repurpose_blade_bones`. Kratos v9.
+- Motions do Dante no esqueleto novo: R5' = R4·R5 e T5' = T4 + R4·T5 por quadro (`blade_chain.fold_neck_into_head`); conferido por FK em 5 motions: diferença máxima 0,0001 nos ossos (exceto 4/23). `build_motions.py --model` gera as 37 coleções (motions_v4).
+- DLL: `chainHitbox` no osso 23.
+- **T16 aplicado:** Kratos v9 + motions_v4 + DLL (chainHitbox).

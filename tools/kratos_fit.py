@@ -168,7 +168,43 @@ def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int]
     return off  # posição do encaixe (osso de arma do Kratos) no espaço do Dante
 
 
-BLADE_BONES = {"rWeapIH": (24, 9), "lWeapIH": (25, 13)}  # osso novo -> pai (mão do Dante)
+# O ator do jogador só tem nós para 24 ossos por modelo (FUN_1401ef040 / FUN_14030f850, T15): as lâminas
+# reaproveitam ossos do Dante. 23 (ponta da cabeça, sem vértices) = lâmina direita, filho da mão 9;
+# 4 (pescoço) = lâmina esquerda, filho da mão 13; a cabeça (5) passa a ser filha do peito (3).
+BLADE_BONES = {"rWeapIH": (23, 9), "lWeapIH": (4, 13)}  # osso reaproveitado -> pai (mão do Dante)
+NECK, HEAD, CHEST = 4, 5, 3
+
+
+def blade_cfg(cfg: dict) -> dict:
+    """Mapeamento Kratos -> Dante sem o pescoço: vertebrae4 aponta para a cabeça; o pescoço herda (peito)."""
+    out = {**cfg, "bones": {k: list(v) for k, v in cfg["bones"].items() if k != "neck"}}
+    out["bones"]["vertebrae4"] = [CHEST, "head", HEAD]
+    return out
+
+
+def repurpose_blade_bones(model: mod.Model, grips: dict[str, np.ndarray], dj: np.ndarray) -> None:
+    """Reaproveita os ossos 23 e 4 para as lâminas (ver BLADE_BONES) e refaz a hierarquia.
+    O 3º array do esqueleto marca a parte superior do corpo (1 no tronco e braços): os ossos mantêm o seu."""
+    s = model.skeleton
+    n = model.bone_count
+    parent = {s.order[i]: s.parents[i] for i in range(n)}
+    upper = {s.order[i]: s.children[i] for i in range(n)}
+    offs = [np.array(struct.unpack_from("<3f", t)) for t in s.transforms]
+    offs[HEAD] = offs[NECK] + offs[HEAD]  # repouso sem rotação: offsets somam
+    parent[HEAD] = CHEST
+    for name, (bone, hand) in BLADE_BONES.items():
+        parent[bone] = hand
+        offs[bone] = grips[name] - dj[hand]
+    order, stack = [], [b for b in range(n) if parent[b] == 255]
+    children = {b: [c for c in range(n) if parent[c] == b] for b in range(n)}
+    while stack:  # pai sempre antes dos filhos, filhos em ordem crescente
+        b = stack.pop(0)
+        order.append(b)
+        stack = children[b] + stack
+    s.order = bytes(order)
+    s.parents = bytes(parent[b] for b in order)
+    s.children = bytes(upper[b] for b in order)
+    s.transforms = [struct.pack("<4f", *o, float(np.linalg.norm(o))) + t[16:] for o, t in zip(offs, s.transforms)]
 
 
 def add_chains(groups: dict, grips: dict[str, np.ndarray], dj: np.ndarray, weapon: Glb, tex_idx: int,
@@ -285,6 +321,8 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False,
          blade_bones: bool = False) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
+    if blade_bones:
+        cfg = blade_cfg(cfg)
     g = Glb(glb)
     body = mod.Model.parse((base_dir / "001.MOD").read_bytes())
     dj, _ = dante_joints(body)
@@ -309,7 +347,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     body.objects = [empty_object(template, dj[1])] * reserve + body.objects
     body.gaps = []
     if blade_bones:
-        add_blade_bones(body, {k: grips[k] for k in ("rWeapIH", "lWeapIH") if k in grips}, dj)
+        repurpose_blade_bones(body, grips, dj)
     body.tail = body.runtime_tail()
     body.auto_index_ptr = True
     coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
@@ -347,7 +385,7 @@ if __name__ == "__main__":
     ap.add_argument("--keep-coat", action="store_true")
     ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
     ap.add_argument("--both-hands", action="store_true", help="com --left-weapon: a mesma arma também no rWeapIH")
-    ap.add_argument("--blade-bones", action="store_true", help="lâminas em ossos novos (24 dir., 25 esq.)")
+    ap.add_argument("--blade-bones", action="store_true", help="lâminas nos ossos 23 (dir.) e 4 (esq.), reaproveitados")
     ap.add_argument("--reserve", type=int, help="objetos vazios no início (padrão: quantos o Dante tem)")
     a = ap.parse_args()
     main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones)

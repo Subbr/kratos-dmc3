@@ -48,7 +48,7 @@ def main() -> None:
     a = ap.parse_args()
     dante = mod.Model.parse((ROOT / "extracted/dmc3/unpacked/pl000/001.MOD").read_bytes())
     body = mod.Model.parse(pac.Pac.parse(a.model.read_bytes()).entries[1])
-    skel = body if body.bone_count > dante.bone_count else dante  # modelo com ossos de lâmina: usa o dele
+    skel = body  # esqueleto do próprio modelo (o do Kratos pode ter ossos reaproveitados para as lâminas)
     dj, parent = kratos_fit.dante_joints(skel)
     s = skel.skeleton
     order = [s.order[i] for i in range(len(parent))]
@@ -84,7 +84,7 @@ def main() -> None:
                         b = bi[1 + k] // 4
                         acc += ww / 31 * (W[b] @ (v - dj[b]) + P[b])
                 acc[[0, 2]] -= root[[0, 2]]  # tira o deslocamento do golpe para caber no quadro
-                d.point((ox + acc[0] * 0.5, oy - acc[1] * 0.5), fill=(200, 0, 0) if bi[1] // 4 in (9, 24, 25) else (0, 0, 0))
+                d.point((ox + acc[0] * 0.5, oy - acc[1] * 0.5), fill=(200, 0, 0) if bi[1] // 4 in (9, 23, 4) else (0, 0, 0))
         d.text((2, r * ch + 2), label, fill="blue")
     img.save(a.out)
     print(a.out)
