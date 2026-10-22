@@ -376,13 +376,13 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T23).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T24).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
   correntes no corpo nos ossos 23/4, fio girado com `--flip-edge`), `plwp_sword.pac` = `kratos_v5` (Rebellion
   escondida), `plwp_sword2.pac` escondido (versão pós-Missão 7), `pl005.pac` = `work/install/kratos_dt_v1` (DT da
-  Rebellion = Kratos dourado, asas escondidas), `plwp_gun.pac` escondido, 37 coleções de motion = `work/install/motions_v11`. Config
+  Rebellion = Kratos dourado, asas escondidas), `plwp_gun.pac` escondido, 37 coleções de motion = `work/install/motions_v12`. Config
   `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida).
   Crimson: skipIntro e skipCutscenes ligados. Backups de tudo em `work/backup/crimson_override/`.
 - **Pipeline (regerar tudo):**
@@ -409,7 +409,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   1. LG jogar a Missão 3 e avaliar o alcance/dano com `reachRadius` 4 (ajustável no KratosConfig sem recompilar).
   2. Pedir ao LG para confirmar o fio das lâminas (`work/shots/t18_fio_v9_v10.png`) e o visual dos combos com
      `strike` (a preparação do 3/5 e do 3/7 agora aparece).
-  3. Trocar mais golpes (Aerial Rave, Swordmaster) sempre com `strike` (golpe aéreo 3/10 feito, T20; rolamento no Trickster 23/0–3, T21; Aerial Rave 13/7–10 e Prop 13/19 no Swordmaster, T23 — testar estilos com `testStyle` no KratosConfig); Devil Trigger feito no slot Rebellion (T22; DT das outras armas `pl006`–`pl009`/`pl017` ainda do Dante); Artemis no slot
+  3. Trocar mais golpes (Aerial Rave, Swordmaster) sempre com `strike` (golpe aéreo 3/10 feito, T20; rolamento no Trickster 23/0–3, T21; Aerial Rave 13/7–10 e Prop 13/19 no Swordmaster, T23; bloqueio no Royalguard 24/0–2, T24 — 24/30 e 24/31 tocam as entradas 0 e 1 — testar estilos com `testStyle` no KratosConfig); Devil Trigger feito no slot Rebellion (T22; DT das outras armas `pl006`–`pl009`/`pl017` ainda do Dante); Artemis no slot
      Agni & Rudra (`work/install/artemis_v1/plwp_2sword.pac`).
 - **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/` (captura só
   a janela do jogo); pedir teste ao LG só quando a automação não alcançar. Juntar mudanças por teste.

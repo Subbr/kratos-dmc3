@@ -60,5 +60,6 @@ zeros até alinhar o fim em 16 (12181/12181)
 | pl000_00_23 | 0, 1, 2, 3 | Trickster dash frente / trás / +x (esquerda) / −x (direita), 400 no osso 0 | log `play motion` (L) + trilha (T21) |
 | pl000_00_13 | 7, 8, 9, 10 | Swordmaster Rebellion: Aerial Rave 1–4 (L no ar) | log `play motion` com `testStyle 0` (T23); 10 pelo enum `REBELLION_AERIAL_RAVE_PART_4` |
 | pl000_00_13 | 19 | Swordmaster Rebellion: Prop (L no chão) | log `play motion` (T23) |
+| pl000_00_24 | 0, 1, 2 (30, 31) | Royalguard: entrar/segurar a guarda, soltar, bloqueio atingido; o jogo toca 24/30 → entrada 0 e 24/31 → entrada 1 | log `play motion` + ponteiros por osso no ator (+0x20128) (T24) |
 | pl000_00_3 | 16 | Stinger nível 1 | `CrimsonDetours.cpp:449` |
 | pl000_00_3 | 17, 18, 19 | Drive | `CrimsonGameplay.cpp:5418` |

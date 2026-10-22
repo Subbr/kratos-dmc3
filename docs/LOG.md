@@ -217,3 +217,19 @@
   **Kratos 28 danos, mediano 154**. 13/7, 13/8 e 13/19 acertam; 13/9 e 13/10 não saíram com o tempo das teclas
   dessa rodada (13/9 saiu 1× na anterior). Capturas: `t23_air_sheet.png`, `t23_prop_sheet.png`.
 - Config final: `testStyle: -1` (o jogo usa o estilo do save), `logDamage` desligado, dano recebido restaurado.
+
+## 2026-10-22 — T24 (agente): Royalguard = bloqueio do GoW1
+- `testStyle 3` (Royalguard). L segurado/tocado toca **24/0**, **24/2** (bloqueio atingido), **24/30** e **24/31**.
+  `pl000_00_24` só tem 21 entradas (original e Crimson), então 30/31 não são entradas do PAC.
+- Diagnóstico na DLL (`ScanMotionPointers`, só com `logDamage`): procura no ator (0–0x90000, fora da tabela
+  `motionArchives` em +38A0) ponteiros que caem dentro de um PAC de motion. Os ponteiros por osso ficam a partir de
+  **ator + 0x20128** e apontam para a entrada tocada. Resultado: **24/30 toca a entrada 0** e **24/31 a entrada 1**
+  (24/0 → 0, 24/2 → 2). A duração em `ModelData.Motion.duration` (0x554) fica 0 com o Actor do Crimson desligado.
+- Folhas: Dante `work/shots/t24_dante_rg_a.png`/`_b.png` (0 = entrar e segurar a guarda, 1 = soltar, 2 = atingido);
+  GoW1 `t24_gow_block.png`, `t24_gow_ber.png` (`berBlockExit` termina na postura do Berserk, descartada).
+- `mapping/motions.yaml` → `pl000_00_24`: 0 `block`, 1 `block+idleCombat`, 2 `blockReaction` (`stretch`). motions_v12
+  (só `pl000_00_24` muda). Folha: `t24_kratos_rg.png`.
+- No jogo: L segurado → Kratos de guarda alta com as lâminas à frente; soltar → volta à postura de combate
+  (`work/shots/t24_block_zoom.png`). Log: 24/0 ×6, 24/2 ×1, 24/30 ×4, 24/31 ×6. Missão e ataques normais com a DLL final.
+- Pendente: Release do Royalguard (contra-ataque) não testado; parry do GoW1 (`parry01/02`) é candidato.
+- Config final: `testStyle -1`, `logDamage` desligado, dano recebido restaurado.
