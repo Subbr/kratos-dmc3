@@ -376,13 +376,13 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T18).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T19).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
   correntes no corpo nos ossos 23/4, fio girado com `--flip-edge`), `plwp_sword.pac` = `kratos_v5` (Rebellion
   escondida), `plwp_gun.pac` escondido, 37 coleções de motion = `work/install/motions_v8`. Config
-  `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox (chainSpheres desligado).
+  `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida).
   Crimson: skipIntro e skipCutscenes ligados. Backups de tudo em `work/backup/crimson_override/`.
 - **Pipeline (regerar tudo):**
   1. `python -I tools/kratos_fit.py extracted/gow1/hero0/hero_obj.glb extracted/dmc3/unpacked/crimson_pl000 work/install/kratos_vN/pl000.pac --left-weapon extracted/gow1/weapons/maiblade.glb --both-hands --blade-bones --flip-edge`
@@ -400,10 +400,11 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   do golpe (copiar do Dante); toda motion precisa das trilhas das lâminas (ossos 23/4), senão o osso fica parado onde
   a anterior deixou; **o jogo começa a tocar a motion no `play_start` (MOT 0x08)** — golpe trocado usa
   `timing: strike` (golpe do Kratos no quadro do golpe do Dante), senão o golpe some e não acerta; o acerto são 3
-  esferas presas à matriz `ator + 0x80E40` e só dá dano com a mão varrendo na janela do golpe.
+  esferas presas à matriz `ator + 0x80E40` e só dá dano com a mão varrendo na janela do golpe; golpe rápido usa
+  cápsula (modo 4) fora do gancho do Crimson, então mexer na posição não adianta — o alcance vem do **raio**
+  devolvido por `InterceptingCollisions` (`reachRadius`).
 - **Pendências imediatas (próxima sessão):**
-  1. **Alcance da corrente no acerto:** as esferas ficam a ~100 da mão; a corrente vai a 200. Repetir o "ímã" na
-     matriz `ator + 0x80E40` (OnTick) com motions_v8; se o dano seguir, esticar as esferas pela corrente nela.
+  1. LG jogar a Missão 3 e avaliar o alcance/dano com `reachRadius` 4 (ajustável no KratosConfig sem recompilar).
   2. Pedir ao LG para confirmar o fio das lâminas (`work/shots/t18_fio_v9_v10.png`) e o visual dos combos com
      `strike` (a preparação do 3/5 e do 3/7 agora aparece).
   3. Trocar mais golpes (no ar, Swordmaster) sempre com `strike`; Devil Trigger com o Kratos; Artemis no slot

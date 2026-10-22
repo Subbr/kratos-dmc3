@@ -36,6 +36,14 @@ Ferramenta: REA 6.7.0 + Ghidra 12.1.4 (`tools/rea_bridge.py` + `tools/rea_q.sh`,
   acerta 3/3; com a do Kratos começando no quadro errado, 0 (ver `docs/formats/mot.md`, `play_start`).
 - status: confirmado (offset, campos, esferas); [HIPÓTESE] (origem = matriz lógica; exigência de varredura).
 
+## Atualização da esfera de acerto (T19)
+- endereço: função em `dmc3.exe+2CCB60` (rcx = `CollisionDataMetadata`); hash `e454272e…dd082`
+- evidência (desmonte): `call 0x140030a70` = ponto `files+0x10` transformado por `matrix1` (+0x30) → +0xE0; se o
+  deslocamento desde o quadro anterior (+0xF0) for > 2 × raio (`files+0x20`), modo 4 (cápsula, raio em +0x150, sem
+  passar por 2CCC98); senão modo 2 (esfera em +0x130, raio gravado em +0x140 em `2CCC98`).
+- o raio devolvido por `InterceptingCollisions` vale no jogo: `reachRadius` 4× → alcance mediano 112 → ~190 (T19).
+- status: confirmado (desmonte + teste); a origem de `matrix1` continua [HIPÓTESE].
+
 ## Vida dos inimigos e rotação do jogador (T18)
 - lista de inimigos: `*(dmc3.exe+0xC90E28)[8]` → `EnemyVectorData` (`Actor.cpp`, `CreateEnemyActor`);
   `metadata[i].baseAddr` = `EnemyActorData`. Hells (`PRIDE_1`…`HELL_VANGUARD`): vida em `hitPointsHells` (0x2E5C).

@@ -143,3 +143,22 @@
 - Instalado: Kratos v10, motions_v8, Crimson.dll do fork (chainHitbox + leftHitbox).
 - Próximo: alcance da corrente no acerto — repetir o ímã na matriz `ator + 0x80E40` com motions_v8 (mão em
   movimento); se o dano seguir, esticar as esferas pela corrente escrevendo nessa matriz.
+
+## 2026-10-22 — T19 (agente): alcance da corrente no acerto
+- Desmonte de `dmc3.exe+2CCB60`: a esfera = `matrix1 × files+0x10` (raio = `files+0x20 × [+0x1C]`). Modo 2 = esfera
+  parada, grava o raio em `2CCC98` (onde fica o gancho do Crimson); modo 4 = cápsula do quadro anterior ao atual
+  quando a esfera anda > 2× o raio, caminho **sem** gancho. Explica o T18: escrever a posição no gancho não muda
+  golpes rápidos.
+- Escrever a matriz de origem (`ator + 0x80E40`) no OnTick: ímã 19 danos, alcance pela corrente 14/28 com alcance
+  igual ao da base (mediana 112–114) → não chega ao teste; código removido.
+- **Raio devolvido pelo gancho** (mesmo caminho do High Time do Yamato no Crimson), flag `reachRadius`, só nas
+  esferas de ataque e com a corrente estendida. Dose-resposta (2 rodadas cada, `combo_test.sh`, dano com distância
+  jogador–inimigo):
+  | raio | danos | alcance mediano | acertos > 200 |
+  |---|---|---|---|
+  | 1× | 15–17 | 112 | 1 |
+  | 2,5× | 21, 21 | 113–140 | 1, 4 |
+  | 4× | 28, 29 | 174–201 | 11, 15 |
+- Instalado `reachRadius: 4` (p90 ~300 ≈ corrente 200 + braço). Verificação com a DLL limpa: 25 danos, mediana 190,
+  3/7 com 4 danos. `chainSpheres` removido.
+- Próximo: LG jogar e dizer se o alcance/dano ficou bom (pode ficar forte demais: ajustar `reachRadius`).
