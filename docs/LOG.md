@@ -201,3 +201,19 @@
   U de novo volta ao Kratos normal (`t22_dt_off_sheet.png`). Sem crash.
 - Obs.: as teclas automáticas não chegam ao jogo quando o Input Director está com o teclado em outro PC.
 - Config final: `testDevilTrigger: false`, `playerReceivedDmgMult` restaurado. `pl005`/`plwp_sword2` ficam instalados.
+
+## 2026-10-22 — T23 (agente): Swordmaster — Aerial Rave e Prop
+- No DMC3, pulo + ataque é o Helm Breaker (3/10, T20); o **Aerial Rave é Swordmaster** (DDMK `Actor.ixx`: estilo
+  SWORDMASTER + no ar → `REBELLION_AERIAL_RAVE_PART_1`). O save é Trickster e o módulo Actor do Crimson está desligado.
+- DLL: flag de teste `testStyle` (STYLE::*, 0 = Swordmaster; −1 = o do save) grava o estilo em `sessionData.style`
+  (0xDC) e no ator (`style`, 0x6338). Funciona trocando ao vivo: L passa a tocar o grupo 13 (`pl000_00_13`,
+  SWORDMASTER_REBELLION).
+- Motions identificadas pelo log (`combo_test.sh t23_sm`): L no chão = **13/19** (Prop); pulo + L L L = **13/7 → 13/8 →
+  13/9** (Aerial Rave 1–3; 13/10 = parte 4 pelo enum `REBELLION_AERIAL_RAVE_PART_4` e pela folha). Folha do Dante:
+  `work/shots/t23_dante_sm.png`.
+- `mapping/motions.yaml` → `pl000_00_13`: 7 `airH1`, 8 `airH2`, 9 `airH3`, 10 `airV1`, 19 `comboLR2` (todas `strike`).
+  motions_v11 (só `pl000_00_13` muda). Folha: `work/shots/t23_kratos_sm.png` (correntes esticando).
+- Teste igual antes/depois (3× L no chão, 3× pulo + 4 L): Dante retargetado 28 danos, alcance mediano 109;
+  **Kratos 28 danos, mediano 154**. 13/7, 13/8 e 13/19 acertam; 13/9 e 13/10 não saíram com o tempo das teclas
+  dessa rodada (13/9 saiu 1× na anterior). Capturas: `t23_air_sheet.png`, `t23_prop_sheet.png`.
+- Config final: `testStyle: -1` (o jogo usa o estilo do save), `logDamage` desligado, dano recebido restaurado.

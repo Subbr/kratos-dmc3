@@ -24,6 +24,12 @@ pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   16: {anim: dash, timing: strike}           # Stinger nível 1 (CrimsonDetours.cpp:449)
   13: {anim: blockLauncher, timing: strike}  # High Time (lançador): pose e teste T10
   10: {anim: airImpale+airImpaleLand, timing: strike}  # golpe aéreo para baixo até o chão (pulo + ataque; T20)
+pl000_00_13:  # SWORDMASTER_REBELLION (L = ação de estilo; T23 com testStyle 0)
+  7:  {anim: airH1, timing: strike}          # Aerial Rave 1 (L no ar)
+  8:  {anim: airH2, timing: strike}          # Aerial Rave 2
+  9:  {anim: airH3, timing: strike}          # Aerial Rave 3
+  10: {anim: airV1, timing: strike}          # Aerial Rave 4 (fecha para baixo)
+  19: {anim: comboLR2, timing: strike}       # Prop (L no chão): lâminas abertas girando
 # timing strike: o quadro de maior velocidade da mão do Kratos cai no mesmo quadro do golpe do Dante
 pl000_00_23:  # TRICKSTER (estilo do save; L = ação de estilo): dash vira o rolamento do GoW1 (§7.1, T21)
   0:  {anim: evadeFront, timing: natural}    # dash para a frente (osso 0 TZ +400)
