@@ -116,3 +116,5 @@
 - **T16 (LG):** carregou sem crash, nada solto, correntes saem e voltam (sutil), inimigos levam dano. Problemas: lâminas "invertidas" (aguardando print), parada pisca ao reiniciar o loop.
 - Loop: último quadro ≠ primeiro (parada: quadril 0,66 e ~7° no braço; corrida: quadril 8,6). `anim_retarget.close_loop`: nos 20 quadros finais cada trilha converge (smoothstep) para o primeiro quadro; `loop: true` no motions.yaml (paradas, caminhada, corrida, guarda). Alcance: 120 → 200, limiar 0,55 → 0,40, rampa 8 → 12.
 - **T17 aplicado:** motions_v5.
+- **T17 (LG, 2026-10-22):** loop e correntes ok; o fio das lâminas está virado para cima; alguns golpes não acertam; o resto ok.
+- Sessão encerrada com estado salvo em CLAUDE.md §12 e `docs/re/jogador.md`. Próximo: girar a lâmina 180° no eixo do comprimento; acerto dos golpes; testes automáticos pelo agente.
