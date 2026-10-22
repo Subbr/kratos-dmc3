@@ -171,6 +171,45 @@ def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int]
 BLADE_BONES = {"rWeapIH": (24, 9), "lWeapIH": (25, 13)}  # osso novo -> pai (mão do Dante)
 
 
+def add_chains(groups: dict, grips: dict[str, np.ndarray], dj: np.ndarray, weapon: Glb, tex_idx: int,
+               segments: int = 12, radius: float = 0.8) -> None:
+    """Corrente entre a mão e a lâmina: tubo de 4 lados; o vértice na fração t do caminho tem peso (1 − t) na
+    mão e t no osso da lâmina, então estica quando a motion afasta a lâmina (alcance do GoW1).
+    Cor única: o pixel mais escuro e pouco saturado da textura da lâmina."""
+    im = weapon.j["images"][0]
+    bv = weapon.j["bufferViews"][im["bufferView"]]
+    px = np.asarray(Image.open(io.BytesIO(weapon.bin[bv.get("byteOffset", 0):bv.get("byteOffset", 0) + bv["byteLength"]]))
+                    .convert("RGB"), dtype=float)
+    lum, sat = px.mean(axis=2), px.max(axis=2) - px.min(axis=2)
+    score = np.where((lum > 25) & (sat < 30), lum, 1e9)
+    y, x = np.unravel_index(np.argmin(score), score.shape)
+    uv = (x + 0.5) / px.shape[1], (y + 0.5) / px.shape[0]
+    for name, (bone, parent) in BLADE_BONES.items():
+        if name not in grips:
+            continue
+        a, b = dj[parent], grips[name]
+        axis = (b - a) / np.linalg.norm(b - a)
+        u = np.cross(axis, [0.0, 1.0, 0.0])
+        u = u / np.linalg.norm(u) if np.linalg.norm(u) > 1e-6 else np.array([1.0, 0.0, 0.0])
+        v = np.cross(axis, u)
+        ring = [radius * (np.cos(k * np.pi / 2) * u + np.sin(k * np.pi / 2) * v) for k in range(4)]
+        P, N, B, Q = [], [], [], []
+        for i in range(segments + 1):
+            t = i / segments
+            w_bone = int(round(31 * t))
+            for r in ring:
+                P.append(a + t * (b - a) + r)
+                N.append(r / radius)
+                B.append(bytes([0, 4 * parent, 4 * bone, 0]))
+                Q.append((31 - w_bone) | (w_bone << 5))
+        idx = []
+        for i in range(segments):
+            for k in range(4):
+                p0, p1 = i * 4 + k, i * 4 + (k + 1) % 4
+                idx += [(p0, p1, p0 + 4), (p1, p1 + 4, p0 + 4)]
+        add_triangles(groups[tex_idx], np.array(idx), P, N, [uv] * len(P), B, Q)
+
+
 def add_blade_bones(model: mod.Model, grips: dict[str, np.ndarray], dj: np.ndarray) -> None:
     """Acrescenta ao esqueleto um osso por lâmina, filho da mão, na posição do encaixe.
     O 3º array do esqueleto marca a parte superior do corpo (1 no tronco e nos braços): os novos recebem 1."""
@@ -262,6 +301,8 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
                                                BLADE_BONES["rWeapIH"][0] if blade_bones else None)
         extra.append(weapon)
     template = body.objects[0]
+    if blade_bones and left_weapon:
+        add_chains(groups, grips, dj, weapon, len(g.j["images"]))
     body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
     # o jogo liga/desliga objetos do Dante pelo índice (ex.: camisa na Missão 1; a coxa direita no objeto 5
     # sumia): os índices do Dante viram objetos vazios e o Kratos começa depois deles

@@ -102,3 +102,8 @@
 - Esqueleto: o 3º array (antes "children") marca a parte superior do corpo (1 no tronco e braços, 0 nas pernas). MOT: cabeçalho = align16(0x1E + 2·ossos) em todas as motions do jogo (até 118 ossos); 0x1A = 0 ou o número de ossos. `Motion.resize_bones`.
 - `kratos_fit.py --blade-bones`: ossos 24 (lâmina direita, filho de 9) e 25 (esquerda, filho de 13) no encaixe do `rWeapIH`/`lWeapIH`; lâminas com peso total nesses ossos. Kratos v7 = 26 ossos, round-trip ok.
 - **T14 aplicado:** Kratos v7 (26 ossos, as duas lâminas no corpo), arma do slot escondida, parada (#0 da BASE) com 26 ossos e as lâminas saindo 80 unidades da mão e voltando em loop (`tools/blade_test.py`). KratosMode desligado.
+- **T14 (LG):** nos golpes as lâminas saíram da mão "como no GoW" (as motions de golpe não tinham trilha dos ossos novos e as lâminas ficaram onde a parada as deixou); parado/correndo a extensão não ficou boa. Conclusão: **motion move as lâminas no desenho** — base das correntes.
+- `tools/blade_chain.py` + `build_motions.py --blades`: as 37 coleções de motion do jogador (pl000_00_*, new*, demo_*) ficam com 26 ossos; lâminas em repouso, exceto no grupo das Blades (00_3, 00_13, demo_00_3): cada lâmina sai até 120 unidades ao longo do antebraço quando a mão dela passa de 55% da velocidade máxima (rampa de 8 quadros).
+- `kratos_fit.py`: corrente = tubo de 4 lados da mão até o encaixe, peso (1−t) na mão e t no osso da lâmina (estica junto). Kratos v8.
+- DLL `chainHitbox`: soma à matriz lógica da arma do slot o deslocamento do osso 24 em relação ao repouso (offset · mão) → o acerto acompanha a lâmina direita.
+- **T15 aplicado:** v8 + motions_v3 (37 arquivos) + DLL com chainHitbox + arma do slot escondida.
