@@ -116,6 +116,18 @@ class Motion:
     def bone_count(self) -> int:
         return struct.unpack_from("<H", self.header, 0x1C)[0]
 
+    def resize_bones(self, n: int) -> None:
+        """Muda o número de ossos: cabeçalho = align16(0x1E + 2·n) (regra de todas as motions do jogo);
+        0x1A vale 0 ou o número de ossos."""
+        old = self.bone_count
+        head = bytearray(self.header[:0x1E]) + bytes(_align(0x1E + 2 * n) - 0x1E)
+        struct.pack_into("<I", head, 0, len(head))
+        struct.pack_into("<H", head, 0x1C, n)
+        if struct.unpack_from("<H", head, 0x1A)[0] == old:
+            struct.pack_into("<H", head, 0x1A, n)
+        self.header = head
+        self.tracks = [t for t in self.tracks if t.bone < n]
+
     @property
     def frames(self) -> float:
         return struct.unpack_from("<f", self.header, 0x0C)[0]

@@ -145,7 +145,7 @@ def build_meshes(g: Glb, cfg: dict, dj: np.ndarray) -> tuple[dict[int, dict], li
 
 
 def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int], weapon: Glb,
-                    joint_name: str, tex_idx: int) -> None:
+                    joint_name: str, tex_idx: int, bone_override: int | None = None) -> np.ndarray:
     """Prende uma arma (glb estático) ao osso de arma do Kratos (ex.: lWeapIH): pose do osso no GoW1 →
     mesmo ajuste do osso → peso total no osso do Dante correspondente."""
     joints = g.j["skins"][0]["joints"]
@@ -154,7 +154,7 @@ def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int]
     t = T[k]
     lin = t[:3, :3] @ ROT_Y180 @ w[:3, :3]
     off = t[:3, :3] @ (ROT_Y180 @ w[:3, 3]) + t[:3, 3]
-    bone = bytes([0, 4 * target[k], 0, 0])
+    bone = bytes([0, 4 * (target[k] if bone_override is None else bone_override), 0, 0])
     for nd in weapon.j["nodes"]:
         if "mesh" not in nd:
             continue
@@ -165,6 +165,26 @@ def add_held_weapon(groups: dict, g: Glb, T: list[np.ndarray], target: list[int]
             N /= np.linalg.norm(N, axis=1, keepdims=True).clip(1e-9)
             idx = weapon.accessor(p["indices"]).reshape(-1, 3) if "indices" in p else np.arange(len(P)).reshape(-1, 3)
             add_triangles(groups[tex_idx], idx, P, N, weapon.accessor(a["TEXCOORD_0"]), [bone] * len(P), [31] * len(P))
+    return off  # posição do encaixe (osso de arma do Kratos) no espaço do Dante
+
+
+BLADE_BONES = {"rWeapIH": (24, 9), "lWeapIH": (25, 13)}  # osso novo -> pai (mão do Dante)
+
+
+def add_blade_bones(model: mod.Model, grips: dict[str, np.ndarray], dj: np.ndarray) -> None:
+    """Acrescenta ao esqueleto um osso por lâmina, filho da mão, na posição do encaixe.
+    O 3º array do esqueleto marca a parte superior do corpo (1 no tronco e nos braços): os novos recebem 1."""
+    s = model.skeleton
+    for name, (bone, parent) in BLADE_BONES.items():
+        if name not in grips:
+            continue
+        assert bone == model.bone_count, "ossos novos em sequência"
+        off = grips[name] - dj[parent]
+        s.parents += bytes([parent])
+        s.order += bytes([bone])
+        s.children += bytes([1])
+        s.transforms.append(struct.pack("<4f", *off, float(np.linalg.norm(off))) + bytes(16))
+        model.bone_count += 1
 
 
 def add_triangles(grp: dict, idx, P, N, uv, B, Q) -> None:
@@ -223,7 +243,8 @@ def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = 
 
 def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
-         left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False) -> None:
+         left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False,
+         blade_bones: bool = False) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     g = Glb(glb)
     body = mod.Model.parse((base_dir / "001.MOD").read_bytes())
@@ -231,11 +252,14 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     reserve = len(body.objects) if reserve is None else reserve
     groups, T, target = build_meshes(g, cfg, dj)
     extra = []
+    grips: dict[str, np.ndarray] = {}
     if left_weapon:  # lâmina da mão esquerda: vai no corpo, presa ao lWeapIH, com textura no slot seguinte
         weapon = Glb(left_weapon)
-        add_held_weapon(groups, g, T, target, weapon, "lWeapIH", len(g.j["images"]))
+        grips["lWeapIH"] = add_held_weapon(groups, g, T, target, weapon, "lWeapIH", len(g.j["images"]),
+                                           BLADE_BONES["lWeapIH"][0] if blade_bones else None)
         if both_hands:  # GoW1: as lâminas nunca vão para as costas; a da direita também fica no corpo
-            add_held_weapon(groups, g, T, target, weapon, "rWeapIH", len(g.j["images"]))
+            grips["rWeapIH"] = add_held_weapon(groups, g, T, target, weapon, "rWeapIH", len(g.j["images"]),
+                                               BLADE_BONES["rWeapIH"][0] if blade_bones else None)
         extra.append(weapon)
     template = body.objects[0]
     body.objects = [make_object(template, t, part) for t in sorted(groups) for part in split(groups[t], max_verts)]
@@ -243,6 +267,8 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     # sumia): os índices do Dante viram objetos vazios e o Kratos começa depois deles
     body.objects = [empty_object(template, dj[1])] * reserve + body.objects
     body.gaps = []
+    if blade_bones:
+        add_blade_bones(body, {k: grips[k] for k in ("rWeapIH", "lWeapIH") if k in grips}, dj)
     body.tail = body.runtime_tail()
     body.auto_index_ptr = True
     coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
@@ -280,6 +306,7 @@ if __name__ == "__main__":
     ap.add_argument("--keep-coat", action="store_true")
     ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
     ap.add_argument("--both-hands", action="store_true", help="com --left-weapon: a mesma arma também no rWeapIH")
+    ap.add_argument("--blade-bones", action="store_true", help="lâminas em ossos novos (24 dir., 25 esq.)")
     ap.add_argument("--reserve", type=int, help="objetos vazios no início (padrão: quantos o Dante tem)")
     a = ap.parse_args()
-    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands)
+    main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones)
