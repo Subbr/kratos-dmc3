@@ -59,7 +59,7 @@ def main(src: Path, dst: Path, model: Path | None = None) -> None:
             if idx in kratos:
                 k = kratos[idx]
                 frames = int(round(m.frames)) + 1
-                m = ar.retarget(g, k["anim"], body, cfg, frames, m, k.get("timing", "stretch"))
+                m = ar.retarget(g, k["anim"], body, cfg, frames, m, k.get("timing", "stretch"), k.get("loop", False))
                 print(f"{name} #{idx}: {k['anim']} ({frames} frames, {k.get('timing', 'stretch')})")
             elif model:
                 blade_chain.fold_neck_into_head(m, neck_off, head_off)

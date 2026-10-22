@@ -18,9 +18,9 @@ import mot
 
 HANDS = {23: (9, -1.0), 4: (13, 1.0)}  # osso da lâmina: (mão, sentido do antebraço em x na pose de repouso)
 NECK, HEAD = 4, 5
-REACH = 120.0       # alcance máximo da corrente (unidades do modelo; braço do Dante ≈ 70)
-FAST = 0.55         # fração da velocidade máxima da mão que conta como golpe
-RAMP = 8            # quadros de subida/descida em volta do trecho rápido
+REACH = 200.0       # alcance máximo da corrente (unidades do modelo; braço do Dante ≈ 70). T16: 120 ficou sutil
+FAST = 0.40         # fração da velocidade máxima da mão que conta como golpe
+RAMP = 12           # quadros de subida/descida em volta do trecho rápido
 
 
 def blade_offsets(model: mod.Model) -> dict[int, np.ndarray]:

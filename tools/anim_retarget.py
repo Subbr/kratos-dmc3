@@ -149,8 +149,27 @@ def strike_frame(mo: mot.Motion, body: mod.Model, parent: list[int], frames: int
     return 3 + int(np.argmax(speed[3:lim]))
 
 
+LOOP_BLEND = 20  # quadros finais que convergem para o primeiro (animação em loop)
+
+
+def close_loop(values: dict[tuple[int, str], list[float]], blend: int = LOOP_BLEND) -> None:
+    """Faz o último quadro igual ao primeiro: soma a diferença com rampa suave nos `blend` quadros finais
+    (ângulos pelo caminho mais curto). Sem isso a parada "pisca" ao reiniciar (T16)."""
+    for (bone, ch), v in values.items():
+        n = len(v)
+        k = min(blend, n - 1)
+        if k <= 0:
+            continue
+        d = v[0] - v[-1]
+        if ch[0] == "r":
+            d = (d + np.pi) % (2 * np.pi) - np.pi
+        for i in range(n - k, n):
+            u = (i - (n - 1 - k)) / k
+            v[i] += d * (u * u * (3 - 2 * u))
+
+
 def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, base: mot.Motion,
-             timing: str = "stretch") -> mot.Motion:
+             timing: str = "stretch", loop: bool = False) -> mot.Motion:
     """timing: "stretch" = a animação inteira ocupa os frames da motion base; "natural" = 60 fps do
     GoW1 (o glb tem tempo em segundos) e o último quadro fica parado até o fim da motion base;
     "strike" = 60 fps, mas o quadro do golpe (maior velocidade da mão) cai no mesmo quadro do golpe do
@@ -210,6 +229,8 @@ def retarget(g: Glb, anim_name: str, body: mod.Model, cfg: dict, frames: int, ba
         for c, v in zip("xyz", hip):
             values.setdefault((HIP, "t" + c), []).append(float(v))
 
+    if loop:
+        close_loop(values)
     out = mot.Motion(bytearray(base.header))
     out.frames = float(frames - 1)  # o cabeçalho guarda o último frame (chaves de 0 a N)
     out.tracks = [mot.Track.hermite(b, ch, v) for (b, ch), v in values.items()]

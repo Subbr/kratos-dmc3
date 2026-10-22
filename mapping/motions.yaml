@@ -1,20 +1,21 @@
 # Motion do Dante (arquivo pl000_00_N.pac, índice) -> animação do Kratos (GoW1, nome no glb).
 # timing: stretch = ocupa a duração da motion do Dante; natural = 60 fps, último quadro parado até o fim.
+# loop: true = animação que repete (o último quadro converge para o primeiro).
 # O osso 0 (deslocamento do personagem) sempre vem da motion do Dante.
 # Evidência de cada índice em docs/formats/mot.md (seção "Índices conhecidos").
 pl000_00_0:   # BASE
-  0:  {anim: idleCombat, timing: stretch}    # parada
-  1:  {anim: walkBlend1, timing: stretch}    # caminhada (pés alternam, osso 0 TZ +214)
-  58: {anim: idleCombat, timing: stretch}    # parada (variação)
-  2:  {anim: walkBlend2, timing: stretch}    # corrida (Crimson: "playerRunning" = motion 2/51/30)
-  51: {anim: walkBlend2, timing: stretch}    # corrida (variação)
+  0:  {anim: idleCombat, timing: stretch, loop: true}    # parada
+  1:  {anim: walkBlend1, timing: stretch, loop: true}    # caminhada (pés alternam, osso 0 TZ +214)
+  58: {anim: idleCombat, timing: stretch, loop: true}    # parada (variação)
+  2:  {anim: walkBlend2, timing: stretch, loop: true}    # corrida (Crimson: "playerRunning" = motion 2/51/30)
+  51: {anim: walkBlend2, timing: stretch, loop: true}    # corrida (variação)
   6:  {anim: land, timing: stretch}          # aterrissagem
   16: {anim: jumpAir, timing: stretch}       # no ar (pose de queda)
   7:  {anim: evadeLeft, timing: stretch}     # rolamento para a esquerda (osso 0 TX +350)
   8:  {anim: evadeRight, timing: stretch}    # rolamento para a direita (osso 0 TX -350)
 pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
-  0:  {anim: idleCombat, timing: stretch}    # guarda com a arma
-  1:  {anim: idleCombat, timing: stretch}
+  0:  {anim: idleCombat, timing: stretch, loop: true}    # guarda com a arma
+  1:  {anim: idleCombat, timing: stretch, loop: true}
   3:  {anim: combo3A, timing: natural}       # combo 1, golpe 1 (CrimsonFX.cpp:467)
   4:  {anim: combo3B, timing: natural}       # combo 1, golpe 2
   5:  {anim: combo3C, timing: natural}       # combo 1, golpe 3
