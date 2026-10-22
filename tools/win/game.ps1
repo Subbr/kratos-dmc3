@@ -46,7 +46,7 @@ $Scan = @{ enter=@(0x1C,$false); esc=@(0x01,$false); space=@(0x39,$false);
   up=@(0x48,$true); down=@(0x50,$true); left=@(0x4B,$true); right=@(0x4D,$true);
   w=@(0x11,$false); a=@(0x1E,$false); s=@(0x1F,$false); d=@(0x20,$false);
   i=@(0x17,$false); j=@(0x24,$false); k=@(0x25,$false); l=@(0x26,$false);
-  q=@(0x10,$false); e=@(0x12,$false); f1=@(0x3B,$false); tab=@(0x0F,$false) }
+  q=@(0x10,$false); e=@(0x12,$false); n=@(0x31,$false); u=@(0x16,$false); f1=@(0x3B,$false); tab=@(0x0F,$false) }
 
 function Focus {
   $p = Get-Process dmc3 -ErrorAction SilentlyContinue | Select-Object -First 1

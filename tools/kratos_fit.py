@@ -304,15 +304,22 @@ def make_object(template: mod.Object, tex_idx: int, d: dict) -> mod.Object:
     return mod.Object(template.ukn, bytes(4), 0, bytes(28), (*center, radius), [mesh])
 
 
-def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = ()) -> bytes:
-    """Texturas do glb (na ordem das imagens) + a primeira imagem de cada glb extra."""
+def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = (),
+                   tint: tuple[float, float, float, float] | None = None) -> bytes:
+    """Texturas do glb (na ordem das imagens) + a primeira imagem de cada glb extra.
+
+    tint = (r, g, b, força): mistura cada textura com essa cor (brilho do Rage of the Gods no modelo de DT)."""
     made = []
     sources = [(g, im) for im in g.j["images"]] + [(e, e.j["images"][0]) for e in extra]
     for src, im in sources:
         bv = src.j["bufferViews"][im["bufferView"]]
         data = src.bin[bv.get("byteOffset", 0):bv.get("byteOffset", 0) + bv["byteLength"]]
         buf = io.BytesIO()
-        Image.open(io.BytesIO(data)).convert("RGBA").save(buf, format="DDS", pixel_format="DXT5")
+        img = Image.open(io.BytesIO(data)).convert("RGBA")
+        if tint:
+            glow = Image.new("RGBA", img.size, (*(int(c * 255) for c in tint[:3]), 255))
+            img = Image.merge("RGBA", (*Image.blend(img, glow, tint[3]).split()[:3], img.split()[3]))
+        img.save(buf, format="DDS", pixel_format="DXT5")
         made.append(tex.make_texture(buf.getvalue(), template_block.textures[0].descriptor))
     while len(made) < len(template_block.textures):  # mantém a contagem de texturas da base
         made.append(made[0])
@@ -322,7 +329,8 @@ def textures_block(g: Glb, template_block: tex.TextureBlock, extra: list[Glb] = 
 def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
          left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False,
-         blade_bones: bool = False, flip_edge: bool = False) -> None:
+         blade_bones: bool = False, flip_edge: bool = False, hide: tuple[str, ...] = ("012.MOD",),
+         tint: tuple[float, float, float, float] | None = None) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     if blade_bones:
         cfg = blade_cfg(cfg)
@@ -353,20 +361,23 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
         repurpose_blade_bones(body, grips, dj)
     body.tail = body.runtime_tail()
     body.auto_index_ptr = True
-    coat = mod.Model.parse((base_dir / "012.MOD").read_bytes())
-    for o in coat.objects:  # casaco do Dante: nenhum vértice fecha triângulo (some sem mexer na física de tecido)
-        for m in o.meshes:
-            m.weights = [w | 0x8000 for w in m.weights]
+    hidden = {}
+    for name in hide:  # casaco do Dante, asas do DT: nenhum vértice fecha triângulo (some sem mexer na física)
+        hidden[name] = mod.Model.parse((base_dir / name).read_bytes())
+        for o in hidden[name].objects:
+            for m in o.meshes:
+                m.weights = [w | 0x8000 for w in m.weights]
     work = Path(tempfile.mkdtemp())
     try:
         shutil.copytree(base_dir, work / "pac", dirs_exist_ok=True)
         if use_body:
             (work / "pac" / "001.MOD").write_bytes(body.build())
         if collapse_coat:
-            (work / "pac" / "012.MOD").write_bytes(coat.build())
+            for name, model in hidden.items():
+                (work / "pac" / name).write_bytes(model.build())
         if use_textures:
             block = tex.TextureBlock.parse((base_dir / "000._").read_bytes())
-            (work / "pac" / "000._").write_bytes(textures_block(g, block, extra))
+            (work / "pac" / "000._").write_bytes(textures_block(g, block, extra, tint))
         out_pac.parent.mkdir(parents=True, exist_ok=True)
         pac.repack(work / "pac", out_pac)
     finally:
@@ -391,6 +402,8 @@ if __name__ == "__main__":
     ap.add_argument("--blade-bones", action="store_true", help="lâminas nos ossos 23 (dir.) e 4 (esq.), reaproveitados")
     ap.add_argument("--flip-edge", action="store_true", help="gira as lâminas 180° no eixo do comprimento")
     ap.add_argument("--reserve", type=int, help="objetos vazios no início (padrão: quantos o Dante tem)")
+    ap.add_argument("--hide", default="012.MOD", help="MODs da base a esconder, separados por vírgula (padrão: casaco)")
+    ap.add_argument("--tint", help="r,g,b,força: cor misturada nas texturas (ex. DT: 1,0.75,0.2,0.35)")
     a = ap.parse_args()
     main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones,
-         a.flip_edge)
+         a.flip_edge, tuple(a.hide.split(",")), tuple(map(float, a.tint.split(","))) if a.tint else None)

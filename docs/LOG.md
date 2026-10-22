@@ -183,3 +183,21 @@
   varredura do `logDamage` quando a missão reinicia. Só acontecia com o log de teste ligado. Correção: `ReadEnemy` com
   SEH (`__try/__except`) em todas as varreduras; removido o diagnóstico de contagem do T18. Sem crash depois.
 - Log de troca de motion agora traz a duração da anterior (`after`, ticks) e a camada 1.
+
+## 2026-10-22 — T22 (agente): Devil Trigger com o Kratos
+- Arquivos do DT do Dante (DDMK `devilFileIdsDante`): `pl005` Rebellion, `pl006` Cerberus, `pl007` Agni & Rudra,
+  `pl008` Nevan, `pl009` Beowulf, `pl017` Sparda. As Blades estão no slot Rebellion (D1) → `pl005.pac`.
+- `pl005.pac` do Crimson (override): 001 corpo (24 ossos, **mesmo esqueleto e hierarquia do `pl000`**), 002 asas
+  (9 ossos), 004 membranas (27 ossos), 000 texturas, 006–008 sombras. Repack idêntico byte a byte.
+- `kratos_fit.py` ganhou `--hide` (MODs a esconder; padrão `012.MOD`, o casaco) e `--tint r,g,b,força` (mistura cor
+  nas texturas). v10 regerado com o código novo: idêntico byte a byte ao instalado.
+  DT: `--hide 002.MOD,004.MOD --tint 1,0.75,0.2,0.35` (dourado, como o Rage of the Gods) → `work/install/kratos_dt_v1/pl005.pac`.
+- Com o DT liberado o jogo troca `plwp_sword` por **`plwp_sword2`** (Crimson `Actor.cpp`, `sessionData.unlockDevilTrigger`):
+  da Missão 8 em diante a Rebellion voltaria. `plwp_sword2.pac` com os modelos escondidos (`hide_models.py`).
+- DLL: flag de teste `testDevilTrigger` (liga `sessionData.unlockDevilTrigger`, `dmc3.exe+C8F250+0xD1`, e mantém
+  `magicPoints` = `maxMagicPoints` ≥ 3000 no ator). Tecla do DT no teclado = **U** (keybind 1 do Crimson).
+- Teste na Missão 3 (com `playerReceivedDmgMult 0`): U ativa o DT (aura vermelha), o Kratos fica dourado com as lâminas,
+  sem asas e sem resto do Dante (`work/shots/t22_dt_zoom.png`); combo em DT acerta (`work/shots/t22_dt_combo_sheet.png`);
+  U de novo volta ao Kratos normal (`t22_dt_off_sheet.png`). Sem crash.
+- Obs.: as teclas automáticas não chegam ao jogo quando o Input Director está com o teclado em outro PC.
+- Config final: `testDevilTrigger: false`, `playerReceivedDmgMult` restaurado. `pl005`/`plwp_sword2` ficam instalados.
