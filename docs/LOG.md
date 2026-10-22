@@ -162,3 +162,12 @@
 - Instalado `reachRadius: 4` (p90 ~300 ≈ corrente 200 + braço). Verificação com a DLL limpa: 25 danos, mediana 190,
   3/7 com 4 danos. `chainSpheres` removido.
 - Próximo: LG jogar e dizer se o alcance/dano ficou bom (pode ficar forte demais: ajustar `reachRadius`).
+
+## 2026-10-22 — T20 (agente): golpe aéreo para baixo
+- Pulo + ataque toca a motion **3/10** (log `play motion`, `combo_test.sh t20_air`): 82 f, começa no ar e termina em pé
+  depois de um corte para baixo (folha `work/shots/t20_sheet_dante.png`).
+- `anim_retarget.KratosAnim` aceita animações encadeadas com "+". 3/10 = `airImpale+airImpaleLand` (`timing: strike`):
+  mergulho, impacto agachado, lâminas abrindo, levanta. motions_v9 (só `pl000_00_3` muda).
+- Teste (`combo_test.sh t20_v9air` com 8× "pulo + ataque"): 3/10 tocou 7×, **13 danos**, alcance mediano 160;
+  capturas sem pose quebrada (`work/shots/t20_air_zoom.png`).
+- Aerial Rave (combo no ar) não saiu pelas teclas automáticas (pulo curto/tempo); fica para depois.

@@ -84,22 +84,35 @@ class KratosAnim:
     """Amostra uma animação do glb em qualquer tempo (interpolação linear / slerp)."""
 
     def __init__(self, g: Glb, name: str):
+        """name: uma animação, ou várias em sequência com "+" (ex.: "airImpale+airImpaleLand", T20)."""
         self.g = g
+        self.parts: list[tuple[float, dict]] = []  # (início em segundos, canais)
+        start = 0.0
+        for part in name.split("+"):
+            channels = self._channels(g, part)
+            self.parts.append((start, channels))
+            start += max(float(t[-1]) for t, _ in channels.values())
+        self.duration = start
+
+    @staticmethod
+    def _channels(g: Glb, name: str) -> dict:
         # nomes do glb: "hero <nome>", alguns com outro prefixo (ex.: "hero lk berWalkBlend0")
         anim = next((a for a in g.j["animations"] if a["name"] in (name, f"hero {name}")), None) or \
             next((a for a in g.j["animations"] if a["name"].split()[-1] == name), None)
         if anim is None:
             raise KeyError(f"animação {name!r} não encontrada")
-        self.channels = {}
+        channels = {}
         for c in anim["channels"]:
             s = anim["samplers"][c["sampler"]]
-            self.channels[(c["target"]["node"], c["target"]["path"])] = (g.accessor(s["input"]), g.accessor(s["output"]))
-        self.duration = max(float(t[-1]) for t, _ in self.channels.values())
+            channels[(c["target"]["node"], c["target"]["path"])] = (g.accessor(s["input"]), g.accessor(s["output"]))
+        return channels
 
     def _value(self, node: int, path: str, t: float, default):
-        if (node, path) not in self.channels:
+        start, channels = next((p for p in reversed(self.parts) if t >= p[0]), self.parts[0])
+        t -= start
+        if (node, path) not in channels:
             return np.array(default, dtype=np.float64)
-        times, vals = self.channels[(node, path)]
+        times, vals = channels[(node, path)]
         vals = np.asarray(vals, dtype=np.float64)
         if t <= times[0] or len(times) == 1:
             return vals[0]
