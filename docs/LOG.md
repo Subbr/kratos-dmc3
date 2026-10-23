@@ -646,3 +646,11 @@
     `combo5A`; aéreos 4/5 → `airH1`/`airV1`; posturas → `idleCombat`. 18 e 20 (deitar/levantar) não identificados,
     ficam do Dante.
 - Sonda dos três estilos sem queda; Swordmaster no chão agora encadeia 13/19 → 13/12 → 13/13.
+
+## 2026-10-23 — T67 (agente): o resto das armas de corpo a corpo com o Kratos
+- Cerberus (`pl000_00_4`, pelas poses `work/shots/cer_un.png`): sequências longas com giro 6/7/22/23/26 → `combo4A–D`,
+  `comboLR3`; 27 → `combo3A`. Artemis (`pl000_00_5`, `agn_un.png`): golpes largos → `berComboH1–H4/V2–V4/Stab`; 18/19 no
+  ar → `berAirH2`/`berAirStab`.
+- Nevan (26 entradas) e Beowulf (20) sem folha por índice: ciclo de combos do Kratos na Nevan e de `KickBox1–3`/
+  `brutal1/3` no Beowulf (socos e chutes) — **aproximado**.
+- Release regerada e instalada (`--check` = 0); sonda das quatro armas sem queda (acertos 6/8/9/2 num combo).

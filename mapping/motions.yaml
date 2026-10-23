@@ -136,6 +136,13 @@ pl000_00_4:   # CERBERUS (Kratos sem a arma: lâminas do corpo; T45, índices de
   19: {anim: dash, timing: strike}           # trava + trás
   24: {anim: comboLR2, timing: strike}
   25: {anim: blockLauncher, timing: strike}
+  # T67, pelas poses (work/shots/cer_un.png): sequências longas com giro
+  6: {anim: combo4A, timing: strike}
+  7: {anim: combo4B, timing: strike}
+  22: {anim: combo4C, timing: strike}
+  23: {anim: combo4D, timing: strike}
+  26: {anim: comboLR3, timing: strike}
+  27: {anim: combo3A, timing: strike}
 pl000_00_6:   # NEVAN (T45, motion_probe.sh 3)
   0:  {anim: idleCombat, timing: stretch, loop: true}
   1:  {anim: idleCombat, timing: stretch, loop: true}
@@ -148,6 +155,33 @@ pl000_00_6:   # NEVAN (T45, motion_probe.sh 3)
   5:  {anim: combo3B, timing: strike}
   16: {anim: dash, timing: strike}           # trava + trás
   15: {anim: airH1, timing: strike}          # no ar
+  # T67: resto da Nevan em ciclo de combos do Kratos (aproximado, sem folha por índice)
+  7: {anim: combo4A, timing: strike}
+  11: {anim: combo4B, timing: strike}
+  12: {anim: combo4C, timing: strike}
+  14: {anim: combo4D, timing: strike}
+  17: {anim: comboLR2, timing: strike}
+  19: {anim: comboLR3, timing: strike}
+  20: {anim: comboLR4, timing: strike}
+  21: {anim: combo5A, timing: strike}
+  23: {anim: combo5B, timing: strike}
+  24: {anim: combo6A, timing: strike}
+  25: {anim: combo7A, timing: strike}
+  26: {anim: combo3F, timing: strike}
+  27: {anim: combo4A, timing: strike}
+  29: {anim: combo4B, timing: strike}
+  30: {anim: combo4C, timing: strike}
+  33: {anim: combo4D, timing: strike}
+  34: {anim: comboLR2, timing: strike}
+  35: {anim: comboLR3, timing: strike}
+  36: {anim: comboLR4, timing: strike}
+  52: {anim: combo5A, timing: strike}
+  53: {anim: combo5B, timing: strike}
+  54: {anim: combo6A, timing: strike}
+  55: {anim: combo7A, timing: strike}
+  56: {anim: combo3F, timing: strike}
+  57: {anim: combo4A, timing: strike}
+  59: {anim: combo4B, timing: strike}
 pl000_00_7:   # BEOWULF (T45, motion_probe.sh 4)
   0:  {anim: idleCombat, timing: stretch, loop: true}
   1:  {anim: idleCombat, timing: stretch, loop: true}
@@ -155,6 +189,27 @@ pl000_00_7:   # BEOWULF (T45, motion_probe.sh 4)
   4:  {anim: combo3B, timing: strike}
   5:  {anim: combo3C, timing: strike}
   25: {anim: airH2, timing: strike}          # no ar
+  # T67: resto do Beowulf (socos e chutes) em ciclo de KickBox/brutal do GoW1 (aproximado)
+  7: {anim: KickBox1, timing: strike}
+  8: {anim: KickBox2, timing: strike}
+  9: {anim: KickBox3, timing: strike}
+  10: {anim: brutal1, timing: strike}
+  11: {anim: brutal3, timing: strike}
+  12: {anim: combo3A, timing: strike}
+  13: {anim: combo3B, timing: strike}
+  14: {anim: combo3C, timing: strike}
+  15: {anim: KickBox1, timing: strike}
+  16: {anim: KickBox2, timing: strike}
+  17: {anim: KickBox3, timing: strike}
+  24: {anim: brutal1, timing: strike}
+  27: {anim: brutal3, timing: strike}
+  28: {anim: combo3A, timing: strike}
+  29: {anim: combo3B, timing: strike}
+  30: {anim: combo3C, timing: strike}
+  31: {anim: KickBox1, timing: strike}
+  32: {anim: KickBox2, timing: strike}
+  33: {anim: KickBox3, timing: strike}
+  34: {anim: brutal1, timing: strike}
 pl000_00_5:   # AGNI & RUDRA = Blade of Artemis (§7.1): golpes "ber*" do GoW1 (espada a duas mãos; T46, motion_probe.sh 2)
   0:  {anim: berserkIdle, timing: stretch, loop: true}
   1:  {anim: berserkIdle, timing: stretch, loop: true}
@@ -166,6 +221,17 @@ pl000_00_5:   # AGNI & RUDRA = Blade of Artemis (§7.1): golpes "ber*" do GoW1 (
   20: {anim: berComboStab, timing: strike}   # trava + frente/trás
   21: {anim: berComboV2, timing: strike}
   17: {anim: berAirH1, timing: strike}       # no ar
+  # T67, pelas poses (work/shots/agn_un.png): golpes largos; 18/19 no ar
+  8: {anim: berComboH3, timing: strike}
+  9: {anim: berComboV2, timing: strike}
+  10: {anim: berComboH4, timing: strike}
+  11: {anim: berComboV4, timing: strike}
+  18: {anim: berAirH2, timing: strike}
+  19: {anim: berAirStab, timing: strike}
+  22: {anim: berComboH1, timing: strike}
+  23: {anim: berComboV3, timing: strike}
+  25: {anim: berComboStab, timing: strike}
+  26: {anim: berComboH2, timing: strike}
 pl000_00_14:  # SWORDMASTER_CERBERUS (T48, motion_probe.sh 1 0): L no chão 0/1, no ar 7/8, segurar 10
   0:  {anim: comboLR3, timing: strike}
   1:  {anim: comboLR4, timing: strike}
