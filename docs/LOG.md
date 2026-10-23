@@ -261,3 +261,15 @@
 - Override: `plwp_2sword.pac` = `work/install/artemis_v1` (backup do original do Crimson em `crimson_override`).
 - No jogo (em segundo plano): RT troca para a Artemis, que aparece dourada na mão direita e golpeia com as motions
   de Agni & Rudra (`work/shots/w_artemis_sheet.png`). As lâminas do Kratos continuam nas mãos (estão no corpo).
+
+## 2026-10-22 — T27 (agente): barra de magia (MVP) com gasto e bloqueio do tiro
+- DLL (flag `magic`, `magicShotCost`, `magicRegenPerSecond`): barra própria 0..100, desenhada em azul pelo ImGui
+  abaixo da vida (provisória até o HUD do GoW1, Fase 7). Cada tiro gasta `magicShotCost`; sem magia o tiro é bloqueado.
+  A recarga é provisória, por tempo (**D3 em aberto**: no GoW1 a magia volta com orbs azuis).
+- Evidência (objdump do exe travado): **dmc3.exe+1EBCF0** preenche `ator+0x74E0` com os botões [segurado, anterior,
+  apertado, solto] (leitura em +32CC70/+32CC80 do dispositivo em +D54A10). A ação é decidida depois (+1E6A62 testa o
+  apertado em +0x74E4). Apagar o bit no `OnTick` chegava tarde: o tiro saía (8/7 depois de "bloqueado"). Com um detour
+  em +1EBCF0, que roda o original e depois aplica a magia, os 3 tiros sem magia não geraram 8/7. Log:
+  `tiro 75/52/28/5` → `bloqueado 7/8/10`, sem motion de disparo após os bloqueios.
+- A captura do controle virtual passou para o fim do Present (depois do ImGui), então a barra aparece nas capturas
+  (`work/shots/m_shoot_t.png`).
