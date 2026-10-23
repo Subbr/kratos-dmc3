@@ -369,3 +369,11 @@
   ImGui: moldura em 2,2× (1080p), vida e magia dentro da lâmina, Rage enchendo o medalhão de dourado, ícone da magia
   da arma de fogo ativa ao lado. Sem os arquivos volta às barras lisas.
 - No jogo: `work/shots/hud2_crop.png`. Posição das barras pelo olho; o `FLP_HUD` pode dar o layout exato.
+
+## 2026-10-23 — T37 (agente): efeito de pedra da Medusa (parcial)
+- Sem campo de cor por modelo conhecido (nada em `ModelData`/ator no Vars.hpp). Tentativa com o Effekseer do Crimson:
+  aura `jdc_charge.efkefc` e explosão `risingstar.efkefc` tingidas de cinza (`SetAllColor`) em cada inimigo
+  petrificado; a aura para quando ele volta.
+- No jogo (`work/shots/md_stone_sheet.png`): os inimigos congelam, mas o efeito quase não aparece (faíscas azuladas
+  nos primeiros quadros). **Resultado fraco**: pedra de verdade pede tingir o modelo (RE do render: constantes de
+  cor do material do inimigo). Fica pendente; o código fica (inofensivo).
