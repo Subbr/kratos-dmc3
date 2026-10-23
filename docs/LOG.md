@@ -393,3 +393,18 @@
   Shotgun → Poseidon's Rage, Spiral → Medusa's Gaze, Artemis → Army of Hades, Devil Trigger → Rage of the Gods.
   No jogo: `work/shots/cu2_crop.png` (Customize com os nomes do GoW1).
 - `to_mission.sh`: `STOP_AT_MENU=1` para no menu da missão (testes de menu).
+
+## 2026-10-23 — T39 (agente): Release do Royalguard e tentativa de tingir os petrificados
+- **Release:** com `testStyle 3`, **trava (RB) + trás + L** depois de carregar a guarda bloqueando golpes toca **24/15 →
+  24/16** ou **24/15 → 24/45** (45 ≥ 21 entradas: pelo padrão do T24, 30 → 0, 31 → 1, deve ser a entrada 15). Sem
+  carga sai só 24/0 + 24/31. `mapping/motions.yaml` → `pl000_00_24` 15 `parry01`, 16 `parry02` (`strike`), motions_v14
+  (só `pl000_00_24` muda; `demo_pl000_00_3` difere 1 byte do v13 porque o `pac.py` do T38 agora preserva o
+  preenchimento do cabeçalho, igual ao original). No jogo: explosão da Release, Kratos na pose de parry, 6 danos e o
+  inimigo morre (`work/shots/rg_rel_sheet.png`).
+- **Tingir o modelo (REA):** o clone do Doppelganger usa `FUN_1402f69c0(ModelData + 0x80, RGBA, 1.0)` (flag
+  0x10000 em +0xE0, modo 10 em +0xB0, cor em +0xC0..+0xCC; `FUN_140089de0` = +0x80). O ModelData dos inimigos fica
+  num offset por tipo (`lea rcx,[reg+X]` antes de +89DE0: 0x80, 0xF80, 0x1EC0, 0x800, 0x1040…). Procurar pelo
+  ponteiro de funções do ModelData do jogador (+8 e +0x88) casa com objetos menores espaçados 0x120 (não são
+  ModelData): tingir o 1º deixou a foice do Hell cinza; tingir os 8 **derrubou o jogo**. Código de tingimento
+  removido; a Medusa fica com congelamento + explosão cinza. Para retomar: achar o ModelData por tipo de inimigo
+  (tabela de offsets por id do inimigo).

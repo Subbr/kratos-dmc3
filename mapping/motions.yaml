@@ -37,6 +37,8 @@ pl000_00_24:  # ROYALGUARD (L segurado = bloqueio do GoW1, §7.1; T24). O jogo t
   0:  {anim: block, timing: stretch}         # entra e segura a guarda
   1:  {anim: block+idleCombat, timing: stretch}  # solta a guarda (volta à postura de combate)
   2:  {anim: blockReaction, timing: stretch} # bloqueio atingido
+  15: {anim: parry01, timing: strike}        # Release 1 (trava + trás + L; T39)
+  16: {anim: parry02, timing: strike}        # Release 2
 # timing strike: o quadro de maior velocidade da mão do Kratos cai no mesmo quadro do golpe do Dante
 pl000_00_23:  # TRICKSTER (estilo do save; L = ação de estilo): dash vira o rolamento do GoW1 (§7.1, T21)
   0:  {anim: evadeFront, timing: natural}    # dash para a frente (osso 0 TZ +400)
