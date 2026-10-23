@@ -87,3 +87,21 @@ pl000_00_5:   # AGNI & RUDRA = Blade of Artemis (§7.1): golpes "ber*" do GoW1 (
   20: {anim: berComboStab, timing: strike}   # trava + frente/trás
   21: {anim: berComboV2, timing: strike}
   17: {anim: berAirH1, timing: strike}       # no ar
+pl000_00_14:  # SWORDMASTER_CERBERUS (T48, motion_probe.sh 1 0): L no chão 0/1, no ar 7/8, segurar 10
+  0:  {anim: comboLR3, timing: strike}
+  1:  {anim: comboLR4, timing: strike}
+  7:  {anim: airH1, timing: strike}
+  8:  {anim: airH2, timing: strike}
+  10: {anim: impaleSlamCharge, timing: strike}
+pl000_00_15:  # SWORDMASTER_AGNI_RUDRA = Artemis (T48): L no chão 0, no ar 4/5
+  0:  {anim: berComboV3, timing: strike}
+  4:  {anim: berAirH1, timing: strike}
+  5:  {anim: berAirH2, timing: strike}
+pl000_00_16:  # SWORDMASTER_NEVAN (T48): L no chão 0, no ar 7/8
+  0:  {anim: dashMultiStab, timing: strike}
+  7:  {anim: airH3, timing: strike}
+  8:  {anim: airV1, timing: strike}
+pl000_00_17:  # SWORDMASTER_BEOWULF (T48): L no chão 0, no ar 6, segurar 8
+  0:  {anim: comboLR4, timing: strike}
+  6:  {anim: airImpale+airImpaleLand, timing: strike}
+  8:  {anim: impaleSlamCharge, timing: strike}

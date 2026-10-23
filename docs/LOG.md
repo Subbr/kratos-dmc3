@@ -487,3 +487,10 @@
   apareceu no filtro (pode ser o modelo 3D ao vivo).
 - Pendente: renderizar o Kratos (glb do GoW1, Blender headless) para cada arte e regravar com `tex.py`
   (`make_texture`), com round-trip primeiro.
+
+## 2026-10-23 — T48 (agente): Swordmaster de Cerberus, Artemis, Nevan e Beowulf
+- Sonda com `testStyle 0` (`motion_probe.sh <arma> 0`): Cerberus = grupo 14 (L no chão 0/1, ar 7/8, segurar 10),
+  Agni & Rudra/Artemis = 15 (0; ar 4/5), Nevan = 16 (0; ar 7/8), Beowulf = 17 (0; ar 6; segurar 8).
+- `pl000_00_14–17` com especiais do Kratos (`comboLR3/4`, `dashMultiStab`, `impaleSlamCharge`, `airH1–3`, `airV1`,
+  `airImpale+airImpaleLand`; Artemis: `berComboV3`, `berAirH1/H2`), `strike`; motions_v17 (só esses quatro mudam;
+  14/10 não é motion do esqueleto do jogador). No jogo: as motions tocam (log), sem queda.
