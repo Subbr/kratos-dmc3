@@ -514,3 +514,7 @@
   aparecem). O retrato da tela STATUS não foi achado por comparação de imagem (candidatas `id300`/`id271` são outras
   artes); pode ser o modelo 3D ao vivo. Troca das artes adiada.
 - Escondidas também `plwp_grenade` (Kalina Ann) e `plwp_sword3` (Sparda): nenhuma arma do Dante fica visível.
+
+## 2026-10-23 — T51 (agente): regressão completa depois de T44–T50
+- 20 missões + 14 chefes com `playtest.sh`: **34/34 sem queda** (`work/shots/playtest/regressao.txt`); configs
+  devolvidos. Dano onde há inimigo perto (M1–3, 5, 13, 19, 20 e 12 de 14 chefes).
