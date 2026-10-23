@@ -665,3 +665,9 @@
 - Release regerada e instalada; regressão completa em andamento.
 - Regressão completa depois do T68: **34/34 sem queda** (20 missões + 14 chefes) e as sondas das quatro armas de fogo e
   dos estilos Trickster/Swordmaster/Royalguard sem queda (`work/shots/playtest/regressao2.txt`); configs devolvidos.
+
+## 2026-10-23 — T69 (agente): barra de vida dos chefes no estilo do GoW1
+- HUD: a barra do chefe do DMC3/Crimson fica escondida (`hideBossHUD` + `ToggleHideBossHUD`) e a DLL desenha a do GoW1
+  embaixo, no centro: barra de pedra (`TXR_HUD037`), ponta de lança dourada (`036`) e o gradiente tingido de vermelho,
+  com a vida do 1º chefe vivo na lista (`EnemyHp`/`IsBoss`, máximo da tabela). `install_hud.sh` copia boss_cap/boss_bar.
+- No jogo (chefes da M3 e da M7): `work/shots/boss_bar.png`, a barra desce com o dano; sem queda.
