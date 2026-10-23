@@ -1,0 +1,6 @@
+# ferramentas Python do projeto (tools/.venv): python -m venv tools/.venv && tools/.venv/bin/pip install -r requirements.txt
+numpy==2.5.4
+pillow==13.0.0
+PyYAML==6.0.3
+capstone==5.0.9
+pytest==9.1.1
