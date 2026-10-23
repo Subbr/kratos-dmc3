@@ -375,7 +375,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
+- **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
   5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T42).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
@@ -422,12 +422,25 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **T41–T42:** `tools/win/playtest.sh <missão>` (Arcade do Crimson, direto na missão): M1–M20 sem queda. Roupas do
   Dante = arquivos próprios (pl011 sem casaco, pl013 rasgada — usada da M8 em diante —, pl015/pl016 DMC1, pl018
   Sparda): todas com o Kratos (`work/install/kratos_costumes_v1`).
-- **Pendências imediatas (próxima sessão):**
-  1. LG jogar a Missão 3 e avaliar o alcance/dano com `reachRadius` 4 (ajustável no KratosConfig sem recompilar).
-  2. Pedir ao LG para confirmar o fio das lâminas (`work/shots/t18_fio_v9_v10.png`) e o visual dos combos com
-     `strike` (a preparação do 3/5 e do 3/7 agora aparece).
-  3. Trocar mais golpes (Aerial Rave, Swordmaster) sempre com `strike` (golpe aéreo 3/10 feito, T20; rolamento no Trickster 23/0–3, T21; Aerial Rave 13/7–10 e Prop 13/19 no Swordmaster, T23; bloqueio no Royalguard 24/0–2, T24 — 24/30 e 24/31 tocam as entradas 0 e 1 — testar estilos com `testStyle` no KratosConfig); Devil Trigger feito no slot Rebellion (T22; DT das outras armas `pl006`–`pl009`/`pl017` ainda do Dante); Artemis no slot
-     Agni & Rudra (`work/install/artemis_v1/plwp_2sword.pac`).
+- **Config ao fechar a sessão de 2026-10-23:** flags de teste desligadas (`logDamage`, `testWeapons`,
+  `testDevilTrigger`, `testStyle -1`, `testCostume -1`), dano recebido restaurado, Arcade desligado. Ligados:
+  enabled, chainHitbox, leftHitbox, reachRadius 4, magic, gowHud, sounds, grab, renameUi, **virtualPad** (o controle
+  físico 1 fica ignorado; desligar para jogar com controle).
+- **Pendências (por prioridade):**
+  1. **LG, de ouvido/olho:** volume e taxa das vozes do GoW1 (22050 Hz é [HIPÓTESE]); se a voz do Dante sumiu
+     (canal COMMON mudo); alcance/dano com `reachRadius 4`; tom do HUD e do DT dourado.
+  2. **Playtest fundo:** a rotina do `playtest.sh` só luta onde o Kratos nasce; andar até os inimigos e entrar nos
+     chefes (agarrão, Medusa e dano das magias contra chefes; chefes podem não ter a vida no lugar esperado).
+  3. **Visual das magias:** pedra da Medusa (tingir o ModelData: precisa do offset por tipo de inimigo, T39); almas do
+     Army of Hades; efeito do Poseidon.
+  4. **Golpes:** Aerial Rave 13/9–13/10 ainda não visto no ar; mais golpes do Swordmaster com trava + direção; outras
+     armas (Cerberus, Nevan, Beowulf) ainda com as motions do Dante; DT de Cerberus/Nevan/Beowulf/Sparda não visto.
+  5. **HUD:** layout exato pelo `FLP_HUD`; retrato do Dante na tela STATUS da pausa e outros menus nativos (texturas).
+  6. **Texto:** diálogos da história (`mNN_*_msg_*`, Fase 9).
+  7. **Decisões abertas:** D2 (estilos; provisório: Trickster rolamento, Royalguard bloqueio, Swordmaster especiais,
+     Gunslinger magias), D3 (recarga da magia; provisório: por dano), D4 (níveis de arma = loja), D5 (botões do DMC3),
+     D6 (cutscenes) — registrar em `docs/decisoes.md` quando o LG confirmar.
+  8. **Fase 9 (cutscenes) e Fase 10 (distribuição: patches xdelta + scripts que extraem da ISO do usuário).**
 - **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/`, em segundo
   plano (`virtualPad`, T25), sem tomar o teclado nem a tela do LG; pedir teste ao LG só quando a automação não
   alcançar. Juntar mudanças por teste.
