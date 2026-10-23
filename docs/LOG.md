@@ -663,3 +663,5 @@
   GoW1) = gesto do raio; taunts 2/2–3 = agarrão; Quicksilver/Doppelganger = `berserkEnter`; resto dos Swordmaster das
   armas em ciclo (aproximado). Só ficam do Dante 13/18, 13/20 e 11/5.
 - Release regerada e instalada; regressão completa em andamento.
+- Regressão completa depois do T68: **34/34 sem queda** (20 missões + 14 chefes) e as sondas das quatro armas de fogo e
+  dos estilos Trickster/Swordmaster/Royalguard sem queda (`work/shots/playtest/regressao2.txt`); configs devolvidos.
