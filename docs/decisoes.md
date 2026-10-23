@@ -47,6 +47,7 @@
 
 ## D4 — Níveis de arma (PROVISÓRIA, agente — aguardando o LG)
 - **Em uso:** loja do Crimson (Customize) com os nomes do GoW1 (`renameUi`, T38); nenhum nível próprio das Blades.
+  Magias sobem com os níveis das armas de fogo da loja (T74: +50% de dano por nível; Medusa +1,5 s).
 
 ## D5 — Controles (PROVISÓRIA, agente — aguardando o LG)
 - **Em uso:** botões do DMC3 (§7.4 opção a). Agarrão no taunt (Back), magias nas armas de fogo (X; LT troca),

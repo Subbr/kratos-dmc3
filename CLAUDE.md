@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T70).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T74).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -437,7 +437,10 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   HUD com gradiente, medidor de Rage e orb do GoW1; efeitos das magias configuráveis (`fx*` no KratosConfig);
   anunciador/voz de estilo/DT do Crimson calados; **todas as coleções de motion do jogador** com o Kratos (só 13/18,
   13/20 e 11/5 ficam do Dante; Nevan, Beowulf e Swordmaster das armas em ciclo aproximado); regressão 34/34.
-- **T69–T70:** barra do chefe do GoW1 (a do DMC3 escondida); Rage of the Gods invulnerável (`rageInvulnerable`).
+- **T69–T74:** barra do chefe do GoW1 (a do DMC3 escondida); Rage of the Gods invulnerável (`rageInvulnerable`);
+  Poseidon em área (`poseidonRadius`/`poseidonAreaDamage`); só as armas do GoW1 na troca (`gowWeaponsOnly`); Blades somem
+  com a Artemis (escala 0 nos ossos 23/4 nas coleções 5/15, escala explícita em toda motion); níveis das magias =
+  níveis das armas de fogo da loja (`magicLevelBonus`).
 - **Pendências (por prioridade):**
   1. **LG, de ouvido/olho:** volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? (canal COMMON mudo);
      sons de Rage/Poseidon [HIPÓTESE pelo nome]; alcance/dano (`reachRadius 4`); visual dos golpes e do HUD.
