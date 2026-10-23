@@ -273,3 +273,16 @@
   `tiro 75/52/28/5` → `bloqueado 7/8/10`, sem motion de disparo após os bloqueios.
 - A captura do controle virtual passou para o fim do Present (depois do ImGui), então a barra aparece nas capturas
   (`work/shots/m_shoot_t.png`).
+
+## 2026-10-22 — T28 (agente): magias por arma, recarga por dano (D3 provisória) e Medusa's Gaze
+- Cada arma de fogo é uma magia (§7.1) com custo próprio: E&I = Zeus' Fury (`magicShotCost` 10), Shotgun = Poseidon
+  (20), Spiral = Medusa (30), Artemis = Army of Hades (25). No Dante, `rangedWeaponIndex` (ator + 0x6494) guarda o
+  próprio `WEAPON::*` da arma ativa (Actor.cpp põe 5 = E&I); o log confirmou 5/6/7/8 ao trocar com LT.
+- D3 provisória: magia volta por dano tirado dos inimigos (`magicPerDamage` 0.05 por ponto de vida), sem recarga por tempo.
+- `testWeapons` agora também escreve as armas da missão em fila (`[dmc3.exe+C90E30] + 0xC0`, `QueuedMissionActorData`):
+  só a sessão não mudava a 2ª arma de fogo. LT percorre todas as armas de fogo liberadas (E&I → Shotgun → Artemis → Spiral).
+- **Medusa's Gaze:** tiro da Spiral petrifica os inimigos até `medusaRange` (900) por `medusaSeconds` (5).
+  Evidência: zerar só `speed` (+0x14) não parava; zerando também `speedMultiplier` (+0x18) os inimigos congelam no
+  meio do golpe e voltam depois de 5 s (`work/shots/md_gaze_sheet.png`; log `pedra 0 speed 0 mult 0`, posição parada).
+  O jogo não sobrescreve os dois campos (valor lido no quadro seguinte continua 0). Visual de pedra: pendente.
+- Teste com `playerReceivedDmgMult 0` (o Kratos morreu numa rodada com dano normal).
