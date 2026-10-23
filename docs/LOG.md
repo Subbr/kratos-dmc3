@@ -253,3 +253,11 @@
   combo, **20 danos** (3/3 ×7, 3/4 ×6, 3/5 ×7). Folha: `work/shots/vp_combo_sheet.png`.
 - Limites: ao abrir, o jogo ainda aparece na frente uma vez; o som toca; com `virtualPad` ligado o controle físico 1
   fica ignorado (o teclado continua valendo).
+
+## 2026-10-22 — T26 (agente): Blade of Artemis no slot Agni & Rudra
+- DLL: flag `testWeapons` equipa na sessão Rebellion + Agni & Rudra e Ebony & Ivory + Shotgun (ordem do Arcade do
+  Crimson, `SessionData.weapons` 0x84) e libera Agni/Shotgun em `weaponAndStyleUnlocks`. Controle virtual: `q`/`e` =
+  LT/RT (troca de arma de fogo/corpo a corpo; o jogo testa os gatilhos em dmc3.exe+41D04).
+- Override: `plwp_2sword.pac` = `work/install/artemis_v1` (backup do original do Crimson em `crimson_override`).
+- No jogo (em segundo plano): RT troca para a Artemis, que aparece dourada na mão direita e golpeia com as motions
+  de Agni & Rudra (`work/shots/w_artemis_sheet.png`). As lâminas do Kratos continuam nas mãos (estão no corpo).
