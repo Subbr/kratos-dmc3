@@ -548,3 +548,12 @@
   corrupção do objeto vizinho. Código revertido.
 - Para retomar: achar o ModelData real dos inimigos pela função de desenho do tipo (vtable do ator → função que faz
   `lea rcx,[reg+X]; call dmc3.exe+89DE0`), por tipo de inimigo.
+
+## 2026-10-23 — T56 (agente): pedra da Medusa, 3ª tentativa (o tingimento não vale para inimigos)
+- ModelData real do Hell achado pela vtable do ator (`1404C9AF8`, tipo 0): as entradas 20–22 passam `+0x840`,
+  `+0xFC0` e `+0x1EC0` para `FUN_140089de0` (`add rcx,0x840` / `lea rcx,[rbx+X]`); o 1º qword de cada um é a vtable do
+  modelo (`call [rax+0x140]`). Busca automática em tempo de execução (padrão antes do `call 89DE0` nas 32 primeiras
+  entradas da vtable, validando a vtable em .rdata) achou exatamente esses três, **sem queda**.
+- Mas `FUN_1402f69c0` nesses modelos **não muda nada na tela**, nem com vermelho opaco (`work/shots/stone7_t.png`): o
+  efeito de cor só vale no caminho de desenho do jogador. Código revertido. Para retomar: procurar onde o desenho do
+  inimigo lê cor/material (ex.: o brilho de dano) — fora do escopo por ora.
