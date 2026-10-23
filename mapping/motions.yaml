@@ -105,9 +105,20 @@ pl000_00_17:  # SWORDMASTER_BEOWULF (T48): L no chão 0, no ar 6, segurar 8
   0:  {anim: comboLR4, timing: strike}
   6:  {anim: airImpale+airImpaleLand, timing: strike}
   8:  {anim: impaleSlamCharge, timing: strike}
-pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh): só o disparo (mira e recuo ficam do Dante)
+pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh)
   8:  {anim: boltThrow, timing: strike}      # tiro no chão (8/2 mira travada → 8/8 → 8/5)
   32: {anim: airBoltThrow, timing: strike}   # no ar
+  # travado (RB) o Dante anda mirando as pistolas: o Kratos fica na postura de combate (T53, motion_probe.sh 0)
+  0:  {anim: idleCombat, timing: stretch, loop: true}
+  2:  {anim: idleCombat, timing: stretch, loop: true}
+  4:  {anim: idleCombat, timing: stretch}
+  5:  {anim: idleCombat, timing: stretch}
+  11: {anim: walkBlend1, timing: stretch, loop: true}
+  12: {anim: walkBlend1, timing: stretch, loop: true}
+  18: {anim: walkBlend1, timing: stretch, loop: true}
+  19: {anim: walkBlend1, timing: stretch, loop: true}
+  25: {anim: walkBlend2, timing: stretch, loop: true}
+  26: {anim: walkBlend2, timing: stretch, loop: true}
 pl000_00_9:   # SHOTGUN = Poseidon's Rage (T49)
   8:  {anim: LightningExit, timing: strike}  # 9/5 → 9/8 → 9/5
   39: {anim: airLightningStart, timing: strike}

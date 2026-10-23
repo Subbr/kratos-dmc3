@@ -525,3 +525,11 @@
   `demo_pl000_00_3` diferia: versão anterior à correção do cabeçalho do T38; reinstalado → 0 diferenças);
   `--restore` devolve os originais do Crimson (backups em `crimson_override`). Antes de copiar, guarda backup de
   qualquer arquivo do override que ainda não tenha.
+
+## 2026-10-23 — T53 (agente): locomoção travada sem a pose de mira
+- Sonda no slot das Blades (`motion_probe.sh 0`): todos os golpes que saem já estão mapeados. Com a trava (RB) e a
+  E&I, o Dante anda mirando as pistolas (grupo 8: parado 0/2/4/5, andar 11/12/18/19, correr 25/26) — o Kratos fazia
+  isso com as armas escondidas. `pl000_00_8` → `idleCombat`/`walkBlend1`/`walkBlend2` (`stretch`, loop); o disparo
+  8/8 e o ar 8/32 seguem como no T49. motions_v19 (só `pl000_00_8` muda); `install_all.sh` aponta para v19.
+- No jogo: travado e andando para os lados em postura de combate (`work/shots/lock_walk_sheet.png`).
+- Pendente: a mesma troca nos grupos 9–11 (Shotgun, Artemis, Spiral) quando estão equipados.
