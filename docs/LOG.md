@@ -414,3 +414,17 @@
   **13/9 ×2, 13/10 ×1**) e o Prop (13/19 ×2). Todas usam as motions do Kratos do T23. A captura
   (`work/shots/ar_rave_sheet.png`) pegou o Prop no chão, com as correntes acertando; o quadro aéreo da 13/9 e 13/10
   não foi capturado (o pulo do script em segundo plano não entrou nessa rodada).
+
+## 2026-10-23 — T41 (agente): playtest automático das 20 missões
+- `tools/win/playtest.sh <missão>`: o **Arcade do Crimson** (`CrimsonConfig.json` → `Arcade.enable/mission`, armas
+  0/2/5/8) abre o jogo direto na missão, sem menus (~30 s). Rotina de combate em 8 fases (andar, combo, pulo + ataque e
+  Aerial Rave, bloqueio + agarrão, magias, DT), captura por fase, confere se o processo responde e resume o log. O
+  CrimsonConfig volta ao original no fim (backup `crimson_override/CrimsonConfig.json.pre_t41`).
+- **Resultado (M1–M20): nenhuma queda nem travamento.** Folhas `work/shots/playtest_sheet_0.png`/`_1.png`; resumo
+  em `work/shots/playtest/resumo.txt`. Dano 0 na maioria porque a sala inicial não tem inimigos perto.
+- **Achado:** da M8 em diante aparecia o **Dante**. As roupas usam arquivos próprios (`costumeFileIdsDante`: pl000
+  padrão, pl011 sem casaco, pl013 rasgada, pl015 DMC1, pl016 DMC1 sem casaco, pl018 Sparda) e as missões seguintes usam
+  a rasgada (pl013). Os cinco do override do Crimson: backup + round-trip idêntico, mesma estrutura do pl000.
+  `kratos_fit` → `work/install/kratos_costumes_v1/pl011.pac` e `pl013.pac` instalados; M10, M15 e M17 agora com o
+  Kratos (`work/shots/pt_zoom3.png`). **pl015/pl016/pl018 falham** no parse do MOD ("seções sobrepostas") — roupas
+  opcionais, pendente.

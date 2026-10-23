@@ -10,6 +10,9 @@ M=$1; N=$(printf "m%02d" "$M")
 P='D:\Code\god1_dmc3\tools\win\game.ps1'
 g() { powershell.exe -ExecutionPolicy Bypass -File "$P" "$@" >/dev/null 2>&1; }
 LOG="Devil May Cry HD Collection/logs/kratos.txt"
+CFG="Devil May Cry HD Collection/Crimson/configs/CrimsonConfig.json"
+cp "$CFG" "$CFG.playtest_bak"
+trap 'g stop; sleep 3; mv -f "$CFG.playtest_bak" "$CFG"' EXIT   # o Arcade não fica ligado depois do teste
 OUT=work/shots/playtest; mkdir -p $OUT; rm -f $OUT/${N}_*.png
 tools/.venv/bin/python -I - "$M" <<'PY'
 import json, pathlib, sys
