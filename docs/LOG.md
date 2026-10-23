@@ -478,3 +478,12 @@
   `pl000_00_5` → berserkIdle, berComboH1–H4, V1, Stab, V2, AirH1 (`strike`), motions_v16 (só `pl000_00_5` muda).
 - No jogo: 6 acertos no combo, golpes largos com a Artemis (`work/shots/probe_w2_sheet.png`). As lâminas continuam
   nas mãos (estão no corpo); no GoW1 iriam para as costas.
+
+## 2026-10-23 — T47 (agente): levantamento das texturas com o Dante nos menus
+- Os menus nativos usam texturas DDS dentro dos `id*.pac` (2698 arquivos; sufixos F/G/I/J/S/C/Z = idiomas). Varredura
+  das texturas ≥ 256 px dos `idNNNN.pac` (1287) filtrando o vermelho do casaco: `work/shots/id_red.png`. Com o Dante:
+  cartas de golpe da loja (`id741`–`id760`, "ACTION" + Dante executando o golpe), título (`id900`: "VERGIL / DANTE" e o
+  logo), fim de missão secreta / Dante na poltrona (`id7168`), `id200` (arte do Vergil). O retrato da tela STATUS não
+  apareceu no filtro (pode ser o modelo 3D ao vivo).
+- Pendente: renderizar o Kratos (glb do GoW1, Blender headless) para cada arte e regravar com `tex.py`
+  (`make_texture`), com round-trip primeiro.
