@@ -586,3 +586,8 @@
   override do Crimson → o `--restore` apaga). Prévia `work/install/menu_art/out/id7168.pac.preview.png`.
 - Entra no `build_all.sh` (passo 6, se os renders existirem); release com 63 arquivos; `install_all --check` = 0.
   Playtest M5 sem queda. **Não visto no jogo** (tela difícil de alcançar no teste automático).
+
+## 2026-10-23 — T60 (agente): Rage of the Gods com as Blades em brasa
+- Os seis DTs (`pl005–pl009`, `pl017`) agora usam `maigodblade.glb` (Blades of Chaos no nível máximo, textura de fogo)
+  nas duas mãos, no `build_all.sh`. No jogo: Kratos dourado com as lâminas em brasa (`work/shots/dt_god_zoom.png`).
+  Release regerada e instalada (`--check` = 0).

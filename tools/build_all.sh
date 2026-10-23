@@ -23,7 +23,8 @@ done
 for n in pl005 pl006 pl007 pl008 pl009 pl017; do
   unpack $B/$n.pac crimson_$n
   hide=$(ls $U/crimson_$n | grep MOD | grep -v '^001' | paste -sd, - || true)
-  $PY tools/kratos_fit.py $GLB $U/crimson_$n "$OUT/$n.pac" $FIT --hide "$hide" --tint 1,0.75,0.2,0.35
+  # Rage of the Gods: Blades em brasa do GoW1 (maigodblade, nível máximo; T60)
+  $PY tools/kratos_fit.py $GLB $U/crimson_$n "$OUT/$n.pac" ${FIT/maiblade/maigodblade} --hide "$hide" --tint 1,0.75,0.2,0.35
 done
 # 3. armas: Artemis no slot Agni & Rudra (T26); as do Dante escondidas (T8, T45, T49, T50)
 unpack $B/plwp_2sword.pac crimson_plwp_2sword
