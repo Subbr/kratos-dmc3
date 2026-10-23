@@ -45,6 +45,9 @@ pl000_00_1:   # DAMAGE: reações a golpe do GoW1 (T65, work/shots/dmg_unmapped.
 pl000_00_2:   # TAUNTS: o taunt (Back) vira o agarrão do GoW1 (§7.1; T33 — a DLL finaliza o inimigo perto)
   0:  {anim: grab+idleCombat, timing: natural}    # agarra e volta à postura de combate
   1:  {anim: grab+idleCombat, timing: natural}    # o outro taunt sorteado (T33: 2/0 e 2/1)
+  # T68: taunts restantes = agarrão
+  2: {anim: grab+idleCombat, timing: natural}
+  3: {anim: grab+idleCombat, timing: natural}
 pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   0:  {anim: idleCombat, timing: stretch, loop: true}    # guarda com a arma
   1:  {anim: idleCombat, timing: stretch, loop: true}
@@ -238,18 +241,47 @@ pl000_00_14:  # SWORDMASTER_CERBERUS (T48, motion_probe.sh 1 0): L no chão 0/1,
   7:  {anim: airH1, timing: strike}
   8:  {anim: airH2, timing: strike}
   10: {anim: impaleSlamCharge, timing: strike}
+  # T68: resto do Swordmaster do Cerberus (aproximado)
+  2: {anim: comboLR2, timing: strike}
+  3: {anim: comboLR3, timing: strike}
+  4: {anim: comboLR4, timing: strike}
+  5: {anim: airH3, timing: strike}
+  6: {anim: airV1, timing: strike}
 pl000_00_15:  # SWORDMASTER_AGNI_RUDRA = Artemis (T48): L no chão 0, no ar 4/5
   0:  {anim: berComboV3, timing: strike}
   4:  {anim: berAirH1, timing: strike}
   5:  {anim: berAirH2, timing: strike}
+  # T68: resto do Swordmaster da Artemis (aproximado)
+  1: {anim: berComboV4, timing: strike}
+  2: {anim: berComboH4, timing: strike}
+  3: {anim: berAirH2, timing: strike}
+  6: {anim: berComboStab, timing: strike}
+  7: {anim: berComboV4, timing: strike}
+  8: {anim: berComboH4, timing: strike}
+  9: {anim: berAirH2, timing: strike}
 pl000_00_16:  # SWORDMASTER_NEVAN (T48): L no chão 0, no ar 7/8
   0:  {anim: dashMultiStab, timing: strike}
   7:  {anim: airH3, timing: strike}
   8:  {anim: airV1, timing: strike}
+  # T68: resto do Swordmaster da Nevan (aproximado)
+  1: {anim: combo6A, timing: strike}
+  3: {anim: combo7A, timing: strike}
+  4: {anim: comboLR3, timing: strike}
+  5: {anim: airH2, timing: strike}
+  9: {anim: combo6A, timing: strike}
+  10: {anim: combo7A, timing: strike}
 pl000_00_17:  # SWORDMASTER_BEOWULF (T48): L no chão 0, no ar 6, segurar 8
   0:  {anim: comboLR4, timing: strike}
   6:  {anim: airImpale+airImpaleLand, timing: strike}
   8:  {anim: impaleSlamCharge, timing: strike}
+  # T68: resto do Swordmaster do Beowulf (aproximado)
+  1: {anim: KickBox2, timing: strike}
+  2: {anim: KickBox3, timing: strike}
+  3: {anim: brutal1, timing: strike}
+  4: {anim: brutal3, timing: strike}
+  5: {anim: KickBox2, timing: strike}
+  7: {anim: KickBox3, timing: strike}
+  9: {anim: brutal1, timing: strike}
 pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh)
   8:  {anim: boltThrow, timing: strike}      # tiro no chão (8/2 mira travada → 8/8 → 8/5)
   32: {anim: airBoltThrow, timing: strike}   # no ar
@@ -271,6 +303,39 @@ pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh)
   48: {anim: walkBlend1, timing: stretch, loop: true}
   50: {anim: walkBlend1, timing: stretch, loop: true}
   51: {anim: walkBlend1, timing: stretch, loop: true}
+  # T68: variações de tiro da E&I = Zeus (aproximado)
+  3: {anim: boltThrow, timing: strike}
+  6: {anim: boltThrowL, timing: strike}
+  7: {anim: boltThrow, timing: strike}
+  10: {anim: boltThrowL, timing: strike}
+  13: {anim: boltThrow, timing: strike}
+  14: {anim: boltThrowL, timing: strike}
+  15: {anim: boltThrow, timing: strike}
+  17: {anim: boltThrowL, timing: strike}
+  20: {anim: boltThrow, timing: strike}
+  21: {anim: boltThrowL, timing: strike}
+  22: {anim: boltThrow, timing: strike}
+  23: {anim: boltThrowL, timing: strike}
+  24: {anim: boltThrow, timing: strike}
+  27: {anim: boltThrowL, timing: strike}
+  28: {anim: boltThrow, timing: strike}
+  29: {anim: boltThrowL, timing: strike}
+  30: {anim: boltThrow, timing: strike}
+  31: {anim: boltThrowL, timing: strike}
+  33: {anim: boltThrow, timing: strike}
+  34: {anim: boltThrowL, timing: strike}
+  35: {anim: boltThrow, timing: strike}
+  39: {anim: boltThrowL, timing: strike}
+  42: {anim: boltThrow, timing: strike}
+  43: {anim: boltThrowL, timing: strike}
+  45: {anim: boltThrow, timing: strike}
+  46: {anim: boltThrowL, timing: strike}
+  47: {anim: boltThrow, timing: strike}
+  49: {anim: boltThrowL, timing: strike}
+  52: {anim: boltThrow, timing: strike}
+  53: {anim: boltThrowL, timing: strike}
+  54: {anim: boltThrow, timing: strike}
+  55: {anim: boltThrowL, timing: strike}
 pl000_00_9:   # SHOTGUN = Poseidon's Rage (T49)
   8:  {anim: LightningExit, timing: strike}  # 9/5 → 9/8 → 9/5
   7:  {anim: LightningExit, timing: strike}  # disparo travado (T53)
@@ -288,6 +353,30 @@ pl000_00_9:   # SHOTGUN = Poseidon's Rage (T49)
   16: {anim: walkBlend1, timing: stretch, loop: true}
   26: {anim: walkBlend2, timing: stretch, loop: true}
   23: {anim: walkBlend1, timing: stretch, loop: true}   # 3ª sonda
+  # T68: variações da Shotgun = Poseidon (aproximado)
+  3: {anim: LightningExit, timing: strike}
+  6: {anim: airLightningStart, timing: strike}
+  10: {anim: LightningExit, timing: strike}
+  13: {anim: airLightningStart, timing: strike}
+  14: {anim: LightningExit, timing: strike}
+  15: {anim: airLightningStart, timing: strike}
+  17: {anim: LightningExit, timing: strike}
+  20: {anim: airLightningStart, timing: strike}
+  21: {anim: LightningExit, timing: strike}
+  22: {anim: airLightningStart, timing: strike}
+  24: {anim: LightningExit, timing: strike}
+  27: {anim: airLightningStart, timing: strike}
+  28: {anim: LightningExit, timing: strike}
+  29: {anim: airLightningStart, timing: strike}
+  30: {anim: LightningExit, timing: strike}
+  31: {anim: airLightningStart, timing: strike}
+  32: {anim: LightningExit, timing: strike}
+  33: {anim: airLightningStart, timing: strike}
+  34: {anim: LightningExit, timing: strike}
+  35: {anim: airLightningStart, timing: strike}
+  36: {anim: LightningExit, timing: strike}
+  37: {anim: airLightningStart, timing: strike}
+  38: {anim: LightningExit, timing: strike}
 pl000_00_10:  # ARTEMIS = Army of Hades (T49)
   4:  {anim: raiseTheDead, timing: strike}   # 10/3 → 10/4 → 10/3 (travado: 10/2 → 10/4)
   13: {anim: airRaiseTheDead, timing: strike}
@@ -301,6 +390,8 @@ pl000_00_10:  # ARTEMIS = Army of Hades (T49)
   11: {anim: walkBlend1, timing: stretch, loop: true}
   12: {anim: walkBlend1, timing: stretch, loop: true}
   3:  {anim: idleCombat, timing: stretch, loop: true}   # recuo do tiro (2ª sonda)
+  # T68: resto da Artemis = Army of Hades
+  10: {anim: raiseTheDead, timing: strike}
 pl000_00_11:  # SPIRAL = Medusa's Gaze (T49)
   8:  {anim: psentHead, timing: strike}      # 11/8 → 11/5
   7:  {anim: psentHead, timing: strike}      # disparo travado (T53)
@@ -319,3 +410,83 @@ pl000_00_11:  # SPIRAL = Medusa's Gaze (T49)
   21: {anim: walkBlend1, timing: stretch, loop: true}
   24: {anim: walkBlend1, timing: stretch, loop: true}
   20: {anim: walkBlend1, timing: stretch, loop: true}   # 4ª sonda
+
+  # T68: resto da Spiral = Medusa (11/5, recuo, fica do Dante)
+  3: {anim: psentHead, timing: strike}
+  6: {anim: headNukeStart, timing: strike}
+  10: {anim: psentHead, timing: strike}
+  14: {anim: headNukeStart, timing: strike}
+  18: {anim: psentHead, timing: strike}
+  22: {anim: headNukeStart, timing: strike}
+pl000_00_12:
+  # T68: KALINA ANN (sem magia do GoW1): gesto do raio de Zeus; 0 parado
+  0: {anim: idleCombat, timing: stretch, loop: true}
+  2: {anim: boltThrow, timing: strike}
+  3: {anim: boltThrow, timing: strike}
+  4: {anim: boltThrow, timing: strike}
+  5: {anim: boltThrow, timing: strike}
+  6: {anim: boltThrow, timing: strike}
+  7: {anim: boltThrow, timing: strike}
+  8: {anim: boltThrow, timing: strike}
+  9: {anim: boltThrow, timing: strike}
+  10: {anim: boltThrow, timing: strike}
+  11: {anim: boltThrow, timing: strike}
+  12: {anim: boltThrow, timing: strike}
+  13: {anim: boltThrow, timing: strike}
+  14: {anim: boltThrow, timing: strike}
+  15: {anim: boltThrow, timing: strike}
+  16: {anim: boltThrow, timing: strike}
+  17: {anim: boltThrow, timing: strike}
+  18: {anim: boltThrow, timing: strike}
+  19: {anim: boltThrow, timing: strike}
+  20: {anim: boltThrow, timing: strike}
+  21: {anim: boltThrow, timing: strike}
+  22: {anim: boltThrow, timing: strike}
+  23: {anim: boltThrow, timing: strike}
+  24: {anim: boltThrow, timing: strike}
+pl000_00_18:
+  # T68: GUNSLINGER (D2 provisória: estilo das magias) = gestos da magia da arma
+  0: {anim: boltThrow, timing: strike}
+  1: {anim: airBoltThrow, timing: strike}
+  2: {anim: boltThrow, timing: strike}
+  3: {anim: airBoltThrow, timing: strike}
+  4: {anim: boltThrow, timing: strike}
+  5: {anim: airBoltThrow, timing: strike}
+  6: {anim: boltThrow, timing: strike}
+  7: {anim: airBoltThrow, timing: strike}
+  15: {anim: boltThrow, timing: strike}
+  16: {anim: airBoltThrow, timing: strike}
+  17: {anim: boltThrow, timing: strike}
+  18: {anim: airBoltThrow, timing: strike}
+pl000_00_19:
+  # T68: GUNSLINGER (D2 provisória: estilo das magias) = gestos da magia da arma
+  0: {anim: LightningExit, timing: strike}
+  1: {anim: airLightningStart, timing: strike}
+  2: {anim: LightningExit, timing: strike}
+  3: {anim: airLightningStart, timing: strike}
+  4: {anim: LightningExit, timing: strike}
+  5: {anim: airLightningStart, timing: strike}
+pl000_00_20:
+  # T68: GUNSLINGER (D2 provisória: estilo das magias) = gestos da magia da arma
+  2: {anim: raiseTheDead, timing: strike}
+  3: {anim: airRaiseTheDead, timing: strike}
+  4: {anim: raiseTheDead, timing: strike}
+pl000_00_21:
+  # T68: GUNSLINGER (D2 provisória: estilo das magias) = gestos da magia da arma
+  0: {anim: psentHead, timing: strike}
+  1: {anim: headNukeStart, timing: strike}
+pl000_00_22:
+  # T68: GUNSLINGER (D2 provisória: estilo das magias) = gestos da magia da arma
+  0: {anim: boltThrow, timing: strike}
+  1: {anim: boltThrowL, timing: strike}
+  2: {anim: boltThrow, timing: strike}
+  3: {anim: boltThrowL, timing: strike}
+pl000_00_25:
+  # T68: QUICKSILVER: pose de poder do Kratos
+  0: {anim: berserkEnter, timing: strike}
+  1: {anim: berserkEnter, timing: strike}
+pl000_00_26:
+  # T68: DOPPELGANGER: pose de poder do Kratos
+  0: {anim: berserkEnter, timing: strike}
+  1: {anim: berserkEnter, timing: strike}
+  2: {anim: berserkEnter, timing: strike}

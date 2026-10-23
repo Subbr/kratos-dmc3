@@ -654,3 +654,12 @@
 - Nevan (26 entradas) e Beowulf (20) sem folha por índice: ciclo de combos do Kratos na Nevan e de `KickBox1–3`/
   `brutal1/3` no Beowulf (socos e chutes) — **aproximado**.
 - Release regerada e instalada (`--check` = 0); sonda das quatro armas sem queda (acertos 6/8/9/2 num combo).
+
+## 2026-10-23 — T68 (agente): todas as coleções de motion do jogador com o Kratos
+- Grupos (enum `MOTION_GROUP_DANTE`): 18–22 Gunslinger (E&I, Shotgun, Artemis, Spiral, Kalina), 25 Quicksilver, 26
+  Doppelganger. Mapeados por arma: variações de tiro e Gunslinger viram os gestos da magia daquela arma (Zeus
+  `boltThrow`/`boltThrowL`/`airBoltThrow`, Poseidon `LightningExit`/`airLightningStart`, Hades `raiseTheDead`/
+  `airRaiseTheDead`, Medusa `psentHead`/`headNukeStart`; 11/5, recuo da Spiral, fica do Dante); Kalina (sem magia no
+  GoW1) = gesto do raio; taunts 2/2–3 = agarrão; Quicksilver/Doppelganger = `berserkEnter`; resto dos Swordmaster das
+  armas em ciclo (aproximado). Só ficam do Dante 13/18, 13/20 e 11/5.
+- Release regerada e instalada; regressão completa em andamento.
