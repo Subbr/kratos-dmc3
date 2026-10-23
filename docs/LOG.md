@@ -408,3 +408,9 @@
   ModelData): tingir o 1º deixou a foice do Hell cinza; tingir os 8 **derrubou o jogo**. Código de tingimento
   removido; a Medusa fica com congelamento + explosão cinza. Para retomar: achar o ModelData por tipo de inimigo
   (tabela de offsets por id do inimigo).
+
+## 2026-10-23 — T40 (agente): Aerial Rave completo (Swordmaster)
+- `testStyle 0`, pulo + L ×4 com intervalos de 180/250/320 ms: o log tem as quatro partes (13/7 ×3, 13/8 ×3,
+  **13/9 ×2, 13/10 ×1**) e o Prop (13/19 ×2). Todas usam as motions do Kratos do T23. A captura
+  (`work/shots/ar_rave_sheet.png`) pegou o Prop no chão, com as correntes acertando; o quadro aéreo da 13/9 e 13/10
+  não foi capturado (o pulo do script em segundo plano não entrou nessa rodada).
