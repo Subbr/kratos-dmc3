@@ -470,3 +470,11 @@
   arma.
 - No jogo: acertos 4 (Cerberus), 7 (Nevan), 3 (Beowulf) num combo; folha `work/shots/t45_weapons.png`. Os raios roxos
   da Nevan continuam (efeito da arma).
+
+## 2026-10-23 — T46 (agente): Blade of Artemis com os golpes "ber*" do GoW1
+- As animações `ber*` do glb (berComboH1–H4, V1–V4, Stab, AirH1/H2, berserkEnter/Exit/Idle, berwalk) são de espada a
+  duas mãos com a arma no ombro (`work/shots/ber_sheet.png`) — o conjunto da Blade of Artemis. Grupo 5 (Agni & Rudra =
+  Artemis, §7.1), índices pela sonda: combo 3→4→5→6→7, trava + frente/trás 20→21, ar 17, parado 0/1.
+  `pl000_00_5` → berserkIdle, berComboH1–H4, V1, Stab, V2, AirH1 (`strike`), motions_v16 (só `pl000_00_5` muda).
+- No jogo: 6 acertos no combo, golpes largos com a Artemis (`work/shots/probe_w2_sheet.png`). As lâminas continuam
+  nas mãos (estão no corpo); no GoW1 iriam para as costas.

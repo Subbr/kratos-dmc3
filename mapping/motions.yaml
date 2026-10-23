@@ -76,3 +76,14 @@ pl000_00_7:   # BEOWULF (T45, motion_probe.sh 4)
   4:  {anim: combo3B, timing: strike}
   5:  {anim: combo3C, timing: strike}
   25: {anim: airH2, timing: strike}          # no ar
+pl000_00_5:   # AGNI & RUDRA = Blade of Artemis (§7.1): golpes "ber*" do GoW1 (espada a duas mãos; T46, motion_probe.sh 2)
+  0:  {anim: berserkIdle, timing: stretch, loop: true}
+  1:  {anim: berserkIdle, timing: stretch, loop: true}
+  3:  {anim: berComboH1, timing: strike}     # combo 5/3 → 5/4 → 5/5 (→ 5/6, 5/7)
+  4:  {anim: berComboH2, timing: strike}
+  5:  {anim: berComboH3, timing: strike}
+  6:  {anim: berComboH4, timing: strike}
+  7:  {anim: berComboV1, timing: strike}
+  20: {anim: berComboStab, timing: strike}   # trava + frente/trás
+  21: {anim: berComboV2, timing: strike}
+  17: {anim: berAirH1, timing: strike}       # no ar
