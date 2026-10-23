@@ -359,3 +359,13 @@
   parado e **0/31** depois de pular correndo (log: pulo correndo = 0/4 → 0/31 → 3/0).
 - Log: 6 passos de corrida em 2,5 s; 2 aterrissagens em 2 pulos. (O 1º avanço da missão dispara a cena dos inimigos
   e corta o teste: medir depois dela.)
+
+## 2026-10-23 — T36 (agente): arte do GoW1 no HUD
+- `R_PERM.WAD` tem o HUD inteiro: `TXR_HUD000–192` (+GFX/PAL) e `FLP_HUD` (layout, não usado ainda). O JSON de cada
+  TXR no god_of_war_browser já traz o PNG (base64); 193 exportadas para `extracted/gow1/hud`, folha
+  `work/shots/gow_hud_sheet.png`. Peças: **029** = lâmina da Blade of Chaos 256x96 com o medalhão (moldura de vida e
+  magia), **014–017** = ícones Poseidon, Medusa, Zeus e Army of Hades, 032–035 = placas do Ω, 163–169 = outros ícones.
+- `tools/install_hud.sh` → `Crimson\huds\kratos` (fora do git). DLL: `CreateTexture` do Crimson (stb_image) e
+  ImGui: moldura em 2,2× (1080p), vida e magia dentro da lâmina, Rage enchendo o medalhão de dourado, ícone da magia
+  da arma de fogo ativa ao lado. Sem os arquivos volta às barras lisas.
+- No jogo: `work/shots/hud2_crop.png`. Posição das barras pelo olho; o `FLP_HUD` pode dar o layout exato.
