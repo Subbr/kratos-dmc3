@@ -451,3 +451,10 @@
 - **Achado 2:** a Medusa petrificava chefes (10 de 14) e o agarrão tirava vida deles. No GoW1 nenhum dos dois pega
   chefe → `IsBoss` exclui Cerberus, Gigapede, Agni & Rudra, Nevan, Geryon, Beowulf, Doppelganger, Arkham, Lady,
   Vergil, Jester e o coração do Leviathan. Reteste M3/M12: `medusa petrificou 0`, `agarrao nada`, dano normal.
+
+## 2026-10-23 — T44 (agente): dano das magias nos chefes
+- O dano dos chefes não passa pelo hook (T43). Na queda de vida por quadro (`UpdateSpells`), se o alvo é chefe e a
+  motion do Kratos é de arma de fogo, o extra (`mult − 1` × dano) sai direto da vida (`EnemyHp`), sem passar de 1 (a
+  morte continua sendo do jogo). Log `magia chefe x2.0 extra 30.0` (Agni & Rudra, M7) e `extra 16.2` ×3 (M11).
+  Na fase de gelo do Cerberus os tiros não ferem (sem extra, como deve ser).
+- `playtest.sh` (chefe): a fase 0 agora dá 4 tiros de E&I travado.

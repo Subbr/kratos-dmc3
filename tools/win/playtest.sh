@@ -46,7 +46,7 @@ if [ "${BOSS:-0}" = 1 ]; then
   # chefe: trava + frente + ataque (Stinger) fecha a distância; combos, Medusa, agarrão e DT, em ciclos
   STING="+n +w wait:120 i:80 wait:600 -w -n"
   CMB="i:50 wait:220 i:50 wait:220 i:50 wait:700"
-  phase 0_start "wait:2000" &&
+  phase 0_start "wait:2000 +n j:80 wait:500 j:80 wait:500 j:80 wait:500 j:80 wait:500 -n" &&
   phase 1_sting "$STING $CMB $STING $CMB" &&
   phase 2_magic "q:200 wait:900 q:200 wait:900 q:200 wait:900 +n j:80 wait:1200 j:80 wait:1200 -n" &&
   phase 3_grab "$STING $CMB tab:100 wait:1500 $STING tab:100 wait:1500" &&
