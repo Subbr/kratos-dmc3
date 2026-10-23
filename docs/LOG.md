@@ -428,3 +428,10 @@
   `kratos_fit` → `work/install/kratos_costumes_v1/pl011.pac` e `pl013.pac` instalados; M10, M15 e M17 agora com o
   Kratos (`work/shots/pt_zoom3.png`). **pl015/pl016/pl018 falham** no parse do MOD ("seções sobrepostas") — roupas
   opcionais, pendente.
+
+## 2026-10-23 — T42 (agente): Kratos em todas as roupas do Dante
+- pl015/pl016/pl018 têm malhas que **compartilham dados** (offset de uma seção antes do fim da anterior); `mod.py`
+  agora lê esses MOD sem as lacunas (sem round-trip idêntico, que o `kratos_fit` não usa: ele zera `gaps`). pytest 10/10.
+- `work/install/kratos_costumes_v1/pl015.pac`, `pl016.pac`, `pl018.pac` instalados (backups dos originais do Crimson em
+  `crimson_override`). Flag de teste `testCostume` (COSTUME::*) na sessão. Arcade M5 com as roupas 3, 4 e 5: Kratos nas três, sem
+  queda (`work/shots/costumes.png`). Com o T41, **todas as 6 roupas do Dante** são o Kratos.

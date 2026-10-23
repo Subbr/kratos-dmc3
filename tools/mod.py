@@ -119,7 +119,11 @@ class Model:
                 raise ValueError(f"layout de esqueleto inesperado: {(hier, order, child, trans)}")
             tail_start = skel_off + trans + 32 * bc
         model = cls(magic, version, bytes(header), objects, skeleton, b[tail_start:], bone_count)
-        model.gaps = model._gaps_from(b)
+        try:
+            model.gaps = model._gaps_from(b)
+        except ValueError:
+            # malhas que compartilham dados (roupas pl015/pl016/pl018, T41): lê, mas não refaz o arquivo idêntico
+            model.gaps = []
         # arquivos de outras ferramentas (ex.: Crimson) reservam mais espaço por malha: preserva o valor lido
         model.auto_index_ptr = False
         model.auto_index_ptr = model.build() != b and cls._with_auto_ptrs(model) == b
