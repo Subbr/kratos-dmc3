@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T42).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T43).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -429,8 +429,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Pendências (por prioridade):**
   1. **LG, de ouvido/olho:** volume e taxa das vozes do GoW1 (22050 Hz é [HIPÓTESE]); se a voz do Dante sumiu
      (canal COMMON mudo); alcance/dano com `reachRadius 4`; tom do HUD e do DT dourado.
-  2. **Playtest fundo:** a rotina do `playtest.sh` só luta onde o Kratos nasce; andar até os inimigos e entrar nos
-     chefes (agarrão, Medusa e dano das magias contra chefes; chefes podem não ter a vida no lugar esperado).
+  2. **Playtest:** feito para as 20 missões e 14 chefes (T41, T43; `BOSS=1 tools/win/playtest.sh`), sem queda. Falta:
+     multiplicador das magias nos chefes (o dano deles não passa pelo hook) e rotina que alcance M4/M8/M16.
   3. **Visual das magias:** pedra da Medusa (tingir o ModelData: precisa do offset por tipo de inimigo, T39); almas do
      Army of Hades; efeito do Poseidon.
   4. **Golpes:** Aerial Rave 13/9–13/10 ainda não visto no ar; mais golpes do Swordmaster com trava + direção; outras
