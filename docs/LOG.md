@@ -676,3 +676,12 @@
 - Flag `rageInvulnerable` (padrão ligado): no hook de dano do Crimson (ramo do jogador, Actor.cpp) a DLL zera o dano
   enquanto `ator.devil` (+0x3E9B) estiver ativo, como a Rage do GoW1. Teste com dano normal e DT liberado: 5 golpes
   bloqueados (`rage bloqueou`); o Kratos ainda faz a reação de golpe (1/x), só não perde vida.
+
+## 2026-10-23 — T71 (agente): Poseidon's Rage em área e só as armas do GoW1
+- **Poseidon's Rage:** no disparo da Shotgun, todo inimigo até `poseidonRadius` (450) perde `poseidonAreaDamage` (150):
+  se o golpe mata e o inimigo já foi golpeado antes, morre pela função de dano do jogo (`Kill`, T33); senão a vida para
+  em 1. A queda conta como golpe no quadro seguinte (magia, hits, som, efeito). Sonda: `poseidon atingiu 1/2/3`
+  (chão, travado, ar); Medusa segue `petrificou 3`.
+- **`gowWeaponsOnly`** (padrão ligado): desmarca na sessão o desbloqueio de Cerberus, Nevan, Beowulf e Kalina Ann e
+  troca essas armas, se equipadas, por Rebellion/Agni & Rudra/E&I. Sonda: um RT agora vai das Blades direto para a
+  Artemis (grupo 5), antes ia para o Cerberus. `gun_probe.sh` registra as linhas de Poseidon/Medusa por modo.

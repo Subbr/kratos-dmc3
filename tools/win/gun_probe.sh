@@ -30,7 +30,7 @@ for gun in zeus poseidon hades medusa; do
       ar) g "k:80 wait:250 j:80 wait:1500" ;;
       andar) g "+n wait:300 +d wait:1200 -d +s wait:800 -s +w wait:800 -w -n wait:300" ;;   # locomoção travada (T53)
     esac
-    echo "$gun $mode: $(grep '^motion' "$LOG" 2>/dev/null | cut -d' ' -f2 | tr '\n' ' ')" >> $OUT
+    echo "$gun $mode: $(grep '^motion' "$LOG" 2>/dev/null | cut -d' ' -f2 | tr '\n' ' ')$(grep -h '^poseidon\|^medusa petrificou' "$LOG" 2>/dev/null | tr '\n' ' ')" >> $OUT
   done
   g "q:200 wait:1200"
 done
