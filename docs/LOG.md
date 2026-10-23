@@ -614,3 +614,12 @@
 - Com `sounds`, a DLL zera em memória (`activeCrimsonConfig.SFX`, sem gravar o CrimsonConfig) o anunciador de rank de
   estilo, a voz do Dante na troca de estilo ("Trickster!") e os dois sons de ativação do DT (a Rage toca o som do
   GoW1, T58). Playtest M3 sem queda; o CrimsonConfig no disco continua com 100.
+
+## 2026-10-23 — T64 (agente): resto dos golpes das Blades e efeito da Medusa
+- `pl000_00_3`: as 11 motions do esqueleto ainda do Dante (8, 9, 11, 14, 15, 17, 18, 19, 29, 31, 32) identificadas pelas
+  poses (`work/shots/reb_unmapped.png`: estocadas rápidas, corte para cima, partes do Stinger, golpes agachados,
+  chute, giro e descida aérea) e trocadas por `dashMultiStab`, `combo4D`, `blockLauncherB`, `dash`, `combo4B`,
+  `comboLR3/4`, `KickBox1`, `air360`, `berAirV2Land` (`strike`). Agora todo o `pl000_00_3` é do Kratos. Release
+  regerada (63) e instalada; regressão curta (M3, chefe M3, sondas) sem queda. A maioria desses golpes não sai na
+  rotina do teste: não vistos no jogo.
+- Medusa: efeito padrão `risingstar` (branco) × verde no lançamento.

@@ -27,6 +27,18 @@ pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   16: {anim: dash, timing: strike}           # Stinger nível 1 (CrimsonDetours.cpp:449)
   13: {anim: blockLauncher, timing: strike}  # High Time (lançador): pose e teste T10
   10: {anim: airImpale+airImpaleLand, timing: strike}  # golpe aéreo para baixo até o chão (pulo + ataque; T20)
+  # T64: o resto do pl000_00_3, pelas poses do Dante (work/shots/reb_unmapped.png)
+  8:  {anim: dashMultiStab, timing: strike}  # estocadas rápidas (Million Stab)
+  9:  {anim: combo4D, timing: strike}        # fim da sequência de estocadas
+  11: {anim: blockLauncherB, timing: strike} # corte para cima
+  14: {anim: dash, timing: strike}           # partes curtas do Stinger
+  15: {anim: dash, timing: strike}
+  17: {anim: combo4B, timing: strike}        # golpes agachados carregados
+  18: {anim: comboLR3, timing: strike}
+  19: {anim: comboLR4, timing: strike}
+  29: {anim: KickBox1, timing: strike}       # chute
+  31: {anim: air360, timing: strike}         # giro no ar
+  32: {anim: berAirV2Land, timing: strike}   # descida aérea
 pl000_00_13:  # SWORDMASTER_REBELLION (L = ação de estilo; T23 com testStyle 0)
   7:  {anim: airH1, timing: strike}          # Aerial Rave 1 (L no ar)
   8:  {anim: airH2, timing: strike}          # Aerial Rave 2
