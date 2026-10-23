@@ -578,3 +578,11 @@
 - DLL: som `rage` ao ativar o DT (`ator.devil`, +0x3E9B) e `poseidon` no disparo da Shotgun. Playtest M3: os dois
   tocaram (log), sem queda.
 - `export_gow1.sh` encerra o servidor pelo nome do processo (`pgrep -x`; o `pkill -f` casava com o próprio shell).
+
+## 2026-10-23 — T59 (agente): arte de menu com o Kratos (pipeline de textura)
+- `tools/build_menu_art.py`: lê o `id*.pac` do `.nbz`, confere o round-trip do PAC e do bloco de textura, troca a
+  textura por fundo da própria arte (bordas esticadas + vinheta, sem a figura) + render do Kratos com brilho vermelho,
+  grava DXT5 com `tex.make_texture`. 1º alvo: `id7168` (fim de missão secreta, Dante na poltrona; não existe no
+  override do Crimson → o `--restore` apaga). Prévia `work/install/menu_art/out/id7168.pac.preview.png`.
+- Entra no `build_all.sh` (passo 6, se os renders existirem); release com 63 arquivos; `install_all --check` = 0.
+  Playtest M5 sem queda. **Não visto no jogo** (tela difícil de alcançar no teste automático).

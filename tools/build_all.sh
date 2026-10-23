@@ -35,4 +35,8 @@ done
 $PY tools/build_motions.py $B "$OUT" --model "$OUT/pl000.pac" >/dev/null
 # 5. textos (T38)
 $PY tools/build_text.py $B/msg_eng.pac "$OUT/msg_eng.pac" >/dev/null
+# 6. artes dos menus com o Kratos (T59; precisa dos renders do blender/scripts/render_kratos.py)
+if ls work/install/menu_art/renders/pose_10_idleCombat.png >/dev/null 2>&1; then
+  $PY tools/build_menu_art.py "$OUT" >/dev/null && rm -f "$OUT"/*.preview.png
+fi
 echo "pronto: $(ls "$OUT" | wc -l) arquivos em $OUT"
