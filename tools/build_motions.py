@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 REACH_PACS = {"pl000_00_3", "pl000_00_13", "demo_pl000_00_3"}  # Rebellion (Blades) e Swordmaster da Rebellion
+# Blade of Artemis (Agni & Rudra e o Swordmaster dela): as Blades of Chaos somem (escala ~0 nos ossos 23/4; T73)
+HIDE_BLADES = {"pl000_00_5", "pl000_00_15"}
 
 
 def main(src: Path, dst: Path, model: Path | None = None) -> None:
@@ -67,6 +69,10 @@ def main(src: Path, dst: Path, model: Path | None = None) -> None:
                 continue
             if model:
                 blade_chain.add_blade_tracks(m, offsets, body, parent, reach=name in REACH_PACS)
+                if name in HIDE_BLADES:
+                    for b in offsets:
+                        for ch in ("sx", "sy", "sz"):
+                            m.tracks.append(mot.Track.hermite(b, ch, [0.001] * (int(round(m.frames)) + 1)))
             p.entries[idx] = m.build(pad=True)
             n += 1
         (dst / f.name).write_bytes(p.build())

@@ -694,3 +694,10 @@
 - Para retomar: (a) pôr as lâminas no PAC da arma do slot Rebellion (`plwp_sword`, que o jogo só mostra com ela) —
   exige o modelo da arma acompanhar os ossos 23/4 do corpo; ou (b) achar no código onde a visibilidade por objeto é
   decidida (REA). O `pl000` de teste foi revertido (`install_all --check` = 0).
+
+## 2026-10-23 — T73 (agente): as Blades somem quando a Artemis está em uso
+- O formato MOT tem canais de escala (`sx/sy/sz`) e o jogo os aplica nos ossos do jogador. `build_motions.py`: nas
+  coleções da Artemis (`pl000_00_5` e o Swordmaster `pl000_00_15`) os ossos das lâminas (23/4) ganham escala 0,001 →
+  as Blades encolhem até sumir na mão enquanto a Artemis é usada; nas outras coleções voltam (sem trilha de escala =
+  1). No jogo: Kratos com a Artemis no ombro e a mão esquerda livre (`work/shots/artemis_noblades.png`).
+- Obs.: com `gowWeaponsOnly`, o RT alterna Blades ↔ Artemis (1 RT = Artemis).
