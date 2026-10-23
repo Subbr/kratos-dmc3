@@ -13,6 +13,9 @@ pl000_00_0:   # BASE
   16: {anim: jumpAir, timing: stretch}       # no ar (pose de queda)
   7:  {anim: evadeLeft, timing: stretch}     # rolamento para a esquerda (osso 0 TX +350)
   8:  {anim: evadeRight, timing: stretch}    # rolamento para a direita (osso 0 TX -350)
+pl000_00_2:   # TAUNTS: o taunt (Back) vira o agarrão do GoW1 (§7.1; T33 — a DLL finaliza o inimigo perto)
+  0:  {anim: grab+idleCombat, timing: natural}    # agarra e volta à postura de combate
+  1:  {anim: grab+idleCombat, timing: natural}    # o outro taunt sorteado (T33: 2/0 e 2/1)
 pl000_00_3:   # REBELLION (slot das Blades of Chaos, D1)
   0:  {anim: idleCombat, timing: stretch, loop: true}    # guarda com a arma
   1:  {anim: idleCombat, timing: stretch, loop: true}

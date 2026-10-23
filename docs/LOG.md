@@ -331,3 +331,16 @@
 - No jogo: RT para Agni & Rudra (Artemis) + DT → Kratos dourado com a Artemis, combo em DT
   (`work/shots/dt_a1_t.png`, `dt_agni_sheet.png`). Cerberus, Nevan, Beowulf e Sparda instalados, não vistos no jogo
   (armas ainda não equipáveis no save).
+
+## 2026-10-23 — T33 (agente): agarrão do GoW1 no taunt
+- O taunt (Back) toca 2/0 ou 2/1; `mapping/motions.yaml` → `pl000_00_2` 0 e 1 = `grab+idleCombat` (`natural`),
+  motions_v13 (só `pl000_00_2` muda).
+- DLL (flag `grab`, `grabRange` 400, `grabDelay` 0.25, `grabKillFraction` 0.35, `grabDamage` 150): `grabDelay` s
+  depois do início do taunt pega o Hell mais perto até `grabRange`; com até 35% da vida ele é finalizado, senão
+  perde `grabDamage`.
+- Morte (REA, `FUN_140088190` = dano do jogo; o Crimson intercepta em +88512): a função tira a vida em
+  `[p1+0x10]+8` e, se ela chega a 0, chama a morte do alvo (`vtable+0x38`). Escrever 0 de fora deixava o inimigo na
+  lista (zumbi). Agora um detour na entrada (+88190) guarda por inimigo a estrutura de dano e o último ataque do
+  Kratos (atacante = **ator + 0x60**, visto no log). O agarrão deixa a vida em 0.01 e chama a função original com
+  esse ataque: a morte sai pelo caminho do jogo (orb vermelho no quadro do agarrão, `work/shots/g_pair.png`).
+- Log: `agarrao golpe` (dano) várias vezes, `agarrao finalizou mais perto 3`.
