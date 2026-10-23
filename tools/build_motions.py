@@ -69,10 +69,11 @@ def main(src: Path, dst: Path, model: Path | None = None) -> None:
                 continue
             if model:
                 blade_chain.add_blade_tracks(m, offsets, body, parent, reach=name in REACH_PACS)
-                if name in HIDE_BLADES:
-                    for b in offsets:
-                        for ch in ("sx", "sy", "sz"):
-                            m.tracks.append(mot.Track.hermite(b, ch, [0.001] * (int(round(m.frames)) + 1)))
+                # escala explícita em toda motion: sem trilha o osso guarda o valor da motion anterior (como na translação)
+                scale = 0.001 if name in HIDE_BLADES else 1.0
+                for b in offsets:
+                    for ch in ("sx", "sy", "sz"):
+                        m.tracks.append(mot.Track.hermite(b, ch, [scale] * (int(round(m.frames)) + 1)))
             p.entries[idx] = m.build(pad=True)
             n += 1
         (dst / f.name).write_bytes(p.build())

@@ -42,4 +42,6 @@ probe estilo "l:80 wait:900 +n +w l:80 -w -n wait:900"
 probe estilo_tras "+n +s wait:120 l:80 wait:900 -s -n"
 probe estilo_ar "k:80 wait:250 l:60 wait:300 l:60 wait:300 l:60 wait:900"
 probe estilo_segurar "l:1200 wait:600"
+# PROBE_BACK=1: volta para a arma inicial (RT de novo) e captura um combo (T73: lâminas voltam?)
+if [ -n "${PROBE_BACK:-}" ]; then g "e:200 wait:1500"; tools/win/burst.sh "i:50 wait:220 i:50" 6 130 probe_back >/dev/null; fi
 cat $OUT

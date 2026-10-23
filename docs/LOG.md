@@ -701,3 +701,6 @@
   as Blades encolhem até sumir na mão enquanto a Artemis é usada; nas outras coleções voltam (sem trilha de escala =
   1). No jogo: Kratos com a Artemis no ombro e a mão esquerda livre (`work/shots/artemis_noblades.png`).
 - Obs.: com `gowWeaponsOnly`, o RT alterna Blades ↔ Artemis (1 RT = Artemis).
+- Escala explícita em **toda** motion (1 nas outras coleções, 0,001 nas da Artemis): sem trilha o osso guardaria a
+  escala da motion anterior. Ida e volta (Blades → Artemis → Blades): as lâminas voltam (`work/shots/blades_back.png`).
+  `motion_probe.sh` com `PROBE_BACK=1` volta para a arma inicial e captura um combo. Regressão curta sem queda.
