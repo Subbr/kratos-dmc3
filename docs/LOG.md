@@ -671,3 +671,8 @@
   embaixo, no centro: barra de pedra (`TXR_HUD037`), ponta de lança dourada (`036`) e o gradiente tingido de vermelho,
   com a vida do 1º chefe vivo na lista (`EnemyHp`/`IsBoss`, máximo da tabela). `install_hud.sh` copia boss_cap/boss_bar.
 - No jogo (chefes da M3 e da M7): `work/shots/boss_bar.png`, a barra desce com o dano; sem queda.
+
+## 2026-10-23 — T70 (agente): Rage of the Gods invulnerável
+- Flag `rageInvulnerable` (padrão ligado): no hook de dano do Crimson (ramo do jogador, Actor.cpp) a DLL zera o dano
+  enquanto `ator.devil` (+0x3E9B) estiver ativo, como a Rage do GoW1. Teste com dano normal e DT liberado: 5 golpes
+  bloqueados (`rage bloqueou`); o Kratos ainda faz a reação de golpe (1/x), só não perde vida.
