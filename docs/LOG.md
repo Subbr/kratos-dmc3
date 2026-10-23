@@ -623,3 +623,15 @@
   regerada (63) e instalada; regressão curta (M3, chefe M3, sondas) sem queda. A maioria desses golpes não sai na
   rotina do teste: não vistos no jogo.
 - Medusa: efeito padrão `risingstar` (branco) × verde no lançamento.
+
+## 2026-10-23 — T65 (agente): reações de dano e o resto da base com o Kratos
+- Levantamento das motions do esqueleto ainda do Dante em cada coleção (base 13, dano 14, armas e estilos dezenas).
+- `pl000_00_1` (DAMAGE, nova no mapeamento): golpe leve/lados, golpe forte, derrubada, arremesso, levantar, colapso,
+  golpe no ar e cambaleios → `hitFront/Left/Right`, `hitSpin`, `hitKnockdown`, `hitBounce`, `hitGetupGround`,
+  `hitGetup`, `death01`, `hitAir` (`stretch`: mantém duração e deslocamento do Dante). Pelas poses
+  (`work/shots/dmg_unmapped.png`).
+- `pl000_00_0`: início do pulo (0/3), pulo com giro (0/4–5, 14), aterrissagem agachada (0/10), variações de parado
+  (0/11, 19, 18, 50), rolamentos no chão (0/12–13) (`work/shots/base_unmapped.png`; escolhas aproximadas).
+- Playtest M3 e chefe M5 sem queda; tocaram 1/0, 1/15, 1/6 (reações) e 0/3, 0/4 (pulo).
+- Ainda do Dante: partes das coleções de armas (Cerberus 6, Artemis 10, Nevan 26, Beowulf 20, guns 8/9), estilos
+  (Trickster 23, Royalguard 24, Swordmaster 13), Gunslinger (18–22) e Kalina (12).

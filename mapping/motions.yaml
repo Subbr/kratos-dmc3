@@ -13,6 +13,35 @@ pl000_00_0:   # BASE
   16: {anim: jumpAir, timing: stretch}       # no ar (pose de queda)
   7:  {anim: evadeLeft, timing: stretch}     # rolamento para a esquerda (osso 0 TX +350)
   8:  {anim: evadeRight, timing: stretch}    # rolamento para a direita (osso 0 TX -350)
+  # T65: o resto da base, pelas poses do Dante (work/shots/base_unmapped.png; escolhas aproximadas)
+  3:  {anim: jumpAir, timing: stretch}       # início do pulo (log: 0/3 antes de 0/1)
+  4:  {anim: jumpDoubleAir, timing: stretch} # pulo com giro
+  5:  {anim: jumpDoubleAir, timing: stretch}
+  9:  {anim: jumpAir, timing: stretch}
+  10: {anim: combatLand2, timing: stretch}   # aterrissagem agachada
+  11: {anim: idleCombat2, timing: stretch}   # parado (variação longa)
+  12: {anim: evadeFront, timing: stretch}    # rolamento no chão
+  13: {anim: evadeFront, timing: stretch}
+  14: {anim: jumpDoubleAir, timing: stretch} # giro
+  17: {anim: land, timing: stretch}          # agachado curto
+  18: {anim: idleCombat, timing: stretch}
+  19: {anim: idleCombat2, timing: stretch}   # parado (espreguiça)
+  50: {anim: idleCombat, timing: stretch}
+pl000_00_1:   # DAMAGE: reações a golpe do GoW1 (T65, work/shots/dmg_unmapped.png; stretch mantém duração e deslocamento)
+  0:  {anim: hitFront, timing: stretch}      # golpe leve
+  1:  {anim: hitLeft, timing: stretch}
+  2:  {anim: hitRight, timing: stretch}
+  3:  {anim: hitSpin, timing: stretch}       # golpe forte
+  4:  {anim: hitKnockdown, timing: stretch}  # derrubado
+  5:  {anim: hitBounce, timing: stretch}     # arremessado
+  6:  {anim: hitGetupGround, timing: stretch} # levanta do chão
+  7:  {anim: hitGetup, timing: stretch}
+  9:  {anim: hitGetup, timing: stretch}
+  11: {anim: death01, timing: stretch}       # colapso
+  13: {anim: hitAir, timing: stretch}        # golpe no ar
+  14: {anim: hitFront, timing: stretch}      # cambaleio
+  15: {anim: hitLeft, timing: stretch}
+  16: {anim: hitRight, timing: stretch}
 pl000_00_2:   # TAUNTS: o taunt (Back) vira o agarrão do GoW1 (§7.1; T33 — a DLL finaliza o inimigo perto)
   0:  {anim: grab+idleCombat, timing: natural}    # agarra e volta à postura de combate
   1:  {anim: grab+idleCombat, timing: natural}    # o outro taunt sorteado (T33: 2/0 e 2/1)
