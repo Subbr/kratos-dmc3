@@ -286,3 +286,9 @@
   meio do golpe e voltam depois de 5 s (`work/shots/md_gaze_sheet.png`; log `pedra 0 speed 0 mult 0`, posição parada).
   O jogo não sobrescreve os dois campos (valor lido no quadro seguinte continua 0). Visual de pedra: pendente.
 - Teste com `playerReceivedDmgMult 0` (o Kratos morreu numa rodada com dano normal).
+
+## 2026-10-22 — T29 (agente): dano das magias
+- O hook de dano do Crimson (Actor.cpp, ramo "Enemy", ativo mesmo com o módulo Actor desligado) chama
+  `KratosMode::OnEnemyDamage`: durante as motions das armas de fogo multiplica o dano por `zeusDamage` (E&I, grupo 8),
+  `poseidonDamage` (Shotgun, 9) e `hadesDamage` (Artemis, 10).
+- Log: E&I `10 x2` (8/7) em 3 tiros; Shotgun `20 x3` (9/7, 5 bagos) e `5 x3` (9/8). Gasto de magia 9 (E&I) e 20 (Shotgun).
