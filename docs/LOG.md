@@ -540,3 +540,11 @@
   disparo travado **9/7**; Artemis 0/2/3/5–9/11/12; Spiral 0/2/4/9/11–13/15–17/19/21/23/24 e disparo travado **11/7**.
 - Tudo vira `idleCombat`/`walkBlend1`/`walkBlend2`; os disparos travados 9/7 e 11/7 viram Poseidon e Medusa como os do
   chão. motions_v20 (só `pl000_00_8–11` mudam); `install_all.sh --check` = 0 diferenças; sonda final sem queda.
+
+## 2026-10-23 — T55 (agente): pedra da Medusa, 2ª tentativa (descartada)
+- Hipótese: as correspondências espaçadas 0x120 (+0x148…+0x5C8) seriam as partes do modelo do inimigo. Tingindo só
+  essa sequência (5 partes no Hell), **o jogo caiu de novo**. Causa provável: o tingimento escreve até
+  `+0x80 + 0xE0 = +0x160`, além do fim de objetos de 0x120 bytes — não são ModelData, e a foice cinza do T39 foi
+  corrupção do objeto vizinho. Código revertido.
+- Para retomar: achar o ModelData real dos inimigos pela função de desenho do tipo (vtable do ator → função que faz
+  `lea rcx,[reg+X]; call dmc3.exe+89DE0`), por tipo de inimigo.
