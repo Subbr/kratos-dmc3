@@ -377,3 +377,19 @@
 - No jogo (`work/shots/md_stone_sheet.png`): os inimigos congelam, mas o efeito quase não aparece (faíscas azuladas
   nos primeiros quadros). **Resultado fraco**: pedra de verdade pede tingir o modelo (RE do render: constantes de
   cor do material do inimigo). Fica pendente; o código fica (inofensivo).
+
+## 2026-10-23 — T38 (agente): nomes do GoW1 nos textos (Fase 8)
+- Textos do jogo: `msg_eng.pac` (interface, itens, ajuda; texto puro com tags `<PS>`, `<BR>`…; comentários em
+  Shift-JIS). O override **já tinha o `msg_eng.pac` do Crimson** (68712 bytes, diferente do `.nbz`): sobrescrevi sem
+  backup por engano e recuperei o original do pacote `vendor/crimson_release/Crimson-0.5a-pack.rar` (backup em
+  `crimson_override` + SHA256SUMS). O round-trip dele não era idêntico (byte 0x14 do preenchimento do cabeçalho = 0x20);
+  `tools/pac.py` agora guarda esse preenchimento (`pad_bytes` no pac.json) → idêntico; pytest 10/10.
+- `tools/build_text.py`: Dante → Kratos (20) e Devil Trigger → Rage of the Gods (1) em `msg_eng.pac` →
+  `work/install/text_v1`. Diálogos da história (`mNN_*_msg_*`) ficam para a Fase 9. Os nomes das armas não aparecem
+  nesse arquivo (os menus nativos usam textura).
+- A loja/Customize é do Crimson (ImGui, strings no C++). Flag `renameUi`: filtro no texto do ImGui
+  (`GImKratosTextFilter` em `ImFont::CalcTextSizeA` e `ImFont::RenderText`, mesma troca para medir e desenhar; os IDs
+  não mudam) troca Dante, Rebellion → Blades of Chaos, Agni & Rudra → Blade of Artemis, Ebony & Ivory → Zeus' Fury,
+  Shotgun → Poseidon's Rage, Spiral → Medusa's Gaze, Artemis → Army of Hades, Devil Trigger → Rage of the Gods.
+  No jogo: `work/shots/cu2_crop.png` (Customize com os nomes do GoW1).
+- `to_mission.sh`: `STOP_AT_MENU=1` para no menu da missão (testes de menu).

@@ -31,6 +31,7 @@ if grep -q '"virtualPad": true' "Devil May Cry HD Collection/Crimson/configs/Kra
   # confirma no Start
   g keys "k:300 wait:8000"              # "Load Successful" -> Mission Select
   g keys "k:300 wait:8000"              # missão do save -> menu da missão (cursor em Customize)
+  [ -n "$STOP_AT_MENU" ] && { tools/win/step.sh "" game; exit 0; }   # para no menu da missão (testes de menu)
   g keys "left:300 wait:900 enter:300 wait:15000"   # Mission Start
 else
   g keys "enter:300 wait:8000"          # "Load Successful" -> Mission Select
