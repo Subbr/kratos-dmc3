@@ -296,6 +296,21 @@ def empty_object(template: mod.Object, at: np.ndarray) -> mod.Object:
     return make_object(template, 0, d)
 
 
+def marker_object(template: mod.Object, at: np.ndarray, size: float) -> mod.Object:
+    """Cubo (12 triângulos) em `at` preso ao osso 0: marca um objeto reservado para ver quando o jogo o mostra (T72)."""
+    c = np.array(at, dtype=float)
+    v = [c + size * np.array(o) for o in [(-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1),
+                                           (-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1)]]
+    faces = [(0, 1, 2), (0, 2, 3), (4, 6, 5), (4, 7, 6), (0, 4, 5), (0, 5, 1), (3, 2, 6), (3, 6, 7),
+             (0, 3, 7), (0, 7, 4), (1, 5, 6), (1, 6, 2)]
+    d = {"pos": [], "nrm": [], "uv": [], "bones": [], "w": []}
+    for f in faces:
+        for k, i in enumerate(f):
+            d["pos"].append(tuple(v[i])); d["nrm"].append((0.0, 1.0, 0.0)); d["uv"].append((0, 0))
+            d["bones"].append(bytes([0, 4, 0, 0])); d["w"].append(31 | (0x8000 if k < 2 else 0))
+    return make_object(template, 0, d)
+
+
 def make_object(template: mod.Object, tex_idx: int, d: dict) -> mod.Object:
     pts = np.array(d["pos"])
     center = (pts.min(0) + pts.max(0)) / 2
@@ -330,7 +345,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
          use_body: bool = True, use_textures: bool = True, collapse_coat: bool = True,
          left_weapon: Path | None = None, reserve: int | None = None, both_hands: bool = False,
          blade_bones: bool = False, flip_edge: bool = False, hide: tuple[str, ...] = ("012.MOD",),
-         tint: tuple[float, float, float, float] | None = None) -> None:
+         tint: tuple[float, float, float, float] | None = None, mark_reserved: bool = False) -> None:
     cfg = yaml.safe_load((ROOT / "mapping" / "skeleton_kratos_dante.yaml").read_text(encoding="utf-8"))
     if blade_bones:
         cfg = blade_cfg(cfg)
@@ -356,6 +371,10 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     # o jogo liga/desliga objetos do Dante pelo índice (ex.: camisa na Missão 1; a coxa direita no objeto 5
     # sumia): os índices do Dante viram objetos vazios e o Kratos começa depois deles
     body.objects = [empty_object(template, dj[1])] * reserve + body.objects
+    if mark_reserved:  # teste T72: cubo k acima da cabeça, na fileira, para cada objeto reservado k
+        top = dj[1] + np.array([0.0, 0.0, 0.0])
+        body.objects[:reserve] = [marker_object(template, top + np.array([(k - reserve / 2) * 9.0, 115.0, 0.0]),
+                                                 6.0 if k else 9.0) for k in range(reserve)]
     body.gaps = []
     if blade_bones:
         repurpose_blade_bones(body, grips, dj)
@@ -398,6 +417,7 @@ if __name__ == "__main__":
     ap.add_argument("--no-textures", action="store_true")
     ap.add_argument("--keep-coat", action="store_true")
     ap.add_argument("--left-weapon", type=Path, help="glb da arma presa à mão esquerda (lWeapIH)")
+    ap.add_argument("--mark-reserved", action="store_true", help="teste: cubo em cada objeto reservado (T72)")
     ap.add_argument("--both-hands", action="store_true", help="com --left-weapon: a mesma arma também no rWeapIH")
     ap.add_argument("--blade-bones", action="store_true", help="lâminas nos ossos 23 (dir.) e 4 (esq.), reaproveitados")
     ap.add_argument("--flip-edge", action="store_true", help="gira as lâminas 180° no eixo do comprimento")
@@ -406,4 +426,4 @@ if __name__ == "__main__":
     ap.add_argument("--tint", help="r,g,b,força: cor misturada nas texturas (ex. DT: 1,0.75,0.2,0.35)")
     a = ap.parse_args()
     main(a.glb, a.base, a.out, a.max_verts, not a.no_body, not a.no_textures, not a.keep_coat, a.left_weapon, a.reserve, a.both_hands, a.blade_bones,
-         a.flip_edge, tuple(a.hide.split(",")), tuple(map(float, a.tint.split(","))) if a.tint else None)
+         a.flip_edge, tuple(a.hide.split(",")), tuple(map(float, a.tint.split(","))) if a.tint else None, a.mark_reserved)

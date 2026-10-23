@@ -685,3 +685,12 @@
 - **`gowWeaponsOnly`** (padrão ligado): desmarca na sessão o desbloqueio de Cerberus, Nevan, Beowulf e Kalina Ann e
   troca essas armas, se equipadas, por Rebellion/Agni & Rudra/E&I. Sonda: um RT agora vai das Blades direto para a
   Artemis (grupo 5), antes ia para o Cerberus. `gun_probe.sh` registra as linhas de Poseidon/Medusa por modo.
+
+## 2026-10-23 — T72 (agente): esconder as Blades com a Artemis — os objetos reservados não servem
+- Teste: `kratos_fit.py --mark-reserved` põe um cubo em cada objeto 0–21 (reservados, que o jogo liga/desliga) numa
+  fileira ~50 acima da cabeça (eixo Y para cima: pelve y 116, cabeça 166, topo do corpo 181,6). No jogo (M3, testWeapons),
+  **nenhum cubo aparece**, nem com as Blades nem com a Artemis (`work/shots/mark_pair.png`): nesse estado todos ficam
+  escondidos, nenhum alterna com a arma. Esconder as lâminas por objeto do corpo não funciona por esse caminho.
+- Para retomar: (a) pôr as lâminas no PAC da arma do slot Rebellion (`plwp_sword`, que o jogo só mostra com ela) —
+  exige o modelo da arma acompanhar os ossos 23/4 do corpo; ou (b) achar no código onde a visibilidade por objeto é
+  decidida (REA). O `pl000` de teste foi revertido (`install_all --check` = 0).
