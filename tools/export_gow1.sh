@@ -44,6 +44,10 @@ for s in gen["Sounds"]:
         seen.add((r["AdpcmOffset"], r["AdpcmSize"]))
         (out / "sound/general" / f"{s['Name']}_{k}.wav").write_bytes(
             get(f"/action/R_PERM.WAD/{t['GENERAL']}/smpd?offset={r['AdpcmOffset']}&size={r['AdpcmSize']}")); k += 1
+# sons de magia soltos na ISO (T58): Rage e Poseidon [HIPÓTESE pelo nome]
+(out / "sound/magic").mkdir(parents=True, exist_ok=True)
+for name in ("POSMAG06.VAG", "RAGEMIME.VAG"):
+    (out / "sound/magic" / name.replace(".VAG", ".wav")).write_bytes(get(f"/dump/pack/{name}/wav"))
 # HUD: TXR_HUD* (PNG embutido no JSON de cada textura)
 for name, tid in t.items():
     if not re.match(r"TXR_HUD\d+$", name): continue
@@ -51,4 +55,5 @@ for name, tid in t.items():
     if imgs: (out / "hud" / f"{name}.png").write_bytes(base64.b64decode(imgs[0]["Image"]))
 print("ok")
 PY
-[ -n "$started" ] && pkill -f "god_of_war_browser -iso" || true
+# pelo nome do processo: "pkill -f" casaria com a linha de comando deste próprio shell
+[ -n "$started" ] && kill $(pgrep -x god_of_war_brow) 2>/dev/null || true

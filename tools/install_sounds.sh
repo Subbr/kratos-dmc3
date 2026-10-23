@@ -26,3 +26,5 @@ put block $S/general/SND_BLADEBLOCK_*.wav
 put step_walk $S/general/SND_FOOTSTEP_STONEWALK_*.wav
 put step_run $S/general/SND_FOOTSTEP_STONERUN_*.wav
 put land $S/general/SND_FOOTSTEP_STONELAND_*.wav
+put rage $S/magic/RAGEMIME.wav           # [HIPÓTESE] pelo nome (GENERAL2 cita SND_MI_RAGEMIME); T58
+put poseidon $S/magic/POSMAG06.wav       # [HIPÓTESE] pelo nome

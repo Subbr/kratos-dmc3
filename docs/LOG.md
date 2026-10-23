@@ -570,3 +570,11 @@
   a partir da base original em vez da do T8). Saída oficial `work/install/release`; `install_all.sh` instala só
   dela (0 diferenças). Fumaça: M3 e chefe da M7 sem queda.
 - Mapeado também o 11/20 (Spiral travado).
+
+## 2026-10-23 — T58 (agente): sons da Rage e de Poseidon
+- Os WADs das magias (`R_LGHTN*`, `R_MEDHD*`, `R_RDEAD*`, `R_BRSRK*`) não têm banco de som. Entre os 617 VAG/VPK soltos,
+  pelo nome: `RAGEMIME.VAG` (3,5 s; o `GENERAL2` cita `SND_MI_RAGEMIME`) e `POSMAG06.VAG` (5,8 s), exportados por
+  `/dump/pack/<arquivo>/wav` (também no `export_gow1.sh`). [HIPÓTESE] pelo nome — conferir de ouvido.
+- DLL: som `rage` ao ativar o DT (`ator.devil`, +0x3E9B) e `poseidon` no disparo da Shotgun. Playtest M3: os dois
+  tocaram (log), sem queda.
+- `export_gow1.sh` encerra o servidor pelo nome do processo (`pgrep -x`; o `pkill -f` casava com o próprio shell).
