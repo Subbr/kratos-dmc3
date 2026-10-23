@@ -704,3 +704,10 @@
 - Escala explícita em **toda** motion (1 nas outras coleções, 0,001 nas da Artemis): sem trilha o osso guardaria a
   escala da motion anterior. Ida e volta (Blades → Artemis → Blades): as lâminas voltam (`work/shots/blades_back.png`).
   `motion_probe.sh` com `PROBE_BACK=1` volta para a arma inicial e captura um combo. Regressão curta sem queda.
+
+## 2026-10-23 — T74 (agente): níveis das magias
+- Cada magia sobe com o nível da arma de fogo comprado na loja (`SessionData.rangedWeaponLevels`, índice
+  `WEAPON::* − 5`, 0–2, o mesmo que o Crimson usa em Config.cpp): `magicLevelBonus` (0,5) de dano por nível em Zeus,
+  Poseidon (inclusive a área) e Hades — também nos chefes, pelo `MagicMultiplier` — e +1,5 s de pedra por nível na
+  Medusa. `OnEnemyDamage` passou a usar o mesmo `MagicMultiplier`. Sonda das quatro armas sem queda (save de teste no
+  nível 0: multiplicador igual ao de antes). [Não testado com níveis 1–2: exige comprar na loja.]
