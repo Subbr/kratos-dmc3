@@ -292,3 +292,12 @@
   `KratosMode::OnEnemyDamage`: durante as motions das armas de fogo multiplica o dano por `zeusDamage` (E&I, grupo 8),
   `poseidonDamage` (Shotgun, 9) e `hadesDamage` (Artemis, 10).
 - Log: E&I `10 x2` (8/7) em 3 tiros; Shotgun `20 x3` (9/7, 5 bagos) e `5 x3` (9/8). Gasto de magia 9 (E&I) e 20 (Shotgun).
+
+## 2026-10-22 — T30 (agente): HUD do GoW1 desenhado pela DLL (Fase 7, etapa provisória)
+- Flag `gowHud`: esconde o HUD principal (`ToggleHideMainHUD`) e o medidor de estilo (`ToggleHideStyleRankHUD`) do
+  Crimson e desenha pelo ImGui: vida verde (ator +0x411C/+0x40EC), magia azul (barra do modo Kratos), Rage dourada
+  (barra de DT, +0x3EB8/+0x3EBC; só com DT liberado), orbs vermelhos (`[dmc3.exe+C90E30]` + 0x38) e contador de hits
+  (cada dano a inimigo no hook do Crimson; zera depois de 2 s). Só aparece em jogo: some quando os botões do ator
+  param de ser lidos (pausa, menus, cenas).
+- No jogo: `work/shots/h_hud_t.png` (vida, magia, Rage, 6606 orbs, "6 HITS"; sem o "C" do estilo).
+- Pendente: arte do GoW1 (molduras `flp`/`txr`) no lugar das barras lisas.
