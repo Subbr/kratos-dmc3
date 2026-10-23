@@ -435,3 +435,19 @@
 - `work/install/kratos_costumes_v1/pl015.pac`, `pl016.pac`, `pl018.pac` instalados (backups dos originais do Crimson em
   `crimson_override`). Flag de teste `testCostume` (COSTUME::*) na sessão. Arcade M5 com as roupas 3, 4 e 5: Kratos nas três, sem
   queda (`work/shots/costumes.png`). Com o T41, **todas as 6 roupas do Dante** são o Kratos.
+
+## 2026-10-23 — T43 (agente): playtest dos chefes
+- `BOSS=1 tools/win/playtest.sh <missão>`: liga o **Boss Rush** do Crimson junto com o Arcade (nasce na sala do chefe);
+  rotina de chefe com Stinger (trava + frente + ataque) para fechar a distância, combos, Spiral, agarrão, DT e ataque
+  aéreo. O script liga `logDamage` e `playerReceivedDmgMult 0` e devolve os três configs no fim.
+- **Achado 1:** o dano dos chefes **não passa pelo hook de dano do Crimson** (Cerberus: 0 acertos no hook, mas a
+  barra do chefe cai). Magia (D3), contador de hits, som de impacto e log passaram a usar a **queda de vida** de cada
+  inimigo por quadro, com a tabela de vida por tipo do Crimson (`EnemyHp`, igual à vida do alvo travado em
+  CrimsonGameplay.cpp: Hells, Cerberus 7200, Gigapede por parte, Geryon/carruagem, Vergil…). O multiplicador das
+  magias continua no hook (não vale nos chefes).
+- Resultado (M3, 4, 5, 7, 8, 9, 11, 12, 13, 16, 17, 18, 19, 20): **nenhuma queda**; dano em 13 das 14 lutas
+  (`work/shots/playtest/chefes.txt`). M8 (coração do Leviathan), M4 (Gigapede na parede) e M16: rotina não alcança o
+  alvo (`work/shots/chefes_fracos.png`) — limite do teste, não do mod.
+- **Achado 2:** a Medusa petrificava chefes (10 de 14) e o agarrão tirava vida deles. No GoW1 nenhum dos dois pega
+  chefe → `IsBoss` exclui Cerberus, Gigapede, Agni & Rudra, Nevan, Geryon, Beowulf, Doppelganger, Arkham, Lady,
+  Vergil, Jester e o coração do Leviathan. Reteste M3/M12: `medusa petrificou 0`, `agarrao nada`, dano normal.
