@@ -173,3 +173,4 @@ pl000_00_11:  # SPIRAL = Medusa's Gaze (T49)
   2:  {anim: idleCombat, timing: stretch, loop: true}   # 3ª sonda
   21: {anim: walkBlend1, timing: stretch, loop: true}
   24: {anim: walkBlend1, timing: stretch, loop: true}
+  20: {anim: walkBlend1, timing: stretch, loop: true}   # 4ª sonda

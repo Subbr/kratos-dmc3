@@ -557,3 +557,16 @@
 - Mas `FUN_1402f69c0` nesses modelos **não muda nada na tela**, nem com vermelho opaco (`work/shots/stone7_t.png`): o
   efeito de cor só vale no caminho de desenho do jogador. Código revertido. Para retomar: procurar onde o desenho do
   inimigo lê cor/material (ex.: o brilho de dano) — fora do escopo por ora.
+
+## 2026-10-23 — T57 (agente): build reproduzível (Fase 10, base)
+- `tools/export_gow1.sh [saída]`: sobe o god_of_war_browser na ISO do usuário (se não estiver rodando), acha cada
+  tag pelo nome e exporta Kratos (`R_HERO0/hero`), Blade of Chaos (`R_WPN0_0/maiblade`), Blade of Artemis
+  (`ATHN08C/athenablade`), as 16 vozes do banco `Hero`, 134 sons do `GENERAL` e as 193 texturas `TXR_HUD*`. Rodado do
+  zero numa pasta de checagem (3,5 min): armas e sons **idênticos** ao extraído; HUD com os **mesmos pixels**
+  (antes regravado pelo PIL); `hero_obj.glb` difere 4 bytes, mas gera um `pl000.pac` **idêntico**.
+- `tools/build_all.sh <saída>`: regera os 62 arquivos do override a partir dos originais do Crimson
+  (`crimson_override`) e do `extracted/gow1` — corpo e 5 roupas, 6 DTs, Artemis, 11 armas escondidas, 37 motions e o
+  msg_eng. Rodado em ~1 min: 60/62 idênticos ao instalado (os 2 diferentes: o 11/20 novo e o `plwp_sword` escondido
+  a partir da base original em vez da do T8). Saída oficial `work/install/release`; `install_all.sh` instala só
+  dela (0 diferenças). Fumaça: M3 e chefe da M7 sem queda.
+- Mapeado também o 11/20 (Spiral travado).

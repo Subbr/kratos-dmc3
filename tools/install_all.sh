@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Instala no override (data/dmc3/GData.afs) tudo o que o modo Kratos usa hoje, a partir de work/install (T52).
+# Instala no override (data/dmc3/GData.afs) tudo o que o modo Kratos usa, a partir de work/install/release
+# (gerada por tools/build_all.sh; T52, T57).
 # Uso: tools/install_all.sh [--check | --restore]
 #   (sem opção) copia; --check só compara e lista o que difere; --restore devolve os originais do Crimson
 #   guardados em work/backup/crimson_override (o que não tem backup é apagado: não existia no Crimson).
@@ -7,16 +8,9 @@
 set -eu
 cd "$(dirname "$0")/.."
 O="Devil May Cry HD Collection/data/dmc3/GData.afs"; B=work/backup/crimson_override; I=work/install
+# tudo sai de tools/build_all.sh (T57): uma pasta só
 MANIFEST=(
-  "$I/motions_v20/*.pac"
-  "$I/kratos_v10/pl000.pac"
-  "$I/kratos_costumes_v1/*.pac"
-  "$I/kratos_dt_v2/*.pac"
-  "$I/kratos_dt_v1/plwp_sword2.pac"
-  "$I/kratos_v5/plwp_sword.pac"
-  "$I/artemis_v1/plwp_2sword.pac"
-  "$I/weapons_hidden_v1/*.pac"
-  "$I/text_v1/msg_eng.pac"
+  "$I/release/*.pac"
 )
 mode=${1:-install}; diff=0
 for pat in "${MANIFEST[@]}"; do
