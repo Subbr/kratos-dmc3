@@ -321,3 +321,13 @@
 - Evidência no jogo (log `som <evento>`, sem ouvir): swing 6, hit 6, voice_long 2, voice_short 1, gun_hit 1,
   medusa_shot 1, stone 1, flesh 3. Um "die" falso (vida a 0 ao recriar o ator) → só conta queda < 90% da vida máxima.
 - **Pendente (LG, de ouvido):** volume, taxa das amostras, se a voz do Dante sumiu.
+
+## 2026-10-22 — T32 (agente): DT do Kratos em todas as armas
+- `pl006` (Cerberus), `pl007` (Agni & Rudra), `pl008` (Nevan), `pl009` (Beowulf) e `pl017` (Sparda) do override do
+  Crimson: backup em `crimson_override` (+SHA256SUMS), unpack em `extracted/dmc3/unpacked/crimson_plNNN`, round-trip
+  idêntico nos cinco. Extras de cada DT: pl006 002.MOD, pl008 002/004.MOD, pl009 002.MOD; pl007 e pl017 só têm o corpo.
+- `kratos_fit.py` com `--hide` = todos os MOD menos o 001 e `--tint 1,0.75,0.2,0.35` → `work/install/kratos_dt_v2/`
+  (pl005 copiado do v1). `--hide ""` agora vale (antes caía no padrão 012.MOD, que não existe nesses PACs).
+- No jogo: RT para Agni & Rudra (Artemis) + DT → Kratos dourado com a Artemis, combo em DT
+  (`work/shots/dt_a1_t.png`, `dt_agni_sheet.png`). Cerberus, Nevan, Beowulf e Sparda instalados, não vistos no jogo
+  (armas ainda não equipáveis no save).

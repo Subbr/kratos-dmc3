@@ -362,7 +362,7 @@ def main(glb: Path, base_dir: Path, out_pac: Path, max_verts: int = 900,
     body.tail = body.runtime_tail()
     body.auto_index_ptr = True
     hidden = {}
-    for name in hide:  # casaco do Dante, asas do DT: nenhum vértice fecha triângulo (some sem mexer na física)
+    for name in filter(None, hide):  # casaco do Dante, asas do DT: nenhum vértice fecha triângulo (some sem mexer na física)
         hidden[name] = mod.Model.parse((base_dir / name).read_bytes())
         for o in hidden[name].objects:
             for m in o.meshes:
