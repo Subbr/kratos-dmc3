@@ -33,3 +33,21 @@
 ## D1 — Blades of Chaos no slot Rebellion (2026-10-20, LG)
 - **Escolha:** Blades of Chaos substituem a Rebellion (`plwp_sword*.pac`), arma inicial. O Kratos começa com elas, como no GoW1, e herda o moveset mais completo.
 - **Consequência:** a Rebellion é de uma mão. A lâmina da mão esquerda precisa de outra solução (presa ao modelo do corpo ou a outra peça). Blade of Artemis vai para outro slot (Agni & Rudra ou similar), a definir.
+
+## D2 — Estilos (PROVISÓRIA, agente, 2026-10-23 — aguardando o LG)
+- **Em uso:** Trickster = rolamento do GoW1 (T21); Royalguard = bloqueio, parry e Release (T24, T39); Swordmaster =
+  especiais (T23, T48); Gunslinger = sem mudança (as magias já estão nas armas de fogo, T49). Quicksilver e
+  Doppelganger continuam do DMC3.
+- **Aberto:** desligar Quicksilver/Doppelganger ou reaproveitá-los (ex.: Rage/Army of Hades).
+
+## D3 — Recarga da magia (PROVISÓRIA, agente, 2026-10-23 — aguardando o LG)
+- **Em uso:** a magia volta pelo dano causado (`magicPerDamage` 0,05 por ponto de vida tirado; vale em chefes, T43),
+  sem recarga por tempo. No GoW1 ela vem dos orbs azuis.
+- **Alternativa:** orbs verdes do DMC3 também recarregam magia; ou baús de orbs azuis.
+
+## D4 — Níveis de arma (PROVISÓRIA, agente — aguardando o LG)
+- **Em uso:** loja do Crimson (Customize) com os nomes do GoW1 (`renameUi`, T38); nenhum nível próprio das Blades.
+
+## D5 — Controles (PROVISÓRIA, agente — aguardando o LG)
+- **Em uso:** botões do DMC3 (§7.4 opção a). Agarrão no taunt (Back), magias nas armas de fogo (X; LT troca),
+  Rage no DT (LB).
