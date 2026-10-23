@@ -301,3 +301,23 @@
   param de ser lidos (pausa, menus, cenas).
 - No jogo: `work/shots/h_hud_t.png` (vida, magia, Rage, 6606 orbs, "6 HITS"; sem o "C" do estilo).
 - Pendente: arte do GoW1 (molduras `flp`/`txr`) no lugar das barras lisas.
+
+## 2026-10-22 — T31 (agente): sons do GoW1 (Fase 8, MVP)
+- Extração (god_of_war_browser na ISO, servidor em 127.0.0.1:8000): `R_PERM.WAD` tag 81 **`Hero`** = 16 VAGs com as
+  vozes originais do Kratos (`H_ATTKS1–4` ataque curto, `H_ATTKL1–2` longo, `H_DMG1–6` dano, `JUMPVOC1–2`,
+  `DIEVOC1`, `LIFTVOC1`; `/action/R_PERM.WAD/81/wav?snd=<nome>`, PCM mono 14 kHz). Tag 69 **`GENERAL`** = banco SBK
+  com 218 sons (whoosh, corrente, `SND_SWORDHIT_*`, `SND_ENEMY_GETHIT_*`, `SND_BLADEBLOCK`, `SND_MEDUSA_*`,
+  `SND_BOLT_HIT`, orbs, passos): cada som aponta para amostras ADPCM (`SampleRef.AdpcmOffset/Size`), exportadas com
+  `/action/R_PERM.WAD/69/smpd?offset=&size=` (134 WAVs). [HIPÓTESE] a taxa de 22050 Hz que o gowb grava no cabeçalho
+  pode não ser a real de cada amostra (o banco tem campo de pitch); conferir de ouvido.
+- `tools/install_sounds.sh` copia para `Crimson\sound\kratos\<evento>_<n>.wav` (fora do git). DLL (`KratosSound.cpp`,
+  flag `sounds`, `soundVolume`): carrega pelo SDL_mixer do Crimson (`CrimsonSDL::KratosLoadWav/KratosPlay`, canais
+  600–679) e sorteia uma variação por evento: golpe corpo a corpo (whoosh + grunhido 30%; 3/5 e 3/7 grunhido longo
+  70%), acerto (espada ou raio, no máximo 1 a cada 60 ms), dano recebido, morte, pulo (40%), Medusa (raio, pedra,
+  carne), bloqueio atingido (24/2).
+- Voz do Dante: `snd_com0.pac` = "Common Dante Default" (Sound.cpp) no canal FMOD **COMMON** (1); com `sounds` o
+  canal fica mudo (log do Crimson `SetVolume 1 0` ao entrar na missão). [HIPÓTESE] o canal 1 tem só voz/passos do
+  Dante; confirmar de ouvido. Também cala os passos do Dante (trocar só as falas do banco fica para depois).
+- Evidência no jogo (log `som <evento>`, sem ouvir): swing 6, hit 6, voice_long 2, voice_short 1, gun_hit 1,
+  medusa_shot 1, stone 1, flesh 3. Um "die" falso (vida a 0 ao recriar o ator) → só conta queda < 90% da vida máxima.
+- **Pendente (LG, de ouvido):** volume, taxa das amostras, se a voz do Dante sumiu.
