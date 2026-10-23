@@ -494,3 +494,14 @@
 - `pl000_00_14–17` com especiais do Kratos (`comboLR3/4`, `dashMultiStab`, `impaleSlamCharge`, `airH1–3`, `airV1`,
   `airImpale+airImpaleLand`; Artemis: `berComboV3`, `berAirH1/H2`), `strike`; motions_v17 (só esses quatro mudam;
   14/10 não é motion do esqueleto do jogador). No jogo: as motions tocam (log), sem queda.
+
+## 2026-10-23 — T49 (agente): as armas de fogo viram as magias do GoW1 (gestos)
+- `tools/win/gun_probe.sh`: um tiro de cada arma no chão, travado e no ar. Disparos: E&I **8/8** (mira travada 8/2,
+  recuo 8/5; ar 8/32), Shotgun **9/8** (9/5 antes e depois; ar 9/39), Artemis **10/4** (10/3; ar 10/13), Spiral **11/8**
+  (recuo 11/5).
+- `mapping/motions.yaml`: só os disparos trocam — Zeus `boltThrow`/`airBoltThrow`, Poseidon `LightningExit`/
+  `airLightningStart`, Hades `raiseTheDead`/`airRaiseTheDead`, Medusa `psentHead` (`strike`); motions_v18 (só
+  `pl000_00_8–11` mudam). Mira e recuo continuam do Dante.
+- Armas de fogo escondidas como a E&I (T7): `plwp_shotgun`, `plwp_laser` (Artemis), `plwp_rifle` (Spiral)
+  (`work/install/weapons_hidden_v1`, backups em `crimson_override`). No jogo: gestos das magias sem armas na mão
+  (`work/shots/t49_zoom.png`), sem queda. Os projéteis/efeitos continuam os do DMC3.

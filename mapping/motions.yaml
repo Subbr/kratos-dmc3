@@ -105,3 +105,14 @@ pl000_00_17:  # SWORDMASTER_BEOWULF (T48): L no chão 0, no ar 6, segurar 8
   0:  {anim: comboLR4, timing: strike}
   6:  {anim: airImpale+airImpaleLand, timing: strike}
   8:  {anim: impaleSlamCharge, timing: strike}
+pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh): só o disparo (mira e recuo ficam do Dante)
+  8:  {anim: boltThrow, timing: strike}      # tiro no chão (8/2 mira travada → 8/8 → 8/5)
+  32: {anim: airBoltThrow, timing: strike}   # no ar
+pl000_00_9:   # SHOTGUN = Poseidon's Rage (T49)
+  8:  {anim: LightningExit, timing: strike}  # 9/5 → 9/8 → 9/5
+  39: {anim: airLightningStart, timing: strike}
+pl000_00_10:  # ARTEMIS = Army of Hades (T49)
+  4:  {anim: raiseTheDead, timing: strike}   # 10/3 → 10/4 → 10/3
+  13: {anim: airRaiseTheDead, timing: strike}
+pl000_00_11:  # SPIRAL = Medusa's Gaze (T49)
+  8:  {anim: psentHead, timing: strike}      # 11/8 → 11/5
