@@ -376,13 +376,13 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T53).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T54).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
   correntes no corpo nos ossos 23/4, fio girado com `--flip-edge`), `plwp_sword.pac` = `kratos_v5` (Rebellion
   escondida), `plwp_sword2.pac` escondido (versão pós-Missão 7), `pl005.pac` = `work/install/kratos_dt_v1` (DT da
-  Rebellion = Kratos dourado, asas escondidas), `plwp_gun/shotgun/laser/rifle/nunchaku/guitar/fight.pac` escondidos (`work/install/weapons_hidden_v1`), 37 coleções de motion = `work/install/motions_v19`. Config
+  Rebellion = Kratos dourado, asas escondidas), `plwp_gun/shotgun/laser/rifle/nunchaku/guitar/fight.pac` escondidos (`work/install/weapons_hidden_v1`), 37 coleções de motion = `work/install/motions_v20`. Config
   `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida), virtualPad (testes em segundo plano).
   Crimson: skipIntro e skipCutscenes ligados. Backups de tudo em `work/backup/crimson_override/`.
 - **Instalar tudo de uma vez (T52):** `tools/install_all.sh` (override), `--check` compara, `--restore` devolve os
