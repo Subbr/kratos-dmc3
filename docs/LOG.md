@@ -505,3 +505,12 @@
 - Armas de fogo escondidas como a E&I (T7): `plwp_shotgun`, `plwp_laser` (Artemis), `plwp_rifle` (Spiral)
   (`work/install/weapons_hidden_v1`, backups em `crimson_override`). No jogo: gestos das magias sem armas na mão
   (`work/shots/t49_zoom.png`), sem queda. Os projéteis/efeitos continuam os do DMC3.
+
+## 2026-10-23 — T50 (agente): render do Kratos para menus; Kalina Ann e Sparda escondidas
+- `blender/scripts/render_kratos.py`: Kratos do glb numa pose de animação (ações "grupo nome" no glb, casadas pelo
+  fim do nome), câmera do lado +Y, textura como emissão (as normais do PS2 são facetadas), fundo transparente
+  (`work/shots/kr_idle.png`). 12 poses em `work/install/menu_art/renders/` (fora do git).
+- Menus: as cartas de golpe (`id741`–`id760`) são da loja nativa, que o Crimson troca pela dele (provavelmente não
+  aparecem). O retrato da tela STATUS não foi achado por comparação de imagem (candidatas `id300`/`id271` são outras
+  artes); pode ser o modelo 3D ao vivo. Troca das artes adiada.
+- Escondidas também `plwp_grenade` (Kalina Ann) e `plwp_sword3` (Sparda): nenhuma arma do Dante fica visível.
