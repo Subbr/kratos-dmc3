@@ -344,3 +344,11 @@
   Kratos (atacante = **ator + 0x60**, visto no log). O agarrão deixa a vida em 0.01 e chama a função original com
   esse ataque: a morte sai pelo caminho do jogo (orb vermelho no quadro do agarrão, `work/shots/g_pair.png`).
 - Log: `agarrao golpe` (dano) várias vezes, `agarrao finalizou mais perto 3`.
+
+## 2026-10-23 — T34 (agente): magia, Medusa e agarrão valem para qualquer inimigo
+- Antes só os Hells (vida em `hitPointsHells`). Agora a vida de cada inimigo vem do detour de dano (T33): o endereço
+  que o jogo usa fica dentro do ator (Hells + 0x2E5C), e a maior vida vista antes de um golpe serve de vida máxima
+  para o agarrão. A magia volta pelo dano causado (hook de dano do Crimson, depois do multiplicador das magias), sem
+  ler vida. A Medusa pega qualquer inimigo pela posição (vida desconhecida conta como vivo).
+- Regressão (Missão 3, em segundo plano): Medusa petrificou 6; agarrão finalizou 3 e golpeou 1; a magia voltou a
+  100 entre os dois tiros da Spiral; 46 sons; a onda foi limpa.

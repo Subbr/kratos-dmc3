@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T30).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T34).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -411,6 +411,10 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   (E&I Zeus, Shotgun Poseidon, Spiral Medusa = petrifica com `speedMultiplier` 0, Artemis Hades) com custo e dano
   próprios; tiro bloqueado sem magia (detour em dmc3.exe+1EBCF0); magia volta por dano (D3 provisória); HUD do GoW1
   desenhado (`gowHud`). Flags de teste: `testWeapons`, `testRangedWeapon`, `testDevilTrigger`, `testStyle`.
+- **T31–T34:** sons do GoW1 (`sounds`; `tools/install_sounds.sh` → `Crimson\sound\kratos`; voz do Dante = canal FMOD
+  COMMON mudo); DT do Kratos em todas as armas (`work/install/kratos_dt_v2`); agarrão no taunt (`grab`, motion 2/0–1 =
+  `grab`, motions_v13; mata pelo dano do jogo, detour em dmc3.exe+88190, atacante = ator + 0x60); magia, Medusa e
+  agarrão valem para qualquer inimigo (vida pelo detour de dano).
 - **Pendências imediatas (próxima sessão):**
   1. LG jogar a Missão 3 e avaliar o alcance/dano com `reachRadius` 4 (ajustável no KratosConfig sem recompilar).
   2. Pedir ao LG para confirmar o fio das lâminas (`work/shots/t18_fio_v9_v10.png`) e o visual dos combos com
