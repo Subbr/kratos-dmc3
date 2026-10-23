@@ -598,3 +598,14 @@
 - DLL: vida e magia com o gradiente tingido (recorte de UV conforme enche), medidor de Rage dourado abaixo da lâmina
   (fundo escurecido + barra cheia até a fração, voluta na ponta) além do brilho do medalhão, orb do GoW1 tingido de
   vermelho no contador. Sem os arquivos, volta ao desenho liso. No jogo: `work/shots/hud3_crop.png`.
+
+## 2026-10-23 — T62 (agente): efeitos visuais das magias
+- DLL: cada magia toca um efeito do Effekseer do Crimson no lançamento (na matriz da mão direita, osso 9 do corpo,
+  como os efeitos do Crimson em `CrimsonFX.cpp`) e no acerto (na posição do inimigo, no máximo 1 a cada 0,1 s).
+  Configurável no KratosConfig sem recompilar: `fx<Zeus|Poseidon|Hades|Medusa><Cast|Hit|Scale|Color>` (cor em hex
+  AARRGGBB). `Read` da config passou a aceitar texto e hex.
+- Padrões (pelo que aparece nas capturas `work/shots/t62_fx.png`): Zeus `drive_level1` + impacto `risingstar` (clarão
+  na mão, faíscas no alvo); Poseidon `risingstar`; Hades `jdc_charge_dt` roxo (o mais visível); Medusa
+  `jdc_charge_dt`. `SetAllColor` **multiplica** a cor do efeito: azul/verde sobre o roxo do jdc somem, então o Poseidon
+  não fica azul. Sem queda na sonda das quatro armas.
+- Pendente: efeitos próprios (raio de Zeus, almas do Hades) exigiriam efeitos Effekseer novos.
