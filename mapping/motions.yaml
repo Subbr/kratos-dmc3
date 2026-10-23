@@ -119,11 +119,57 @@ pl000_00_8:   # EBONY & IVORY = Zeus' Fury (T49, tools/win/gun_probe.sh)
   19: {anim: walkBlend1, timing: stretch, loop: true}
   25: {anim: walkBlend2, timing: stretch, loop: true}
   26: {anim: walkBlend2, timing: stretch, loop: true}
+  9:  {anim: walkBlend1, timing: stretch, loop: true}
+  16: {anim: walkBlend1, timing: stretch, loop: true}
+  41: {anim: walkBlend1, timing: stretch, loop: true}   # índices altos da 2ª sonda (o build ignora os que não existem no PAC)
+  44: {anim: walkBlend1, timing: stretch, loop: true}
+  48: {anim: walkBlend1, timing: stretch, loop: true}
+  50: {anim: walkBlend1, timing: stretch, loop: true}
+  51: {anim: walkBlend1, timing: stretch, loop: true}
 pl000_00_9:   # SHOTGUN = Poseidon's Rage (T49)
   8:  {anim: LightningExit, timing: strike}  # 9/5 → 9/8 → 9/5
+  7:  {anim: LightningExit, timing: strike}  # disparo travado (T53)
   39: {anim: airLightningStart, timing: strike}
+  0:  {anim: idleCombat, timing: stretch, loop: true}   # travado: postura e caminhada do Kratos (T53, gun_probe.sh "andar")
+  4:  {anim: idleCombat, timing: stretch, loop: true}
+  11: {anim: walkBlend1, timing: stretch, loop: true}
+  18: {anim: walkBlend1, timing: stretch, loop: true}
+  19: {anim: walkBlend1, timing: stretch, loop: true}
+  25: {anim: walkBlend2, timing: stretch, loop: true}
+  2:  {anim: idleCombat, timing: stretch, loop: true}   # mesma estrutura do grupo 8 (2ª sonda)
+  5:  {anim: idleCombat, timing: stretch, loop: true}
+  9:  {anim: walkBlend1, timing: stretch, loop: true}
+  12: {anim: walkBlend1, timing: stretch, loop: true}
+  16: {anim: walkBlend1, timing: stretch, loop: true}
+  26: {anim: walkBlend2, timing: stretch, loop: true}
+  23: {anim: walkBlend1, timing: stretch, loop: true}   # 3ª sonda
 pl000_00_10:  # ARTEMIS = Army of Hades (T49)
-  4:  {anim: raiseTheDead, timing: strike}   # 10/3 → 10/4 → 10/3
+  4:  {anim: raiseTheDead, timing: strike}   # 10/3 → 10/4 → 10/3 (travado: 10/2 → 10/4)
   13: {anim: airRaiseTheDead, timing: strike}
+  0:  {anim: idleCombat, timing: stretch, loop: true}   # travado (T53)
+  2:  {anim: idleCombat, timing: stretch, loop: true}
+  5:  {anim: walkBlend1, timing: stretch, loop: true}
+  6:  {anim: walkBlend1, timing: stretch, loop: true}
+  7:  {anim: walkBlend1, timing: stretch, loop: true}
+  8:  {anim: walkBlend1, timing: stretch, loop: true}
+  9:  {anim: walkBlend1, timing: stretch, loop: true}
+  11: {anim: walkBlend1, timing: stretch, loop: true}
+  12: {anim: walkBlend1, timing: stretch, loop: true}
+  3:  {anim: idleCombat, timing: stretch, loop: true}   # recuo do tiro (2ª sonda)
 pl000_00_11:  # SPIRAL = Medusa's Gaze (T49)
   8:  {anim: psentHead, timing: strike}      # 11/8 → 11/5
+  7:  {anim: psentHead, timing: strike}      # disparo travado (T53)
+  0:  {anim: idleCombat, timing: stretch, loop: true}   # travado (T53)
+  4:  {anim: idleCombat, timing: stretch, loop: true}
+  11: {anim: walkBlend1, timing: stretch, loop: true}
+  15: {anim: walkBlend1, timing: stretch, loop: true}
+  16: {anim: walkBlend1, timing: stretch, loop: true}
+  19: {anim: walkBlend1, timing: stretch, loop: true}
+  23: {anim: walkBlend1, timing: stretch, loop: true}
+  9:  {anim: walkBlend1, timing: stretch, loop: true}   # 2ª sonda
+  12: {anim: walkBlend1, timing: stretch, loop: true}
+  13: {anim: walkBlend1, timing: stretch, loop: true}
+  17: {anim: walkBlend1, timing: stretch, loop: true}
+  2:  {anim: idleCombat, timing: stretch, loop: true}   # 3ª sonda
+  21: {anim: walkBlend1, timing: stretch, loop: true}
+  24: {anim: walkBlend1, timing: stretch, loop: true}

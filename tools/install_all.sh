@@ -8,7 +8,7 @@ set -eu
 cd "$(dirname "$0")/.."
 O="Devil May Cry HD Collection/data/dmc3/GData.afs"; B=work/backup/crimson_override; I=work/install
 MANIFEST=(
-  "$I/motions_v19/*.pac"
+  "$I/motions_v20/*.pac"
   "$I/kratos_v10/pl000.pac"
   "$I/kratos_costumes_v1/*.pac"
   "$I/kratos_dt_v2/*.pac"

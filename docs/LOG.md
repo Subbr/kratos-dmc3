@@ -533,3 +533,10 @@
   8/8 e o ar 8/32 seguem como no T49. motions_v19 (só `pl000_00_8` muda); `install_all.sh` aponta para v19.
 - No jogo: travado e andando para os lados em postura de combate (`work/shots/lock_walk_sheet.png`).
 - Pendente: a mesma troca nos grupos 9–11 (Shotgun, Artemis, Spiral) quando estão equipados.
+
+## 2026-10-23 — T54 (agente): locomoção travada sem mira em todas as armas de fogo
+- `gun_probe.sh` ganhou o modo "andar" (travado, para os lados, para trás e para frente). Os índices variam com o
+  estado da trava; três rodadas levantaram: E&I também 9/16/41/44/48/50/51; Shotgun 0/2/4/5/9/11/12/16/18/19/23/25/26 e
+  disparo travado **9/7**; Artemis 0/2/3/5–9/11/12; Spiral 0/2/4/9/11–13/15–17/19/21/23/24 e disparo travado **11/7**.
+- Tudo vira `idleCombat`/`walkBlend1`/`walkBlend2`; os disparos travados 9/7 e 11/7 viram Poseidon e Medusa como os do
+  chão. motions_v20 (só `pl000_00_8–11` mudam); `install_all.sh --check` = 0 diferenças; sonda final sem queda.

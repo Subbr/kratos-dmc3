@@ -21,12 +21,13 @@ tools/win/to_mission.sh >/dev/null 2>&1
 g() { powershell.exe -ExecutionPolicy Bypass -File 'D:\Code\god1_dmc3\tools\win\game.ps1' keys "$1" >/dev/null 2>&1; }
 OUT=work/shots/gun_probe.txt; : > $OUT
 for gun in zeus poseidon hades medusa; do
-  for mode in chao travado ar; do
+  for mode in chao travado ar andar; do
     rm -f "$LOG"
     case $mode in
       chao) tools/win/burst.sh "j:80" 8 110 gun_$gun >/dev/null; g "wait:1000" ;;   # folha do disparo
       travado) g "+n wait:300 j:80 wait:1800 -n wait:300" ;;
       ar) g "k:80 wait:250 j:80 wait:1500" ;;
+      andar) g "+n wait:300 +d wait:1200 -d +s wait:800 -s +w wait:800 -w -n wait:300" ;;   # locomoção travada (T53)
     esac
     echo "$gun $mode: $(grep '^motion' "$LOG" 2>/dev/null | cut -d' ' -f2 | tr '\n' ' ')" >> $OUT
   done
