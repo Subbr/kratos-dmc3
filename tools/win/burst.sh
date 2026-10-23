@@ -2,9 +2,10 @@
 # Aperta teclas e captura N quadros; monta uma folha de contato: tools/win/burst.sh "<seq>" <n> <ms> <nome>
 set -e
 cd "$(dirname "$0")/../.."
+W=$(wslpath -w "$PWD")   # raiz do projeto no Windows (sem caminho fixo)
 mkdir -p work/shots/burst
 rm -f work/shots/burst/$4_*.png
-powershell.exe -ExecutionPolicy Bypass -File 'D:\Code\god1_dmc3\tools\win\game.ps1' burst "$1|$2|$3|D:\Code\god1_dmc3\work\shots\burst\\$4" >/dev/null
+powershell.exe -ExecutionPolicy Bypass -File "$W\tools\win\game.ps1" burst "$1|$2|$3|$W\work\shots\burst\\$4" >/dev/null
 tools/.venv/bin/python -I - "$4" <<'PY'
 import sys, glob
 from PIL import Image

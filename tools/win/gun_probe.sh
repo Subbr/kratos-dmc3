@@ -3,9 +3,10 @@
 # E&I → Shotgun → Artemis → Spiral. Uso: tools/win/gun_probe.sh → work/shots/gun_probe.txt
 set -u
 cd "$(dirname "$0")/../.."
+W=$(wslpath -w "$PWD")   # raiz do projeto no Windows (sem caminho fixo)
 CD="Devil May Cry HD Collection/Crimson/configs"; LOG="Devil May Cry HD Collection/logs/kratos.txt"
 for f in KratosConfig CrimsonConfigGameplay; do cp "$CD/$f.json" "$CD/$f.json.probe_bak"; done
-trap 'powershell.exe -ExecutionPolicy Bypass -File "D:\Code\god1_dmc3\tools\win\game.ps1" stop >/dev/null; sleep 3; for f in KratosConfig CrimsonConfigGameplay; do mv -f "$CD/$f.json.probe_bak" "$CD/$f.json"; done' EXIT
+trap 'powershell.exe -ExecutionPolicy Bypass -File "$W\tools\win\game.ps1" stop >/dev/null; sleep 3; for f in KratosConfig CrimsonConfigGameplay; do mv -f "$CD/$f.json.probe_bak" "$CD/$f.json"; done' EXIT
 tools/.venv/bin/python -I - <<'PY'
 import json, pathlib
 cd = pathlib.Path("Devil May Cry HD Collection/Crimson/configs")
@@ -18,7 +19,7 @@ d["Cheats"]["Damage"]["playerReceivedDmgMult"] = 0.0
 p.write_text(json.dumps(d, indent=4))
 PY
 tools/win/to_mission.sh >/dev/null 2>&1
-g() { powershell.exe -ExecutionPolicy Bypass -File 'D:\Code\god1_dmc3\tools\win\game.ps1' keys "$1" >/dev/null 2>&1; }
+g() { powershell.exe -ExecutionPolicy Bypass -File "$W\tools\win\game.ps1" keys "$1" >/dev/null 2>&1; }
 OUT=work/shots/gun_probe.txt; : > $OUT
 for gun in zeus poseidon hades medusa; do
   for mode in chao travado ar andar; do

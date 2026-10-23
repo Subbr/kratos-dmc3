@@ -4,7 +4,8 @@
 # Requer no CrimsonConfig.json: skipIntro e skipCutscenes = true. Termina com work/shots/game.png.
 set -e
 cd "$(dirname "$0")/../.."
-P='D:\Code\god1_dmc3\tools\win\game.ps1'
+W=$(wslpath -w "$PWD")   # raiz do projeto no Windows (sem caminho fixo)
+P="$W\tools\win\game.ps1"
 g() { powershell.exe -ExecutionPolicy Bypass -File "$P" "$@" >/dev/null; }
 g stop || true
 powershell.exe -Command "Start-Sleep 3; Get-Process dmcLauncher -ErrorAction SilentlyContinue | Stop-Process" || true

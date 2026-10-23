@@ -6,8 +6,9 @@
 # Exige virtualPad. Liga logDamage e playerReceivedDmgMult 0 durante o teste; os três configs voltam ao fim.
 set -u
 cd "$(dirname "$0")/../.."
+W=$(wslpath -w "$PWD")   # raiz do projeto no Windows (sem caminho fixo)
 M=$1; N=$(printf "%s%02d" "$([ "${BOSS:-0}" = 1 ] && echo b || echo m)" "$M")
-P='D:\Code\god1_dmc3\tools\win\game.ps1'
+P="$W\tools\win\game.ps1"
 g() { powershell.exe -ExecutionPolicy Bypass -File "$P" "$@" >/dev/null 2>&1; }
 LOG="Devil May Cry HD Collection/logs/kratos.txt"
 CD="Devil May Cry HD Collection/Crimson/configs"
@@ -36,7 +37,7 @@ PY
 g stop; sleep 4; rm -f "$LOG"
 g start; sleep 30
 alive() { powershell.exe -Command "(Get-Process dmc3 -ErrorAction SilentlyContinue).Responding" 2>/dev/null | tr -d '\r'; }
-shot() { g shot "D:\\Code\\god1_dmc3\\work\\shots\\playtest\\${N}_$1.png"; }
+shot() { g shot "$W\\work\\shots\\playtest\\${N}_$1.png"; }
 status=ok
 phase() {  # phase <nome> <teclas>
   [ "$(alive)" = True ] || { status="caiu antes de $1"; return 1; }

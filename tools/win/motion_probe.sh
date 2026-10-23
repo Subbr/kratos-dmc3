@@ -5,10 +5,11 @@
 # O RT percorre todas as armas liberadas (Rebellion → Cerberus → Agni → Nevan → Beowulf): aperta RT <N> vezes.
 set -u
 cd "$(dirname "$0")/../.."
+ROOTW=$(wslpath -w "$PWD")   # raiz do projeto no Windows (sem caminho fixo)
 W=$1; ST=${2:--1}
 CD="Devil May Cry HD Collection/Crimson/configs"; LOG="Devil May Cry HD Collection/logs/kratos.txt"
 for f in KratosConfig CrimsonConfigGameplay; do cp "$CD/$f.json" "$CD/$f.json.probe_bak"; done
-trap 'powershell.exe -ExecutionPolicy Bypass -File "D:\Code\god1_dmc3\tools\win\game.ps1" stop >/dev/null; sleep 3; for f in KratosConfig CrimsonConfigGameplay; do mv -f "$CD/$f.json.probe_bak" "$CD/$f.json"; done' EXIT
+trap 'powershell.exe -ExecutionPolicy Bypass -File "$ROOTW\tools\win\game.ps1" stop >/dev/null; sleep 3; for f in KratosConfig CrimsonConfigGameplay; do mv -f "$CD/$f.json.probe_bak" "$CD/$f.json"; done' EXIT
 tools/.venv/bin/python -I - "$W" "$ST" <<'PY'
 import json, pathlib, sys
 cd = pathlib.Path("Devil May Cry HD Collection/Crimson/configs")
@@ -20,7 +21,7 @@ d["Cheats"]["Damage"]["playerReceivedDmgMult"] = 0.0
 p.write_text(json.dumps(d, indent=4))
 PY
 tools/win/to_mission.sh >/dev/null 2>&1
-g() { powershell.exe -ExecutionPolicy Bypass -File 'D:\Code\god1_dmc3\tools\win\game.ps1' keys "$1" >/dev/null 2>&1; }
+g() { powershell.exe -ExecutionPolicy Bypass -File "$ROOTW\tools\win\game.ps1" keys "$1" >/dev/null 2>&1; }
 RT=""; for _ in $(seq "$W"); do RT="$RT e:200 wait:1200"; done
 g "s:1800 wait:5000 $RT"
 OUT=work/shots/probe_w$W${2:+_s$2}.txt; : > $OUT
@@ -38,4 +39,7 @@ probe segurar "i:900"
 probe ar "k:80 wait:250 i:60 wait:250 i:60 wait:250 i:60 wait:900"
 probe ar_tras "k:80 wait:250 +n +s i:80 wait:900 -s -n"
 probe estilo "l:80 wait:900 +n +w l:80 -w -n wait:900"
+probe estilo_tras "+n +s wait:120 l:80 wait:900 -s -n"
+probe estilo_ar "k:80 wait:250 l:60 wait:300 l:60 wait:300 l:60 wait:900"
+probe estilo_segurar "l:1200 wait:600"
 cat $OUT

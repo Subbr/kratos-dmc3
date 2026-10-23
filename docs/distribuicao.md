@@ -28,6 +28,6 @@ idênticos aos instalados.
   código; o `Crimson.dll` original está em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 
 ## Pendente para uma distribuição pública
-- Empacotar a DLL compilada e os scripts sem o resto do repositório; trocar os caminhos fixos de `tools/win/*.ps1`
-  (`D:\Code\god1_dmc3`) por caminhos relativos; checar a licença do god_of_war_browser (sem licença: o usuário
+- Empacotar a DLL compilada e os scripts sem o resto do repositório (os scripts `tools/win` já calculam a raiz com
+  `wslpath`, T57); checar a licença do god_of_war_browser (sem licença: o usuário
   precisa baixá-lo por conta própria).
