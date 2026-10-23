@@ -518,3 +518,10 @@
 ## 2026-10-23 — T51 (agente): regressão completa depois de T44–T50
 - 20 missões + 14 chefes com `playtest.sh`: **34/34 sem queda** (`work/shots/playtest/regressao.txt`); configs
   devolvidos. Dano onde há inimigo perto (M1–3, 5, 13, 19, 20 e 12 de 14 chefes).
+
+## 2026-10-23 — T52 (agente): instalador único do override
+- `tools/install_all.sh`: manifesto do que o modo Kratos usa (motions_v18, pl000 v10, roupas, DTs, Rebellion/
+  sword2 escondidas, Artemis, armas escondidas, msg_eng). `--check` compara o override com as fontes (só
+  `demo_pl000_00_3` diferia: versão anterior à correção do cabeçalho do T38; reinstalado → 0 diferenças);
+  `--restore` devolve os originais do Crimson (backups em `crimson_override`). Antes de copiar, guarda backup de
+  qualquer arquivo do override que ainda não tenha.

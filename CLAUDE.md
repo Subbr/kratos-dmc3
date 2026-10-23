@@ -385,6 +385,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   Rebellion = Kratos dourado, asas escondidas), `plwp_gun/shotgun/laser/rifle/nunchaku/guitar/fight.pac` escondidos (`work/install/weapons_hidden_v1`), 37 coleções de motion = `work/install/motions_v18`. Config
   `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida), virtualPad (testes em segundo plano).
   Crimson: skipIntro e skipCutscenes ligados. Backups de tudo em `work/backup/crimson_override/`.
+- **Instalar tudo de uma vez (T52):** `tools/install_all.sh` (override), `--check` compara, `--restore` devolve os
+  originais do Crimson; mais `tools/install_sounds.sh`, `tools/install_hud.sh` e `tools/win/install_crimson_dll.sh`.
 - **Pipeline (regerar tudo):**
   1. `python -I tools/kratos_fit.py extracted/gow1/hero0/hero_obj.glb extracted/dmc3/unpacked/crimson_pl000 work/install/kratos_vN/pl000.pac --left-weapon extracted/gow1/weapons/maiblade.glb --both-hands --blade-bones --flip-edge`
      DT: mesmo comando com base `extracted/dmc3/unpacked/crimson_pl005`, saída `pl005.pac` e `--hide 002.MOD,004.MOD --tint 1,0.75,0.2,0.35`
