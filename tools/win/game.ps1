@@ -1,5 +1,7 @@
 ﻿# Controle do DMC3 para testes automáticos: abrir, apertar teclas (SendInput com scancode) e capturar a tela.
 # Uso: powershell.exe -ExecutionPolicy Bypass -File game.ps1 <start|stop|shot <png>|keys <seq>|click "x y">
+# Com "virtualPad": true no KratosConfig, teclas e capturas vão pela DLL (controle virtual + back buffer,
+# KratosVirtualPad.cpp): a janela do jogo não precisa de foco e o PC fica livre.
 #   seq: nomes separados por espaço, opcional ":ms" de pressão e "wait:ms". Ex.: "enter wait:1500 down enter"
 param([string]$Action, [string]$Arg = "")
 $ErrorActionPreference = "Stop"
@@ -47,6 +49,31 @@ $Scan = @{ enter=@(0x1C,$false); esc=@(0x01,$false); space=@(0x39,$false);
   w=@(0x11,$false); a=@(0x1E,$false); s=@(0x1F,$false); d=@(0x20,$false);
   i=@(0x17,$false); j=@(0x24,$false); k=@(0x25,$false); l=@(0x26,$false);
   q=@(0x10,$false); e=@(0x12,$false); n=@(0x31,$false); u=@(0x16,$false); f1=@(0x3B,$false); tab=@(0x0F,$false) }
+
+$CrimsonDir = Join-Path $GameDir "Crimson"
+$VPad = $false
+try { $VPad = [bool]((Get-Content (Join-Path $CrimsonDir "configs\KratosConfig.json") -Raw | ConvertFrom-Json).virtualPad) } catch {}
+
+# manda um script para a DLL e espera terminar (kratos_script_<id>.txt -> .done)
+function VScript([string]$text) {
+  if (-not (Get-Process dmc3 -ErrorAction SilentlyContinue)) { throw "dmc3 não está rodando" }
+  $id = [guid]::NewGuid().ToString("N").Substring(0, 8)
+  $tmp = Join-Path $CrimsonDir "kratos_tmp_$id"; $done = Join-Path $CrimsonDir "kratos_script_$id.done"
+  Set-Content -Path $tmp -Value $text -NoNewline -Encoding ascii
+  Rename-Item $tmp "kratos_script_$id.txt"
+  $limit = (Get-Date).AddSeconds(120)
+  while (-not (Test-Path $done)) {
+    if ((Get-Date) -gt $limit) { throw "a DLL não respondeu ao script $id" }
+    Start-Sleep -Milliseconds 50
+  }
+  $r = (Get-Content $done | Select-Object -First 1).Trim(); Remove-Item $done
+  if ($r -ne "ok") { throw "script ${id}: $r" }
+}
+
+function ToPng([string]$bmp, [string]$png) {
+  $img = [System.Drawing.Image]::FromFile($bmp)
+  $img.Save($png, [System.Drawing.Imaging.ImageFormat]::Png); $img.Dispose(); Remove-Item $bmp
+}
 
 function Focus {
   $p = Get-Process dmc3 -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -96,6 +123,7 @@ switch ($Action) {
   }
   "stop" { Get-Process dmc3 -ErrorAction SilentlyContinue | Stop-Process; "parado" }
   "shot" {
+    if ($VPad) { VScript "shot:$Arg.bmp"; ToPng "$Arg.bmp" $Arg; "dll -> $Arg"; break }
     # só a área da janela do jogo, e só com ela em primeiro plano (nunca captura outras janelas)
     $h = Focus | Select-Object -Last 1
     "$(Shot $h $Arg) -> $Arg"
@@ -103,12 +131,19 @@ switch ($Action) {
   "burst" {
     # "<teclas>|<capturas>|<intervalo ms>|<prefixo do arquivo>": aperta as teclas e captura em sequência
     $seq, $n, $ms, $prefix = $Arg.Split("|")
+    if ($VPad) {
+      $names = 0..([int]$n - 1) | ForEach-Object { "{0}_{1:d2}" -f $prefix, $_ }
+      VScript ("$seq " + (($names | ForEach-Object { "shot:$_.bmp wait:$ms" }) -join " "))
+      $names | ForEach-Object { ToPng "$_.bmp" "$_.png" }
+      "ok"; break
+    }
     $h = Focus | Select-Object -Last 1
     Keys $seq
     for ($i = 0; $i -lt [int]$n; $i++) { Shot $h ("{0}_{1:d2}.png" -f $prefix, $i) | Out-Null; Start-Sleep -Milliseconds ([int]$ms) }
     "ok"
   }
   "keys" {
+    if ($VPad) { VScript $Arg; "ok"; break }
     Focus | Out-Null
     Keys $Arg
     "ok"

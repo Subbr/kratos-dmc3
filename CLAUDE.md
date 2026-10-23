@@ -376,14 +376,14 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T24).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T25).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
   correntes no corpo nos ossos 23/4, fio girado com `--flip-edge`), `plwp_sword.pac` = `kratos_v5` (Rebellion
   escondida), `plwp_sword2.pac` escondido (versão pós-Missão 7), `pl005.pac` = `work/install/kratos_dt_v1` (DT da
   Rebellion = Kratos dourado, asas escondidas), `plwp_gun.pac` escondido, 37 coleções de motion = `work/install/motions_v12`. Config
-  `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida).
+  `Crimson/configs/KratosConfig.json`: enabled, chainHitbox, leftHitbox, reachRadius 4 (raio das esferas de ataque com a corrente estendida), virtualPad (testes em segundo plano).
   Crimson: skipIntro e skipCutscenes ligados. Backups de tudo em `work/backup/crimson_override/`.
 - **Pipeline (regerar tudo):**
   1. `python -I tools/kratos_fit.py extracted/gow1/hero0/hero_obj.glb extracted/dmc3/unpacked/crimson_pl000 work/install/kratos_vN/pl000.pac --left-weapon extracted/gow1/weapons/maiblade.glb --both-hands --blade-bones --flip-edge`
@@ -393,6 +393,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   4. Teste automático: `tools/win/to_mission.sh` (abre o jogo, carrega o slot 2 = início da Missão 3, ~75 s) e
      `tools/win/burst.sh "<teclas>" <n> <ms> <nome>` + `tools/win/zoom.py` (I = ataque, K = pulo/confirmar,
      L = cancelar, Enter = Start, WASD = mover; o 1º avanço dispara a cena de entrada dos inimigos).
+     **Em segundo plano (padrão, T25):** `"virtualPad": true` no KratosConfig → teclas viram controle virtual e as
+     capturas saem do back buffer pela DLL; o LG usa o PC normalmente. Desligar para o LG jogar com controle.
   5. Teste de acerto: `tools/win/combo_test.sh <nome>` + `python -I tools/win/damage_report.py work/shots/<nome>_kratos.txt`
      (exige `logDamage: true` no KratosConfig e, para não morrer, `playerReceivedDmgMult: 0` no
      CrimsonConfigGameplay — **não** usar `infiniteHP`, que zera o dano dos inimigos; restaurar depois).
@@ -411,7 +413,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
      `strike` (a preparação do 3/5 e do 3/7 agora aparece).
   3. Trocar mais golpes (Aerial Rave, Swordmaster) sempre com `strike` (golpe aéreo 3/10 feito, T20; rolamento no Trickster 23/0–3, T21; Aerial Rave 13/7–10 e Prop 13/19 no Swordmaster, T23; bloqueio no Royalguard 24/0–2, T24 — 24/30 e 24/31 tocam as entradas 0 e 1 — testar estilos com `testStyle` no KratosConfig); Devil Trigger feito no slot Rebellion (T22; DT das outras armas `pl006`–`pl009`/`pl017` ainda do Dante); Artemis no slot
      Agni & Rudra (`work/install/artemis_v1/plwp_2sword.pac`).
-- **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/` (captura só
-  a janela do jogo); pedir teste ao LG só quando a automação não alcançar. Juntar mudanças por teste.
+- **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/`, em segundo
+  plano (`virtualPad`, T25), sem tomar o teclado nem a tela do LG; pedir teste ao LG só quando a automação não
+  alcançar. Juntar mudanças por teste.
 - **Decisões tomadas:** D1 (Blades no slot Rebellion), D7, D8, D9, D10. **Pendentes:** D2–D6.
 - **REA:** instalado (`vendor/rea_cli`, CLI 6.7.0) e usado via ponte stdio (docs/re/jogador.md).

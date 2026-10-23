@@ -26,7 +26,15 @@ for _ in 1 2 3 4; do [ "$(dialog)" != none ] && break; g keys "wait:1000"; done
 for _ in 1 2 3; do [ "$(dialog)" = yes ] && break; [ "$(dialog)" = none ] && break; g keys "a:300 wait:1000"; done
 [ "$(dialog)" = yes ] || { echo "diálogo de load não chegou em Yes" >&2; exit 1; }
 g keys "k:300 wait:6000"
-g keys "enter:300 wait:8000"            # "Load Successful" -> Mission Select
-g keys "k:300 wait:8000"                # missão do save -> menu da missão (cursor em Customize)
-g keys "a:300 wait:900 k:300 wait:15000" # Mission Start
+if grep -q '"virtualPad": true' "Devil May Cry HD Collection/Crimson/configs/KratosConfig.json"; then
+  # controle virtual (2026-10-22): "Load Successful" fecha com A; o menu da missão só anda no direcional e
+  # confirma no Start
+  g keys "k:300 wait:8000"              # "Load Successful" -> Mission Select
+  g keys "k:300 wait:8000"              # missão do save -> menu da missão (cursor em Customize)
+  g keys "left:300 wait:900 enter:300 wait:15000"   # Mission Start
+else
+  g keys "enter:300 wait:8000"          # "Load Successful" -> Mission Select
+  g keys "k:300 wait:8000"              # missão do save -> menu da missão (cursor em Customize)
+  g keys "a:300 wait:900 k:300 wait:15000" # Mission Start
+fi
 tools/win/step.sh "" game

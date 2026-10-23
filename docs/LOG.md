@@ -233,3 +233,23 @@
   (`work/shots/t24_block_zoom.png`). Log: 24/0 ×6, 24/2 ×1, 24/30 ×4, 24/31 ×6. Missão e ataques normais com a DLL final.
 - Pendente: Release do Royalguard (contra-ataque) não testado; parry do GoW1 (`parry01/02`) é candidato.
 - Config final: `testStyle -1`, `logDamage` desligado, dano recebido restaurado.
+
+## 2026-10-22 — T25 (agente): testes em segundo plano (controle virtual + captura pela DLL)
+- Pedido do LG: rodar os testes sem atrapalhar o uso do PC. Antes, `game.ps1` mandava teclas por `SendInput` e
+  capturava a tela, e as duas coisas exigiam o jogo em primeiro plano.
+- DLL (`KratosVirtualPad.cpp`, flag `virtualPad`): `game.ps1` grava `Crimson\kratos_script_<id>.txt`. A DLL lê no
+  Present, aperta os botões num controle XInput virtual (controle 1) e captura o back buffer (BMP; o `game.ps1`
+  converte para PNG). No fim grava `.done`. Cada arquivo é uma trilha própria, então segurar uma tecla e capturar ao
+  mesmo tempo continua funcionando.
+- Evidência do caminho do XInput: o jogo chama `XInputGetState` pelo salto `jmp [rip+x]` em **dmc3.exe+3453F6**
+  (chamadas em +41AFA na abertura e em +41C40 a cada quadro). O byte em **+5D9070 + 0x2C·i** marca o controle i
+  conectado quando a chamada devolve 0. O detour do Crimson nesse salto só é instalado com o módulo Actor ligado
+  (`InitBindings`), por isso a entrada da tabela de importação é trocada direto (`InstallVirtualPad`, na inicialização
+  do Crimson). O `Hook::XI::XInputGetState` do Crimson roda depois e sobrescreve o estado, então também consulta o
+  controle virtual. O jogo segue rodando sem foco (`forceWindowFocus`).
+- Menus com o controle (diferente do teclado): "Load Successful" fecha com A; o menu da missão anda só no direcional
+  e confirma com Start. `to_mission.sh` usa essa sequência quando `virtualPad` está ligado.
+- Resultado: `to_mission.sh` e `combo_test.sh t25_vpad` rodaram com o jogo fora de foco (`fg=False`): Missão 3,
+  combo, **20 danos** (3/3 ×7, 3/4 ×6, 3/5 ×7). Folha: `work/shots/vp_combo_sheet.png`.
+- Limites: ao abrir, o jogo ainda aparece na frente uma vez; o som toca; com `virtualPad` ligado o controle físico 1
+  fica ignorado (o teclado continua valendo).
