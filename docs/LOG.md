@@ -609,3 +609,8 @@
   `jdc_charge_dt`. `SetAllColor` **multiplica** a cor do efeito: azul/verde sobre o roxo do jdc somem, então o Poseidon
   não fica azul. Sem queda na sonda das quatro armas.
 - Pendente: efeitos próprios (raio de Zeus, almas do Hades) exigiriam efeitos Effekseer novos.
+
+## 2026-10-23 — T63 (agente): sons do Crimson que destoam do GoW1
+- Com `sounds`, a DLL zera em memória (`activeCrimsonConfig.SFX`, sem gravar o CrimsonConfig) o anunciador de rank de
+  estilo, a voz do Dante na troca de estilo ("Trickster!") e os dois sons de ativação do DT (a Rage toca o som do
+  GoW1, T58). Playtest M3 sem queda; o CrimsonConfig no disco continua com 100.
