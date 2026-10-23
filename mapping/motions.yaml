@@ -74,18 +74,56 @@ pl000_00_13:  # SWORDMASTER_REBELLION (L = ação de estilo; T23 com testStyle 0
   9:  {anim: airH3, timing: strike}          # Aerial Rave 3
   10: {anim: airV1, timing: strike}          # Aerial Rave 4 (fecha para baixo)
   19: {anim: comboLR2, timing: strike}       # Prop (L no chão): lâminas abertas girando
+  # T66, pelas poses (work/shots/sm_unmapped.png; 18/20 deitar-levantar ficam do Dante)
+  0:  {anim: comboLR3, timing: strike}
+  4:  {anim: airH1, timing: strike}
+  5:  {anim: airV1, timing: strike}
+  6:  {anim: idleCombat, timing: stretch}
+  11: {anim: combo4A, timing: strike}
+  12: {anim: combo4C, timing: strike}
+  13: {anim: comboLR2, timing: strike}
+  15: {anim: idleCombat, timing: stretch}
+  17: {anim: combo5A, timing: strike}
 pl000_00_24:  # ROYALGUARD (L segurado = bloqueio do GoW1, §7.1; T24). O jogo toca 24/30 → entrada 0 e 24/31 → entrada 1
   0:  {anim: block, timing: stretch}         # entra e segura a guarda
   1:  {anim: block+idleCombat, timing: stretch}  # solta a guarda (volta à postura de combate)
   2:  {anim: blockReaction, timing: stretch} # bloqueio atingido
   15: {anim: parry01, timing: strike}        # Release 1 (trava + trás + L; T39)
   16: {anim: parry02, timing: strike}        # Release 2
+  # T66, pelas poses (work/shots/rg_unmapped.png)
+  3:  {anim: airBlock, timing: stretch}      # guarda no ar
+  4:  {anim: airBlock, timing: stretch}
+  5:  {anim: airBlock, timing: stretch}
+  6:  {anim: airBlock, timing: stretch}
+  7:  {anim: airBlock, timing: stretch}
+  8:  {anim: airBlock, timing: stretch}
+  9:  {anim: parry02, timing: strike}        # Release no ar
+  10: {anim: block, timing: stretch}         # guarda no chão (variações)
+  11: {anim: block, timing: stretch}
+  12: {anim: blockReaction, timing: stretch}
+  13: {anim: block, timing: stretch}
+  14: {anim: parry01, timing: strike}
+  17: {anim: airBlock, timing: stretch}
+  18: {anim: blockReaction, timing: stretch}
+  19: {anim: airBlock, timing: stretch}
+  20: {anim: airBlock, timing: stretch}
 # timing strike: o quadro de maior velocidade da mão do Kratos cai no mesmo quadro do golpe do Dante
 pl000_00_23:  # TRICKSTER (estilo do save; L = ação de estilo): dash vira o rolamento do GoW1 (§7.1, T21)
   0:  {anim: evadeFront, timing: natural}    # dash para a frente (osso 0 TZ +400)
   1:  {anim: evadeBack, timing: natural}     # para trás (TZ -400)
   2:  {anim: evadeLeft, timing: natural}     # esquerda (TX +400, mesmo sentido do 0/7)
   3:  {anim: evadeRight, timing: natural}    # direita (TX -400)
+  # T66, pelas poses (work/shots/trick_unmapped.png)
+  5:  {anim: airDash, timing: stretch}       # dash no ar
+  6:  {anim: airDash, timing: stretch}
+  7:  {anim: airForwardFlip, timing: stretch} # parede / pirueta
+  8:  {anim: airForwardFlip, timing: stretch}
+  9:  {anim: air360, timing: stretch}
+  10: {anim: air360, timing: stretch}
+  11: {anim: airDash, timing: stretch}       # Sky Star
+  15: {anim: evadeFront, timing: natural}    # dash curto
+  16: {anim: evadeFront, timing: natural}
+  17: {anim: land, timing: stretch}
 pl000_00_4:   # CERBERUS (Kratos sem a arma: lâminas do corpo; T45, índices de tools/win/motion_probe.sh 1)
   0:  {anim: idleCombat, timing: stretch, loop: true}
   1:  {anim: idleCombat, timing: stretch, loop: true}

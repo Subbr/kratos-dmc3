@@ -635,3 +635,14 @@
 - Playtest M3 e chefe M5 sem queda; tocaram 1/0, 1/15, 1/6 (reações) e 0/3, 0/4 (pulo).
 - Ainda do Dante: partes das coleções de armas (Cerberus 6, Artemis 10, Nevan 26, Beowulf 20, guns 8/9), estilos
   (Trickster 23, Royalguard 24, Swordmaster 13), Gunslinger (18–22) e Kalina (12).
+
+## 2026-10-23 — T66 (agente): o resto dos estilos com o Kratos
+- Pelas poses (`work/shots/trick_unmapped.png`, `rg_unmapped.png`, `sm_unmapped.png`):
+  - Trickster (`pl000_00_23`): dash no ar e Sky Star → `airDash`; parede/piruetas → `airForwardFlip`/`air360`; dashes
+    curtos → `evadeFront`; aterrissagem → `land`.
+  - Royalguard (`pl000_00_24`, agora as 21 entradas): guarda no ar → `airBlock`; variações no chão → `block`/
+    `blockReaction`; Releases → `parry01/02`.
+  - Swordmaster da Rebellion (`pl000_00_13`): 0/11/12/13/17 → `comboLR3`, `combo4A`, `combo4C`, `comboLR2`,
+    `combo5A`; aéreos 4/5 → `airH1`/`airV1`; posturas → `idleCombat`. 18 e 20 (deitar/levantar) não identificados,
+    ficam do Dante.
+- Sonda dos três estilos sem queda; Swordmaster no chão agora encadeia 13/19 → 13/12 → 13/13.
