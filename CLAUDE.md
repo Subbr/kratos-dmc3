@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-22. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T39).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T42).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -419,6 +419,9 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   com efeito fraco (pendente: tingir o modelo); textos: `msg_eng.pac` = `work/install/text_v1` (`tools/build_text.py`,
   base = msg do Crimson) e `renameUi` troca os nomes na interface ImGui do Crimson. **Antes de copiar para o override,
   conferir se o arquivo já existe lá (o Crimson instala vários) e fazer backup.**
+- **T41–T42:** `tools/win/playtest.sh <missão>` (Arcade do Crimson, direto na missão): M1–M20 sem queda. Roupas do
+  Dante = arquivos próprios (pl011 sem casaco, pl013 rasgada — usada da M8 em diante —, pl015/pl016 DMC1, pl018
+  Sparda): todas com o Kratos (`work/install/kratos_costumes_v1`).
 - **Pendências imediatas (próxima sessão):**
   1. LG jogar a Missão 3 e avaliar o alcance/dano com `reachRadius` 4 (ajustável no KratosConfig sem recompilar).
   2. Pedir ao LG para confirmar o fio das lâminas (`work/shots/t18_fio_v9_v10.png`) e o visual dos combos com
