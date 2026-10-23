@@ -352,3 +352,10 @@
   ler vida. A Medusa pega qualquer inimigo pela posição (vida desconhecida conta como vivo).
 - Regressão (Missão 3, em segundo plano): Medusa petrificou 6; agarrão finalizou 3 e golpeou 1; a magia voltou a
   100 entre os dois tiros da Spiral; 46 sons; a onda foi limpa.
+
+## 2026-10-23 — T35 (agente): passos e aterrissagem do GoW1
+- Com o canal COMMON mudo (T31) os passos do Dante sumiram. A DLL toca `SND_FOOTSTEP_STONEWALK/RUN` do GoW1 a cada
+  0,5 s na caminhada (0/1) e 0,32 s na corrida (0/2, 0/51), e `SND_FOOTSTEP_STONELAND` na aterrissagem: **0/6**
+  parado e **0/31** depois de pular correndo (log: pulo correndo = 0/4 → 0/31 → 3/0).
+- Log: 6 passos de corrida em 2,5 s; 2 aterrissagens em 2 pulos. (O 1º avanço da missão dispara a cena dos inimigos
+  e corta o teste: medir depois dela.)

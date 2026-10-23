@@ -23,3 +23,6 @@ put medusa_shot $S/general/SND_MEDUSA_RAY_SHOT_*.wav
 put stone $S/general/SND_MEDUSA_TURNTOSTONE_*.wav
 put flesh $S/general/SND_MEDUSA_TURNTOFLESH_*.wav
 put block $S/general/SND_BLADEBLOCK_*.wav
+put step_walk $S/general/SND_FOOTSTEP_STONEWALK_*.wav
+put step_run $S/general/SND_FOOTSTEP_STONERUN_*.wav
+put land $S/general/SND_FOOTSTEP_STONELAND_*.wav
