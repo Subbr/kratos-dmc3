@@ -45,3 +45,34 @@ pl000_00_23:  # TRICKSTER (estilo do save; L = ação de estilo): dash vira o ro
   1:  {anim: evadeBack, timing: natural}     # para trás (TZ -400)
   2:  {anim: evadeLeft, timing: natural}     # esquerda (TX +400, mesmo sentido do 0/7)
   3:  {anim: evadeRight, timing: natural}    # direita (TX -400)
+pl000_00_4:   # CERBERUS (Kratos sem a arma: lâminas do corpo; T45, índices de tools/win/motion_probe.sh 1)
+  0:  {anim: idleCombat, timing: stretch, loop: true}
+  1:  {anim: idleCombat, timing: stretch, loop: true}
+  3:  {anim: combo3A, timing: strike}        # combo 4/3 → 4/4 → 4/5
+  4:  {anim: combo3B, timing: strike}
+  5:  {anim: combo3C, timing: strike}
+  8:  {anim: combo3D, timing: strike}        # combo com pausa
+  10: {anim: combo3E, timing: strike}
+  11: {anim: airH1, timing: strike}          # no ar
+  19: {anim: dash, timing: strike}           # trava + trás
+  24: {anim: comboLR2, timing: strike}
+  25: {anim: blockLauncher, timing: strike}
+pl000_00_6:   # NEVAN (T45, motion_probe.sh 3)
+  0:  {anim: idleCombat, timing: stretch, loop: true}
+  1:  {anim: idleCombat, timing: stretch, loop: true}
+  3:  {anim: combo3A, timing: strike}        # combo 6/3 → 6/6 → 6/9 → 6/8
+  6:  {anim: combo3B, timing: strike}
+  9:  {anim: combo3C, timing: strike}
+  8:  {anim: combo3D, timing: strike}
+  10: {anim: combo3E, timing: strike}
+  4:  {anim: comboLR2, timing: strike}       # frente / segurar
+  5:  {anim: combo3B, timing: strike}
+  16: {anim: dash, timing: strike}           # trava + trás
+  15: {anim: airH1, timing: strike}          # no ar
+pl000_00_7:   # BEOWULF (T45, motion_probe.sh 4)
+  0:  {anim: idleCombat, timing: stretch, loop: true}
+  1:  {anim: idleCombat, timing: stretch, loop: true}
+  3:  {anim: combo3A, timing: strike}        # combo 7/3 → 7/4 → 7/5
+  4:  {anim: combo3B, timing: strike}
+  5:  {anim: combo3C, timing: strike}
+  25: {anim: airH2, timing: strike}          # no ar

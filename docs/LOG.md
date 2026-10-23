@@ -458,3 +458,15 @@
   morte continua sendo do jogo). Log `magia chefe x2.0 extra 30.0` (Agni & Rudra, M7) e `extra 16.2` ×3 (M11).
   Na fase de gelo do Cerberus os tiros não ferem (sem extra, como deve ser).
 - `playtest.sh` (chefe): a fase 0 agora dá 4 tiros de E&I travado.
+
+## 2026-10-23 — T45 (agente): Cerberus, Nevan e Beowulf com o Kratos
+- `tools/win/motion_probe.sh <arma>`: Missão 3 com testWeapons; o RT percorre **todas** as armas liberadas
+  (Rebellion → Cerberus → Agni → Nevan → Beowulf), então aperta RT N vezes; roda cada comando separado e lista as
+  motions. Flag nova `testMeleeWeapon` (e testWeapons libera as cinco).
+- Índices: **Cerberus (grupo 4)** combo 3→4→5, pausa 8/10, ar 11, trava + trás 19/24/25; **Nevan (6)** 3/6/9/8/10,
+  4, 5, 16 (trás), 15 (ar); **Beowulf (7)** 3→4→5, 25 (ar). `mapping/motions.yaml` → `pl000_00_4/6/7` com os golpes do
+  Kratos (`strike`), motions_v15 (só esses três mudam). `plwp_nunchaku/guitar/fight` com os modelos escondidos
+  (`work/install/weapons_hidden_v1`, backups em `crimson_override`): o Kratos luta com as lâminas do corpo em qualquer
+  arma.
+- No jogo: acertos 4 (Cerberus), 7 (Nevan), 3 (Beowulf) num combo; folha `work/shots/t45_weapons.png`. Os raios roxos
+  da Nevan continuam (efeito da arma).
