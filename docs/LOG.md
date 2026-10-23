@@ -591,3 +591,10 @@
 - Os seis DTs (`pl005–pl009`, `pl017`) agora usam `maigodblade.glb` (Blades of Chaos no nível máximo, textura de fogo)
   nas duas mãos, no `build_all.sh`. No jogo: Kratos dourado com as lâminas em brasa (`work/shots/dt_god_zoom.png`).
   Release regerada e instalada (`--check` = 0).
+
+## 2026-10-23 — T61 (agente): HUD com mais peças do GoW1
+- Peças (`work/shots/hud_pieces.png`): `TXR_HUD019` gradiente branco (preenchimento), `013` orb, `004` voluta e
+  `003` barra de ouro (medidor de Rage do GoW1). `install_hud.sh` copia como fill/orb/rage_cap/rage_bar.
+- DLL: vida e magia com o gradiente tingido (recorte de UV conforme enche), medidor de Rage dourado abaixo da lâmina
+  (fundo escurecido + barra cheia até a fração, voluta na ponta) além do brilho do medalhão, orb do GoW1 tingido de
+  vermelho no contador. Sem os arquivos, volta ao desenho liso. No jogo: `work/shots/hud3_crop.png`.
