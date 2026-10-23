@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T57).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T58).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -429,21 +429,19 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   `testDevilTrigger`, `testStyle -1`, `testCostume -1`), dano recebido restaurado, Arcade desligado. Ligados:
   enabled, chainHitbox, leftHitbox, reachRadius 4, magic, gowHud, sounds, grab, renameUi, **virtualPad** (o controle
   físico 1 fica ignorado; desligar para jogar com controle).
+- **T43–T58 (resumo):** chefes no playtest (`BOSS=1`), vida de todo inimigo pela tabela do Crimson, magias valem nos
+  chefes, Medusa/agarrão não pegam chefes; Cerberus/Nevan/Beowulf/Artemis e o Swordmaster de todas com golpes do Kratos;
+  disparos = gestos das magias, locomoção travada sem mira, todas as armas do Dante escondidas; sons de Rage/Poseidon;
+  build reproduzível (`export_gow1.sh` → `build_all.sh` → `install_all.sh`, `docs/distribuicao.md`); regressão 34/34.
 - **Pendências (por prioridade):**
-  1. **LG, de ouvido/olho:** volume e taxa das vozes do GoW1 (22050 Hz é [HIPÓTESE]); se a voz do Dante sumiu
-     (canal COMMON mudo); alcance/dano com `reachRadius 4`; tom do HUD e do DT dourado.
-  2. **Playtest:** feito para as 20 missões e 14 chefes (T41, T43; `BOSS=1 tools/win/playtest.sh`), sem queda. Falta:
-     multiplicador das magias nos chefes (o dano deles não passa pelo hook) e rotina que alcance M4/M8/M16.
-  3. **Visual das magias:** pedra da Medusa (tingir o ModelData: precisa do offset por tipo de inimigo, T39); almas do
-     Army of Hades; efeito do Poseidon.
-  4. **Golpes:** Aerial Rave 13/9–13/10 ainda não visto no ar; mais golpes do Swordmaster com trava + direção; outras
-     armas (Cerberus, Nevan, Beowulf) ainda com as motions do Dante; DT de Cerberus/Nevan/Beowulf/Sparda não visto.
-  5. **HUD:** layout exato pelo `FLP_HUD`; retrato do Dante na tela STATUS da pausa e outros menus nativos (texturas).
-  6. **Texto:** diálogos da história (`mNN_*_msg_*`, Fase 9).
-  7. **Decisões abertas:** D2 (estilos; provisório: Trickster rolamento, Royalguard bloqueio, Swordmaster especiais,
-     Gunslinger magias), D3 (recarga da magia; provisório: por dano), D4 (níveis de arma = loja), D5 (botões do DMC3),
-     D6 (cutscenes) — registrar em `docs/decisoes.md` quando o LG confirmar.
-  8. **Fase 9 (cutscenes) e Fase 10 (distribuição: patches xdelta + scripts que extraem da ISO do usuário).**
+  1. **LG, de ouvido/olho:** volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? (canal COMMON mudo);
+     sons de Rage/Poseidon [HIPÓTESE pelo nome]; alcance/dano (`reachRadius 4`); visual dos golpes e do HUD.
+  2. **Visual das magias:** pedra da Medusa (o tingimento do jogo não vale para inimigos, T56); almas do Army of Hades.
+  3. **Menus nativos:** artes com o Dante (`id741`–`id760`, `id900`, `id7168`; render do Kratos pronto em
+     `blender/scripts/render_kratos.py`); retrato da tela STATUS não localizado.
+  4. **Texto:** diálogos da história (`mNN_*_msg_*`) — junto com a Fase 9.
+  5. **Decisões do LG:** D2–D5 provisórias em `docs/decisoes.md`; D6 (cutscenes).
+  6. **Fase 9 (cutscenes) e o pacote público da Fase 10** (DLL + scripts, sem o repositório inteiro).
 - **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/`, em segundo
   plano (`virtualPad`, T25), sem tomar o teclado nem a tela do LG; pedir teste ao LG só quando a automação não
   alcançar. Juntar mudanças por teste.
