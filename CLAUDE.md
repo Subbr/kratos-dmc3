@@ -375,8 +375,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Data:** 2026-10-23. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T74).
+- **Data:** 2026-10-24. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T75).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -425,22 +425,9 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **T41–T42:** `tools/win/playtest.sh <missão>` (Arcade do Crimson, direto na missão): M1–M20 sem queda. Roupas do
   Dante = arquivos próprios (pl011 sem casaco, pl013 rasgada — usada da M8 em diante —, pl015/pl016 DMC1, pl018
   Sparda): todas com o Kratos (`work/install/kratos_costumes_v1`).
-- **Config ao fechar a sessão de 2026-10-23:** flags de teste desligadas (`logDamage`, `testWeapons`,
-  `testDevilTrigger`, `testStyle -1`, `testCostume -1`), dano recebido restaurado, Arcade desligado. Ligados:
-  enabled, chainHitbox, leftHitbox, reachRadius 4, magic, gowHud, sounds, grab, renameUi, **virtualPad** (o controle
-  físico 1 fica ignorado; desligar para jogar com controle).
-- **T43–T58 (resumo):** chefes no playtest (`BOSS=1`), vida de todo inimigo pela tabela do Crimson, magias valem nos
-  chefes, Medusa/agarrão não pegam chefes; Cerberus/Nevan/Beowulf/Artemis e o Swordmaster de todas com golpes do Kratos;
-  disparos = gestos das magias, locomoção travada sem mira, todas as armas do Dante escondidas; sons de Rage/Poseidon;
-  build reproduzível (`export_gow1.sh` → `build_all.sh` → `install_all.sh`, `docs/distribuicao.md`); regressão 34/34.
-- **T59–T68:** arte de fim de missão com o Kratos (`build_menu_art.py`); DT com as Blades em brasa (`maigodblade`);
-  HUD com gradiente, medidor de Rage e orb do GoW1; efeitos das magias configuráveis (`fx*` no KratosConfig);
-  anunciador/voz de estilo/DT do Crimson calados; **todas as coleções de motion do jogador** com o Kratos (só 13/18,
-  13/20 e 11/5 ficam do Dante; Nevan, Beowulf e Swordmaster das armas em ciclo aproximado); regressão 34/34.
-- **T69–T74:** barra do chefe do GoW1 (a do DMC3 escondida); Rage of the Gods invulnerável (`rageInvulnerable`);
-  Poseidon em área (`poseidonRadius`/`poseidonAreaDamage`); só as armas do GoW1 na troca (`gowWeaponsOnly`); Blades somem
-  com a Artemis (escala 0 nos ossos 23/4 nas coleções 5/15, escala explícita em toda motion); níveis das magias =
-  níveis das armas de fogo da loja (`magicLevelBonus`).
+- **Config ao fechar a sessão de 2026-10-24:** a do jogo segue `config/KratosConfig.default.json` (T75: todos os
+  recursos ligados, testes desligados), **exceto `virtualPad: true`** para os testes do agente (o controle físico 1 fica
+  ignorado; desligar para o LG jogar com controle). Dano recebido normal, Arcade desligado, `install_all --check` = 0.
 - **Pendências (por prioridade):**
   1. **LG, de ouvido/olho:** volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? (canal COMMON mudo);
      sons de Rage/Poseidon [HIPÓTESE pelo nome]; alcance/dano (`reachRadius 4`); visual dos golpes e do HUD.
