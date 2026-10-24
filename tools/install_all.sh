@@ -28,5 +28,8 @@ for pat in "${MANIFEST[@]}"; do
     esac
   done
 done
+# config do modo Kratos: instala a recomendada (config/KratosConfig.default.json) se ainda não houver (T75)
+CFG="Devil May Cry HD Collection/Crimson/configs/KratosConfig.json"
+[ "$mode" = install ] && [ ! -f "$CFG" ] && cp config/KratosConfig.default.json "$CFG" && echo "KratosConfig.json instalado (padrão)"
 [ "$mode" = --check ] && echo "$diff arquivo(s) diferente(s)"
 true

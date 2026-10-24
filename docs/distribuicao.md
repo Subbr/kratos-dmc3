@@ -20,7 +20,7 @@ idênticos aos instalados.
 3. **Build:** `tools/build_all.sh work/install/release` (≈ 1 min) → 62 PACs.
 4. **Instalar:** `tools/install_all.sh`, `tools/install_sounds.sh`, `tools/install_hud.sh`.
 5. **DLL:** `cmd.exe /c tools\win\build_crimson.bat` e `tools/win/install_crimson_dll.sh` (jogo fechado).
-6. **Config:** `Devil May Cry HD Collection/Crimson/configs/KratosConfig.json` — ver `dll/crimson/src/KratosMode.hpp`
+6. **Config:** `install_all.sh` instala `config/KratosConfig.default.json` se não houver; ajustar em `Crimson/configs/KratosConfig.json` — ver `dll/crimson/src/KratosMode.hpp`
    (cada recurso tem uma flag; `"enabled": false` desliga tudo).
 
 ## Desinstalar

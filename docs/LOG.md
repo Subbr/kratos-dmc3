@@ -712,3 +712,8 @@
   Medusa. `OnEnemyDamage` passou a usar o mesmo `MagicMultiplier`. Sonda das quatro armas sem queda (save de teste no
   nível 0: multiplicador igual ao de antes). [Não testado com níveis 1–2: exige comprar na loja.]
 - Regressão completa depois do T73–T74 (escala em toda motion, níveis das magias): **34/34 sem queda** (`work/shots/playtest/regressao3.txt`).
+
+## 2026-10-23 — T75 (agente): config recomendada versionada
+- `config/KratosConfig.default.json`: todos os recursos do modo Kratos ligados, valores de jogo explícitos (custos,
+  danos, raios, agarrão, níveis), flags de teste desligadas e `virtualPad` **desligado** (é só para os testes do
+  agente). `install_all.sh` instala essa config quando a do jogo não existe. `docs/distribuicao.md` aponta para ela.
