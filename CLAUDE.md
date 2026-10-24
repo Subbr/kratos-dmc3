@@ -425,15 +425,19 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **T41–T42:** `tools/win/playtest.sh <missão>` (Arcade do Crimson, direto na missão): M1–M20 sem queda. Roupas do
   Dante = arquivos próprios (pl011 sem casaco, pl013 rasgada — usada da M8 em diante —, pl015/pl016 DMC1, pl018
   Sparda): todas com o Kratos (`work/install/kratos_costumes_v1`).
-- **Config ao fechar a sessão de 2026-10-24:** a do jogo segue `config/KratosConfig.default.json` (T75: todos os
-  recursos ligados, testes desligados), **exceto `virtualPad: true`** para os testes do agente (o controle físico 1 fica
-  ignorado; desligar para o LG jogar com controle). Dano recebido normal, Arcade desligado, `install_all --check` = 0.
+- **T76–T78 (2026-10-24, 2ª sessão):** cópias de motion do Crimson (sprint, troca de estilo, taunts, Drive, Quick Drive,
+  Backslide) com o Kratos (`build_motions.table_for`); título, LOAD e fundos dos menus com o Kratos e as Blades
+  (`tools/render_menu_art.sh` + `build_menu_art.py`, bases `id900`/`id7008`/`id430–470` do Crimson); aura da pedra da
+  Medusa. Release com 69 arquivos.
+- **Config ao fechar a sessão (T78):** a do jogo = `config/KratosConfig.default.json`, **`virtualPad: false`** (o LG vai
+  testar com controle; religar para testes do agente). Checklist do LG em `docs/playtest_lg.md`. Dano normal, Arcade
+  desligado, `install_all --check` = 0.
 - **Pendências (por prioridade):**
   1. **LG, de ouvido/olho:** volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? (canal COMMON mudo);
      sons de Rage/Poseidon [HIPÓTESE pelo nome]; alcance/dano (`reachRadius 4`); visual dos golpes e do HUD.
   2. **Visual das magias:** pedra da Medusa (o tingimento do jogo não vale para inimigos, T56); almas do Army of Hades.
-  3. **Menus nativos:** artes com o Dante (`id741`–`id760`, `id900`, `id7168`; render do Kratos pronto em
-     `blender/scripts/render_kratos.py`); retrato da tela STATUS não localizado.
+  3. **Menus nativos:** título, LOAD e fundos feitos (T77); faltam as cartas da loja nativa (`id741`–`id760`, a loja
+     usada é a do Crimson) e o retrato da tela STATUS (não localizado).
   4. **Texto:** diálogos da história (`mNN_*_msg_*`) — junto com a Fase 9.
   5. **Decisões do LG:** D2–D5 provisórias em `docs/decisoes.md`; D6 (cutscenes).
   6. **Fase 9 (cutscenes) e o pacote público da Fase 10** (DLL + scripts, sem o repositório inteiro).

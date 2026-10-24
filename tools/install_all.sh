@@ -12,6 +12,8 @@ O="Devil May Cry HD Collection/data/dmc3/GData.afs"; B=work/backup/crimson_overr
 MANIFEST=(
   "$I/release/*.pac"
 )
+# arquivos que o Crimson não instala (só nós): nunca viram "original do Crimson" no backup (T77: o id7168 do T59 virou)
+OURS=" id7168.pac "
 mode=${1:-install}; diff=0
 for pat in "${MANIFEST[@]}"; do
   for src in $pat; do
@@ -20,8 +22,7 @@ for pat in "${MANIFEST[@]}"; do
       --check) cmp -s "$src" "$dst" || { echo "difere: $n ($src)"; diff=$((diff + 1)); } ;;
       --restore) if [ -f "$B/$n" ]; then cp "$B/$n" "$dst"; else rm -f "$dst"; fi ;;
       install)
-        [ -f "$dst" ] && [ ! -f "$B/$n" ] && cmp -s "$dst" "$src" || true
-        if [ -f "$dst" ] && [ ! -f "$B/$n" ] && ! cmp -s "$dst" "$src"; then
+        if [ -f "$dst" ] && [ ! -f "$B/$n" ] && [[ "$OURS" != *" $n "* ]] && ! cmp -s "$dst" "$src"; then
           echo "sem backup de $n (original do Crimson?): copiando para $B" ; cp "$dst" "$B/$n"; (cd "$B" && sha256sum "$n" >> SHA256SUMS)
         fi
         cp "$src" "$dst" ;;

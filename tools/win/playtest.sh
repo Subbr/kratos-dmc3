@@ -2,7 +2,7 @@
 # Playtest automático de uma missão pelo Arcade do Crimson (T41): abre o jogo direto na missão, roda uma rotina de
 # combate (andar, combo, pulo + ataque, bloqueio, Spiral/Medusa, agarrão, DT), captura a tela a cada fase e confere se
 # o jogo segue respondendo. Uso: [BOSS=1] tools/win/playtest.sh <missão 1–20>  → work/shots/playtest/mNN_*.png e
-# uma linha de resumo. BOSS=1 liga o Boss Rush do Crimson (nasce na sala do chefe; T43) e usa a rotina de chefe.
+# uma linha de resumo. ROUTINE=moves = sprint/troca de estilo/taunt/Drive (T76). BOSS=1 liga o Boss Rush do Crimson (nasce na sala do chefe; T43) e usa a rotina de chefe.
 # Exige virtualPad. Liga logDamage e playerReceivedDmgMult 0 durante o teste; os três configs voltam ao fim.
 set -u
 cd "$(dirname "$0")/../.."
@@ -55,6 +55,15 @@ if [ "${BOSS:-0}" = 1 ]; then
   phase 5_air "$STING k:80 wait:250 i:80 wait:1200 $STING $CMB" &&
   phase 6_more "$STING $CMB $STING $CMB $STING $CMB" &&
   phase 7_end "$STING $CMB wait:1500"
+elif [ "${ROUTINE:-}" = moves ]; then
+  # golpes que o Crimson toca de arquivos próprios (T76): sprint, troca de estilo parado, taunt e Drive
+  phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&   # o 1º avanço dispara a cena dos inimigos
+  phase 1_sprint "+w wait:4000" &&                          # captura ainda correndo (sprint do Crimson, 0/20)
+  phase 2_style "-w wait:1200 up:100 wait:1500 right:100 wait:1500 down:100 wait:1500 left:100 wait:1500" &&
+  phase 3_taunt "tab:100 wait:2500 tab:100 wait:2500" &&
+  phase 4_drive "+n +w wait:120 i:80 wait:200 -w s:100 w:100 i:80 wait:1800 -n i:50 wait:200 s:100 w:100 i:80 wait:1800" &&
+  phase 5_back "q:200 wait:600 +n s:150 l:80 wait:1500 -n" &&
+  phase 6_end "w:1500 wait:300 i:50 wait:220 i:50 wait:1500"
 else
 phase 0_start "wait:500" &&
 phase 1_walk "w:2500 wait:300 d:800 wait:300" &&

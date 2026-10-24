@@ -717,3 +717,40 @@
 - `config/KratosConfig.default.json`: todos os recursos do modo Kratos ligados, valores de jogo explícitos (custos,
   danos, raios, agarrão, níveis), flags de teste desligadas e `virtualPad` **desligado** (é só para os testes do
   agente). `install_all.sh` instala essa config quando a do jogo não existe. `docs/distribuicao.md` aponta para ela.
+
+## 2026-10-24 — T76 (agente): golpes do Crimson tocavam motions do Dante
+- O Crimson troca o arquivo de motion do grupo inteiro por cópias próprias enquanto um golpe novo toca (`src/File.hpp`):
+  sprint (`newBaseDanteAnims_pl000_00_0`, BASE até parar de correr), troca de estilo parado (`newStyleSwitching01/02`,
+  no grupo TAUNTS), taunts sorteados (`newTauntDanteAnims1/2`), Drive (`newDrivePart1–3_pl000_00_3`), Quick Drive
+  (`demo_pl000_00_3`) e Backslide (`newBackslide_pl000_00_19`). Essas cópias ficavam com as motions do Dante (só com
+  as trilhas das lâminas): a troca de estilo, o taunt (que vira agarrão) e o Drive mostravam o Dante.
+- `build_motions.table_for`: a cópia herda o mapeamento da coleção base pelo sufixo `pl000_00_N`; entradas próprias
+  no `motions.yaml` (troca de estilo = `idleCombat2`/`blockBreak`/`berserkReact`/`blockReaction` + `idleCombat`; sprint
+  = `walkBlend2`; Backslide = `evadeBack`; Quick Drive 2/20–24/30 pelas poses, `work/shots/t76_demo.png`). Drive e Quick
+  Drive entram no alcance da corrente (`REACH_PACS`). Estalo de dedos do Dante na troca de estilo mudo
+  (`styleChangeSnapVolume` em memória, como o T63).
+- `playtest.sh` com `ROUTINE=moves` (sprint, troca de estilo nas 4 direções, taunt, Drive, Backslide): M3 sem queda; o
+  log mostra 0/20 (sprint; a entrada 20 é vazia também no Crimson), 2/0 e 2/2 (troca de estilo), 2/0 (agarrão).
+
+## 2026-10-24 — T77 (agente): título, LOAD e menus com o Kratos
+- Capturas da abertura (`work/shots/t76_title*.png`): o título do Crimson (Dante com a Rebellion na lua) e a tela
+  LOAD (Vergil + Dante) vêm do `id900.pac` e do `id7008.pac` **do override do Crimson** (backup em `crimson_override`).
+  Os fundos 900×580 com o Dante ao telefone são `id430/435/440/470`.
+- `tools/glb_add_weapon.py`: junta as Blades ao glb do Kratos nos ossos `lWeapIH`/`rWeapIH` (mesmo encaixe e
+  `--flip-edge` do `kratos_fit`), para render com armas em qualquer pose. `tools/render_menu_art.sh` gera os renders
+  (`idleCombat2`, `boltThrow`, `idleCombat`).
+- `build_menu_art.py` agora tem modos: `cutout` (título, textura transparente), `right` (LOAD: apaga só a metade do
+  Dante repetindo a coluna do meio, com as linhas horizontais), `dark` (fundo escuro novo com os riscos vermelhos da
+  arte), `scene` (id7168) e `label` ("DANTE" → "KRATOS" no `id900` 14 e no rótulo do slot `id7008` 17). Base = arquivo
+  do Crimson quando existe, senão o `.nbz`. No jogo: Kratos no título e na LOAD (`work/shots/t77_title*.png`).
+- `install_all.sh`: o `id7168` (só nosso) tinha virado "original do Crimson" no backup; removido e protegido (`OURS`).
+- `build_all.sh` chama o `render_menu_art.sh` se faltarem os renders. Release com 69 arquivos.
+
+## 2026-10-24 — T78 (agente): revisão do código e aura da pedra
+- Revisão do `KratosMode.cpp`: a aura cinza dos petrificados era declarada mas nunca tocava; agora o `jdc_charge`
+  cinza é refeito a cada 1 s no inimigo enquanto dura a pedra. Som de golpe também no Swordmaster da Artemis (grupo 15).
+- Regressão curta depois de T76–T78 (M3, M9, M15, M20, chefes M7 e M12): **6/6 sem queda**
+  (`work/shots/playtest/regressao_t78.txt`); `gun_probe.sh`: Medusa petrificou 3 (no ar) com a aura nova, Poseidon
+  atingiu 1–2. `install_all --check` = 0.
+- Config do jogo = `config/KratosConfig.default.json` (virtualPad **desligado**) para o teste do LG; a anterior em
+  `work/backup/KratosConfig.pre_t78.json`. Checklist do teste em `docs/playtest_lg.md`.

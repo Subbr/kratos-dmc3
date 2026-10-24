@@ -489,4 +489,36 @@ pl000_00_26:
   # T68: DOPPELGANGER: pose de poder do Kratos
   0: {anim: berserkEnter, timing: strike}
   1: {anim: berserkEnter, timing: strike}
-  2: {anim: berserkEnter, timing: strike}
+  2: {anim: berserkEnter, timing: strike}# T76: cópias do Crimson que trocam o arquivo do grupo inteiro enquanto o golpe novo toca (src/File.hpp). Herdam o
+# mapeamento da coleção base pelo sufixo (build_motions.table_for); aqui só as entradas que o Crimson mudou.
+newBaseDanteAnims_pl000_00_0:    # sprint do Crimson (BASE até parar de correr; CrimsonGameplay.cpp)
+  2:  {anim: walkBlend2, timing: stretch, loop: true}
+  50: {anim: walkBlend2, timing: stretch, loop: true}
+  51: {anim: walkBlend2, timing: stretch, loop: true}
+newStyleSwitching01_pl000_00_4:  # troca de estilo parado (vai no grupo TAUNTS; Actor.cpp): 0 Trickster, 1 SM, 2 GS
+  0: {anim: idleCombat2+idleCombat, timing: natural}
+  1: {anim: blockBreak+idleCombat, timing: natural}
+  2: {anim: berserkReact+idleCombat, timing: natural}
+newStyleSwitching02_pl000_00_4:  # 0 Royalguard, 1 Quicksilver, 2 Doppelganger
+  0: {anim: blockReaction+idleCombat, timing: natural}
+  1: {anim: idleCombat2+idleCombat, timing: natural}
+  2: {anim: berserkReact+idleCombat, timing: natural}
+newBackslide_pl000_00_19:        # Backslide (trava + trás + estilo com a Shotgun/Poseidon)
+  5: {anim: evadeBack, timing: stretch}
+# newTauntDanteAnims1/2_pl000_00_2 (taunts sorteados do Crimson) = agarrão, herdado de pl000_00_2;
+# newDrivePart1–3 e demo_pl000_00_3 (Drive e Quick Drive) herdam pl000_00_3 (17–19 = golpes carregados).
+newDrivePart2_pl000_00_3:        # 17/18 têm 1–2 quadros (só passam a pose); 19 = 2º corte do Drive
+  17: {anim: comboLR3, timing: stretch}
+  18: {anim: comboLR3, timing: stretch}
+newDrivePart3_pl000_00_3:
+  17: {anim: comboLR3, timing: stretch}
+  18: {anim: comboLR3, timing: stretch}
+demo_pl000_00_3:                 # Quick Drive (o Crimson troca o grupo REBELLION por este arquivo; Actor.cpp)
+  # entradas que não existem no pl000_00_3, pelas poses (golpes de espada; work/shots/t76_demo.png)
+  2:  {anim: combo3F, timing: strike}
+  20: {anim: combo3B, timing: strike}
+  21: {anim: combo4A, timing: strike}
+  22: {anim: combo3C, timing: strike}
+  23: {anim: combo5A, timing: strike}
+  24: {anim: combo6A, timing: strike}
+  30: {anim: comboLR2, timing: strike}

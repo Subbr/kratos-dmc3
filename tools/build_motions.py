@@ -25,9 +25,19 @@ from gltf import Glb  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 
 
-REACH_PACS = {"pl000_00_3", "pl000_00_13", "demo_pl000_00_3"}  # Rebellion (Blades) e Swordmaster da Rebellion
+# Rebellion (Blades) e Swordmaster da Rebellion; as cópias do Crimson para o Drive e o Quick Drive (T76)
+REACH_PACS = {"pl000_00_3", "pl000_00_13", "demo_pl000_00_3",
+              "newDrivePart1_pl000_00_3", "newDrivePart2_pl000_00_3", "newDrivePart3_pl000_00_3"}
 # Blade of Artemis (Agni & Rudra e o Swordmaster dela): as Blades of Chaos somem (escala ~0 nos ossos 23/4; T73)
 HIDE_BLADES = {"pl000_00_5", "pl000_00_15"}
+
+
+def table_for(table: dict, name: str) -> dict:
+    """Mapeamento de uma coleção. As cópias do Crimson (newDrivePart1_pl000_00_3, demo_pl000_00_3, newBaseDanteAnims_
+    pl000_00_0…) trocam o arquivo inteiro do grupo enquanto o golpe novo toca (T76): herdam o mapeamento da coleção base
+    pelo sufixo, e a entrada própria (mesmo nome do arquivo no yaml) sobrepõe."""
+    base = name[name.find("pl000_00_"):]
+    return {**table.get(base, {}), **table.get(name, {})}
 
 
 def main(src: Path, dst: Path, model: Path | None = None) -> None:
@@ -50,7 +60,7 @@ def main(src: Path, dst: Path, model: Path | None = None) -> None:
     for f in files:
         name = f.stem
         p = pac.Pac.parse(f.read_bytes())
-        kratos = table.get(name, {})
+        kratos = table_for(table, name)
         n = 0
         for idx, e in enumerate(p.entries):
             if e is None or e[4:8] != b"MOT\0":
