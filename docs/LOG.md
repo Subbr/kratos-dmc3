@@ -711,3 +711,4 @@
   Poseidon (inclusive a área) e Hades — também nos chefes, pelo `MagicMultiplier` — e +1,5 s de pedra por nível na
   Medusa. `OnEnemyDamage` passou a usar o mesmo `MagicMultiplier`. Sonda das quatro armas sem queda (save de teste no
   nível 0: multiplicador igual ao de antes). [Não testado com níveis 1–2: exige comprar na loja.]
+- Regressão completa depois do T73–T74 (escala em toda motion, níveis das magias): **34/34 sem queda** (`work/shots/playtest/regressao3.txt`).
