@@ -795,3 +795,18 @@
 - DMC3: `func_1E09D0(ator, evento)` muda o evento do ator; `1EFB90` toca motion; a função de dano `88190` só tira vida
   (lê dano em +0xC/+0x14/+0x1C do ataque e índices +4/+8 numa tabela); a reação do inimigo vem do sistema de colisão
   de ataque, não dela → o acerto do motor novo precisa acionar o volume de ataque do jogo (próximo passo de RE).
+
+## 2026-10-24 — T81 (agente): D11 — como acertar inimigos com reação nativa (DMC3)
+- Golpes do Dante usam `DamageData` estáticas no exe (Crimson `Vars.hpp`: `DamageDataAddrOffsets`): combo da
+  Rebellion `0x5C68C0` (3/3, reação 0, dano 100), `0x5C6910` (3/4, 80), `0x5C6960` (3/5, reação 7, desl. 60, ângulo 5);
+  High Time `0x5C6C30`, Stinger `0x5C6C80`. Tabela fixa (4º parâmetro do dano) `0x5A3220`. Log `ataque … knock …`.
+- Pilha do acerto (`RtlCaptureStackBackTrace` no gancho do dano): `5B16B → 5A8A7 → 5A7D2 → 87C46 → 87ED3 → 88190`.
+  Em `87C1D` o objeto de colisão do golpe traz `DamageData` em +0x310 e o atacante em +0x300; a vítima recebe por
+  `87D10(recebedor, DamageData, atacante+0x60, info)`, que chama a reação (`[recebedor+0x68]` vfunc 0x18), o dano
+  (`[recebedor+0x28]` = alvo do 88190) e avisa o atacante.
+- Experimentos (flags `testAttackRva`, `grabAttackRva`, só para teste): chamar só o `88190` tira vida sem reação
+  visível; reaplicar o `87D10` com recebedor e "info" copiados de um acerto real funcionou 1 vez (Stinger) e deu
+  exceção com o High Time — a "info" tem ponteiros que não sobrevivem à cópia. Próximo passo: decodificar a "info"
+  (posição do acerto/colisão) ou acionar o volume de ataque do próprio jogo com a `DamageData` escolhida.
+- GoW1: descompilação completa com o plugin do EE (`work/ghidra/all.c`, 5692 funções). O 1º candidato com passo de
+  24 bytes (`FUN_001d35d0`) é A* de navegação, não combate. Interpretador do CombatFile ainda não achado.
