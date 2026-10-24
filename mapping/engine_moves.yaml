@@ -1,0 +1,8 @@
+# Motor Kratos (D11): golpes tocados pela DLL no tempo original do GoW1 (60 fps), arquivo kratosMoves_pl000_00_2.pac
+# + KratosMoves.json. Índice = posição na lista. PROVISÓRIO até decodificar o TWK_CombatFile: cadeia (next = □,
+# nextHeavy = △), janela de botão (fração da animação), avanço (forward, osso 0) e ficha de dano do DMC3
+# (DamageData, RVA: 5C68C0 leve, 5C6960 finalizador que arremessa, 5C6C30 lança) são [HIPÓTESE].
+moves:
+  - {name: blades_1, anim: combo3A, forward: 40, next: 1, damage: 5C68C0, window: [0.15, 0.70]}
+  - {name: blades_2, anim: combo3B, forward: 40, next: 2, damage: 5C68C0, window: [0.15, 0.70]}
+  - {name: blades_3, anim: combo3C, forward: 60, next: -1, damage: 5C6960, window: [0.15, 0.80]}

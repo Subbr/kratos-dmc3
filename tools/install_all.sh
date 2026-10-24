@@ -29,6 +29,13 @@ for pat in "${MANIFEST[@]}"; do
     esac
   done
 done
+# tabela do motor Kratos (D11), lida pela DLL
+J="Devil May Cry HD Collection/Crimson/configs/KratosMoves.json"
+case $mode in
+  install) cp "$I/release/KratosMoves.json" "$J" ;;
+  --check) cmp -s "$I/release/KratosMoves.json" "$J" || { echo "difere: KratosMoves.json"; diff=$((diff + 1)); } ;;
+  --restore) rm -f "$J" ;;
+esac
 # config do modo Kratos: instala a recomendada (config/KratosConfig.default.json) se ainda não houver (T75)
 CFG="Devil May Cry HD Collection/Crimson/configs/KratosConfig.json"
 [ "$mode" = install ] && [ ! -f "$CFG" ] && cp config/KratosConfig.default.json "$CFG" && echo "KratosConfig.json instalado (padrão)"

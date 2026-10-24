@@ -55,6 +55,14 @@ if [ "${BOSS:-0}" = 1 ]; then
   phase 5_air "$STING k:80 wait:250 i:80 wait:1200 $STING $CMB" &&
   phase 6_more "$STING $CMB $STING $CMB $STING $CMB" &&
   phase 7_end "$STING $CMB wait:1500"
+elif [ "${ROUTINE:-}" = engine ]; then
+  # motor Kratos (D11): 1º ataque prepara o acerto sintético (golpe do Dante), depois combos do motor com capturas
+  phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
+  phase 1_prime "i:50 wait:1500 w:600 wait:300" &&
+  tools/win/burst.sh "i:50 wait:250 i:50 wait:250 i:50 wait:1200" 16 110 engine_combo >/dev/null &&
+  phase 2_after "wait:300" &&
+  tools/win/burst.sh "w:500 i:50 wait:250 i:50 wait:250 i:50 wait:1200" 16 110 engine_combo2 >/dev/null &&
+  phase 3_end "wait:300"
 elif [ "${ROUTINE:-}" = moves ]; then
   # golpes que o Crimson toca de arquivos próprios (T76): sprint, troca de estilo parado, taunt e Drive
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&   # o 1º avanço dispara a cena dos inimigos

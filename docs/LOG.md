@@ -810,3 +810,35 @@
   (posição do acerto/colisão) ou acionar o volume de ataque do próprio jogo com a `DamageData` escolhida.
 - GoW1: descompilação completa com o plugin do EE (`work/ghidra/all.c`, 5692 funções). O 1º candidato com passo de
   24 bytes (`FUN_001d35d0`) é A* de navegação, não combate. Interpretador do CombatFile ainda não achado.
+
+## 2026-10-24 — T82 (agente): acerto sintético com reação nativa (DMC3) — resolvido
+- Entrada do acerto `dmc3.exe+87B90(vítima, colisão do golpe, colisão da vítima)`: descarta golpe repetido pelo id
+  (`colisão+0xC`, anel de 16 em `vítima+0x34`), usa `colisão+0xC0` como ponto de contato e chama o recebedor
+  (`vítima−8`, vfunc 0x20) com `DamageData` (`+0x310`) e atacante (`+0x300`, +0x60). A vítima fica **dentro do ator do
+  inimigo em +0x32F8** (Hells); a colisão da vítima tem o inimigo em `+0x300` (vista no gancho de colisão).
+- Quando o golpe do Dante acaba, o jogo zera dono (`+0x300`), dados (`+0xD0` = ator + 0x7250) e "files"
+  (`+0x110/+0x118`, forma do golpe, fora do ator). Solução: cópia da colisão ativa do Kratos (gancho de colisão) e,
+  no acerto sintético, troca temporária pela cópia com a `DamageData` escolhida, id novo e contato; depois devolve.
+- Resultado (`testAttackRva`): High Time `0x5C6C30` **lança o inimigo (+308 em y)**; Stinger e finalizador aplicados;
+  3/3 sem exceção. Pendente: a cópia exige um golpe real do Dante na missão (1º ataque passa normal).
+
+## 2026-10-24 — T83 (agente): protótipo do motor Kratos (D11)
+- `tools/build_engine_moves.py` + `mapping/engine_moves.yaml` → `kratosMoves_pl000_00_2.pac` (animações do GoW1 a
+  60 fps, sem esticar; osso 0 com avanço provisório porque as animações do GoW1 são "no lugar" — a raiz `main` não se
+  move) e `KratosMoves.json` (quadro do golpe pela velocidade da mão, cadeia, janela, `DamageData`). No
+  `build_all.sh`/`install_all.sh`.
+- DLL (flag `kratosEngine`, desligada por padrão): bloqueia o ataque do Dante (bit 0x10) e guarda o aperto; no chão
+  vira para o inimigo mais perto e entra no evento TAUNT (`func_1E09D0`); o controlador de taunt do Crimson chama
+  `KratosMode::EngineTauntFrame`, que troca o arquivo do grupo TAUNTS e toca o golpe; aperto dentro da janela encadeia;
+  no quadro do golpe, acerto sintético nos inimigos à frente (até 260) ou perto (120); no fim devolve o arquivo.
+- Teste M3 (`ROUTINE=engine tools/win/playtest.sh 3`): `golpe 0 → 1 → 2 → fim`, acerto em 1 inimigo, sem queda;
+  capturas `work/shots/engine_combo_sheet.png`. Cadeia/janelas/avanço ainda provisórios (combo3A→B→C).
+
+## 2026-10-24 — T84 (agente): eventos dos golpes do GoW1
+- `FUN_00205488` (GoW1) percorre os eventos de cada golpe: registro do golpe `+10` = lista de eventos, byte `+0x16` =
+  quantidade; evento: `+8/+10` janela (fração × 65535), `+0xC` id, `+0xE` chance %, `+0xF` tipo, `+0x10` condição
+  (0 sempre; 1/3/5 botões no quadro; 4 direção; 6 outra), `+0x11` dificuldade, `+0x12` flags. Os tipos (1–48)
+  disparam efeitos, sons, câmera, vibração e `Concussion` (tweaks em R_PERM: `TWK_PlayFX_*`, `TWK_CameraShake_*`,
+  `TWK_ForceFeedback_*`, `TWK_Concussion_*`). `tools/gow_combat.py` lista os eventos de cada golpe.
+- Ex.: `BLOCK360` (giro) tem o tipo 13 em 0,493–0,539 e 0,546–0,59 (os dois giros). Próximo: dar nome a cada tipo
+  (funções chamadas no `switch`) e achar onde ficam as transições por botão (provavelmente as listas A1/A2).

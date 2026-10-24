@@ -34,6 +34,8 @@ for n in plwp_sword plwp_sword2 plwp_sword3 plwp_gun plwp_shotgun plwp_laser plw
 done
 # 4. motions do Kratos (mapping/motions.yaml)
 $PY tools/build_motions.py $B "$OUT" --model "$OUT/pl000.pac" >/dev/null
+# 4b. motor Kratos (D11): golpes do GoW1 no tempo original + tabela para a DLL (KratosMoves.json)
+$PY tools/build_engine_moves.py $B/pl000_00_2.pac "$OUT/pl000.pac" "$OUT/kratosMoves_pl000_00_2.pac" >/dev/null
 # 5. textos (T38)
 $PY tools/build_text.py $B/msg_eng.pac "$OUT/msg_eng.pac" >/dev/null
 # 6. artes dos menus com o Kratos (T59, T77; renders de tools/render_menu_art.sh, que precisa do Blender)
