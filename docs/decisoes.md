@@ -52,3 +52,19 @@
 ## D5 — Controles (PROVISÓRIA, agente — aguardando o LG)
 - **Em uso:** botões do DMC3 (§7.4 opção a). Agarrão no taunt (Back), magias nas armas de fogo (X; LT troca),
   Rage no DT (LB).
+
+## D11 — Motor de combate do GoW1 dentro do DMC3 (2026-10-24, LG)
+- **Problema:** até o T79 o Kratos é o DMC3 com pele do GoW1 — cada animação do GoW1 foi encaixada num golpe do Dante e
+  o código do DMC3 decide combo, janela, cancelamento e tempo. Nunca terá a sensação do GoW1, por mais polimento.
+- **Achado:** o combate do GoW1 é orientado a dados: `TWK_CombatFile_000…006` (R_PERM.WAD) = tabela de golpes
+  (animação por hash, id, sub-tabelas), `TWK_Player` = parâmetros reais de magia/Rage/lâminas, `goHero` = tempos de
+  transição. Ver `docs/formats/gow-combat.md`.
+- **Escolha:** a DLL ganha um "motor Kratos" que **executa a tabela de golpes do GoW1** (animações no tempo original,
+  transições e janelas da tabela, acerto por esferas nas lâminas). O DMC3 fica com câmera, física, fases e a reação
+  dos inimigos ao dano (o LG achou razoáveis). Finalizações: genéricas ou só as principais. Flag `kratosEngine`.
+- **Descartado:** usar o DMC3 de PS2 (o código do Kratos depende do motor inteiro do GoW1; perderíamos Crimson, REA e
+  testes); levar o DMC3 para o GoW1 (sem ferramenta de importar fases); medir no PCSX2 (o LG não tem PS2 para extrair
+  a BIOS — fica de fora).
+- **Aproveita-se:** modelo, armas, Rage, HUD, menus, sons, infraestrutura. Sai: as motions do Kratos encaixadas nos
+  golpes do Dante (ficam como modo antigo, sem a flag).
+- **Gate:** protótipo do combo básico das Blades jogável na M3; o LG decide se a sensação está no caminho.

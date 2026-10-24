@@ -782,3 +782,16 @@
 - Varredura de bancos de som em todos os WADs interrompida (lenta no servidor do gowb). Pista para retomar:
   `ATHN02B.WAD` tags 4368/4383 `SEM_SNDKratos` e `PAND04G.WAD` 4633–4637 `SEM_SNDKratosGrunt`/`sndgrpkratosgrnt`
   (grupos de som do Kratos em fases específicas). Candidatos para ouvir em `work/voice_review/` (fora do git).
+
+## 2026-10-24 — T80 (agente): D11 — investigação do motor de combate do GoW1
+- Decisão D11 (LG): o Kratos passa a ser comandado pela tabela de golpes do próprio GoW1; o DMC3 fica com câmera,
+  física, fases e reação dos inimigos. Detalhe em `docs/decisoes.md`.
+- Achados: `TWK_CombatFile_000…006` (tabelas de golpes, binário), `TWK_Player` (parâmetros reais das magias/Rage),
+  `TWK_goHero` (transições). Formato parcial em `docs/formats/gow-combat.md`.
+- Ghidra: o processador MIPS padrão não decodifica o R5900 (funções truncadas); com o plugin
+  `ghidra-emotionengine-reloaded` v2.1.38 (`vendor/ghidra_12.1.4_PUBLIC/Ghidra/Extensions`) a descompilação funciona.
+  Achados os registradores dos tipos CombatFile/CombatFileSet; o interpretador ainda não.
+- PCSX2 2.8.2 instalado, com PINE, mas sem BIOS (o LG não tem PS2) → medição no emulador fora do plano.
+- DMC3: `func_1E09D0(ator, evento)` muda o evento do ator; `1EFB90` toca motion; a função de dano `88190` só tira vida
+  (lê dano em +0xC/+0x14/+0x1C do ataque e índices +4/+8 numa tabela); a reação do inimigo vem do sistema de colisão
+  de ataque, não dela → o acerto do motor novo precisa acionar o volume de ataque do jogo (próximo passo de RE).
