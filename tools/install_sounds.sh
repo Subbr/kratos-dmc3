@@ -26,5 +26,19 @@ put block $S/general/SND_BLADEBLOCK_*.wav
 put step_walk $S/general/SND_FOOTSTEP_STONEWALK_*.wav
 put step_run $S/general/SND_FOOTSTEP_STONERUN_*.wav
 put land $S/general/SND_FOOTSTEP_STONELAND_*.wav
-put rage $S/magic/RAGEMIME.wav           # [HIPÓTESE] pelo nome (GENERAL2 cita SND_MI_RAGEMIME); T58
-put poseidon $S/magic/POSMAG06.wav       # [HIPÓTESE] pelo nome
+# T79 (transcrição local com Whisper, extracted/gow1/sound/transcripts.jsonl): o RAGEMIME é um deus narrando ("Let the
+# rage of the gods drive your blades, Kratos") e o POSMAG06 é "Go with the gods, Kratos!" — trocados pelos sons de jogo.
+put rage $S/all/STAINVOC_VAG.wav         # rugido do Kratos ("RAAARGH") [HIPÓTESE: voz do Kratos, conferir de ouvido]
+put rage_fx $S/general/SND_TRANSFORM_LP_0.wav
+put poseidon $S/general/SND_LIGHTNING360_START_0.wav $S/general/SND_LIGHTNING360_BOLT_1.wav  # Poseidon's Rage = Lightning 360
+put zeus $S/general/SND_BOLT_FIRE_0.wav
+put hades $S/general/SND_RAISEDEAD_SHOT_0.wav
+put grab $S/all/PUSHGRNT_VAG.wav $S/general/SND_KICKCHARGEVO_LP_0.wav $S/general/SND_MAI_STRUGGLEVO_LP_3.wav
+# falas do Kratos no começo da luta com chefe, recortadas do áudio original (sem gerar nada; regra 5)
+cut() {  # cut <origem> <início s> <duração s> <destino>
+  ffmpeg -v error -y -i "$1" -ss "$2" -t "$3" -ac 1 -af "afade=t=out:st=$(echo "$3 - 0.25" | bc):d=0.25" "$4"
+}
+mkdir -p "$S/cut"
+cut $S/all/A01HL17_VPK.wav 0 5.3 $S/cut/boss_hades.wav     # "Foul beast! I will send you back to the depths of Hades!"
+cut $S/all/A08HL02A_VAG.wav 5.1 2.2 $S/cut/boss_demons.wav # "I will put these demons down!"
+put boss_start $S/cut/boss_hades.wav $S/cut/boss_demons.wav

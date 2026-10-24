@@ -19,13 +19,14 @@ testes automáticos do agente, religar.
 | 4 | Taunt (Back) várias vezes: sempre agarrão | perto de um Hell | |
 | 5 | Drive (Stinger/combo + trás→frente + ataque, se liberado) | Blades | |
 | 6 | Medusa (Spiral): inimigo para e fica com aura cinza | M3+ | |
-| 7 | Volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? | combate | |
-| 8 | Sons da Rage e de Poseidon (escolhidos pelo nome, [HIPÓTESE]) | DT / Shotgun | |
+| 7 | Volume e velocidade das vozes (Hero = 14000 Hz no cabeçalho; sons do GENERAL a 22050 Hz [HIPÓTESE]); voz do Dante sumiu em combate? | combate | |
+| 8 | Sons novos (T79): rugido + efeito na Rage, raio do Poseidon, Zeus, Hades, esforço no agarrão | DT / magias / taunt | |
+| 8b | Fala do Kratos no começo de cada luta com chefe ("…depths of Hades!" / "I will put these demons down!") | chefes | |
 | 9 | Alcance e dano das Blades (`reachRadius 4`) | combate | |
 | 10 | HUD do GoW1 (vida, magia, Rage, orbs, hits, barra do chefe) | combate / chefe | |
 
 ## Pendências conhecidas (não precisa reportar)
-- Cutscenes em vídeo (12 `.webm`) ainda com o Dante — D6.
+- Cutscenes em vídeo (12 `.wmv`) ainda com o Dante — D6.
 - Diálogos da história com "Dante" — Fase 9.
 - Retrato da tela STATUS e cartas de golpe da loja nativa (a loja usada é a do Crimson).
 - Almas do Army of Hades: usa o efeito roxo do Crimson, não as almas do GoW1.

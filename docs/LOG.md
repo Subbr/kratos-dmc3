@@ -754,3 +754,31 @@
   atingiu 1–2. `install_all --check` = 0.
 - Config do jogo = `config/KratosConfig.default.json` (virtualPad **desligado**) para o teste do LG; a anterior em
   `work/backup/KratosConfig.pre_t78.json`. Checklist do teste em `docs/playtest_lg.md`.
+
+## 2026-10-24 — T79 (agente): reaproveitamento das falas do Kratos
+- **Inventário:** os 617 VAG/VPK soltos da ISO exportados (`extracted/gow1/sound/all`, 526 min, inclui música) e os
+  422 com menos de 60 s transcritos localmente com Whisper `medium.en` na GPU (`vendor/whisper_venv`; nada sai da
+  máquina) → `extracted/gow1/sound/transcripts.jsonl`. "Thanks for watching!" e afins são alucinação do Whisper em
+  música/efeito. As vozes do banco `Hero` têm 14000 Hz no cabeçalho (a [HIPÓTESE] dos 22050 Hz era do `GENERAL`).
+- **Erros do T58 corrigidos:** `POSMAG06` (som do Poseidon's Rage) é a fala "Go with the gods, Kratos! Go forth in the
+  name of Olympus!" e `RAGEMIME` (som da Rage) é um deus narrando "Let the rage of the gods drive your blades,
+  Kratos" — escolhidos só pelo nome. Agora: Poseidon = `SND_LIGHTNING360_START`/`_BOLT` (Poseidon's Rage do GoW1 é o
+  Lightning 360); Rage = rugido `STAINVOC` [HIPÓTESE: voz do Kratos] + `SND_TRANSFORM_LP`.
+- **Falas do Kratos achadas (por conteúdo):** "Foul beast! I will send you back to the depths of Hades!" (`A01HL17`,
+  Hidra), "Ares! There is nothing you can put in my way to stop me! I will put these demons down! This time, I will
+  save my family!" (`A08HL02A/B`), grunhidos `PUSHGRNT`, `STAINVOC`, `SND_KICKCHARGEVO_LP`, `SND_MAI_STRUGGLEVO_LP`.
+  Gritos `HSCR*`, `FALL*`, `SKFALL*`, `FSCRM*` e `MOAN_*` não estão atribuídos (podem ser de vítimas/inimigos).
+  O resto das falas é de outros personagens (Ares, Oráculo, Atena, Zeus, marinheiros, narradora); as falas de
+  história do Kratos ficam nos vídeos PSS.
+- **Eventos novos** (`install_sounds.sh` + DLL): `boss_start` (1,5 s depois de a barra do chefe aparecer: "…depths of
+  Hades!" ou "I will put these demons down!", recortados do áudio original com `ffmpeg`, conferidos pela energia do
+  sinal e pelo Whisper), `grab` (esforço no começo do agarrão), `zeus` (`SND_BOLT_FIRE`), `hades`
+  (`SND_RAISEDEAD_SHOT`), `rage_fx`. Teste: M3 e chefe da M3 tocaram `boss_start`, `grab`, `rage`, `rage_fx`, `zeus`;
+  sonda das armas de fogo sem queda (Poseidon atingiu 2, Medusa petrificou 3, Hades disparou).
+- **Voz do Dante nas cenas do motor:** as faixas `data/dmc3/afs/sound/m*_s/c/b*.ogg` e `m_demo_*.ogg` trazem os
+  diálogos (Dante, Arkham, Jester…) **misturados** com a música (transcrição de `m03_s00`, `m05_s00`,
+  `m_demo_04_004`). Trocar só a voz do Dante ali exige separar vozes — fora do escopo; fica com a Fase 9.
+- `playtest.sh` e `gun_probe.sh` ligam o `virtualPad` só durante o teste (a config do LG volta no fim).
+- Varredura de bancos de som em todos os WADs interrompida (lenta no servidor do gowb). Pista para retomar:
+  `ATHN02B.WAD` tags 4368/4383 `SEM_SNDKratos` e `PAND04G.WAD` 4633–4637 `SEM_SNDKratosGrunt`/`sndgrpkratosgrnt`
+  (grupos de som do Kratos em fases específicas). Candidatos para ouvir em `work/voice_review/` (fora do git).

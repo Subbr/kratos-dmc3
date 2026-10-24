@@ -1,6 +1,6 @@
 # Cutscenes — levantamento inicial (2026-10-20)
 
-`data/dmc3/Video/`: 30 arquivos `.webm` (480 MB). Não são WMV como o plano supunha.
+`data/dmc3/Video/`: 32 arquivos `.wmv` (~3,8 GB; corrigido em 2026-10-24 — a 1ª anotação dizia `.webm`).
 
 - **Cutscenes de missão em vídeo (12):** `m01_s00`, `m01_v01`, `m02_c00`, `m06_s00`, `m07_c00`, `m08_s00`,
   `m09_s00`, `m13_c00`, `m14_c00`, `m14_s00`, `m19_c00`, `m99_s00`.

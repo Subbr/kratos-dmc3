@@ -11,7 +11,7 @@ tools/.venv/bin/python -I - <<'PY'
 import json, pathlib
 cd = pathlib.Path("Devil May Cry HD Collection/Crimson/configs")
 p = cd / "KratosConfig.json"; d = json.loads(p.read_text())
-d.update({"logDamage": True, "testWeapons": True, "testRangedWeapon": 8, "magicShotCost": 1.0, "poseidonCost": 1.0,
+d.update({"logDamage": True, "virtualPad": True, "testWeapons": True, "testRangedWeapon": 8, "magicShotCost": 1.0, "poseidonCost": 1.0,
           "medusaCost": 1.0, "hadesCost": 1.0})
 p.write_text(json.dumps(d, indent=4))
 p = cd / "CrimsonConfigGameplay.json"; d = json.loads(p.read_text())

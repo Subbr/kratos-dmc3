@@ -29,7 +29,7 @@ def crimson(d):
     d["Arcade"].update({"enable": True, "mission": int(sys.argv[1]), "mode": 1, "weapons": [0, 2, 5, 8]})
     d["BossRush"]["enable"] = sys.argv[2] == "1"
 edit("CrimsonConfig", crimson)
-edit("KratosConfig", lambda d: d.update({"logDamage": True}))
+edit("KratosConfig", lambda d: d.update({"logDamage": True, "virtualPad": True}))  # a config do LG volta no fim
 def gameplay(d):
     d["Cheats"]["Damage"]["playerReceivedDmgMult"] = 0.0
 edit("CrimsonConfigGameplay", gameplay)
