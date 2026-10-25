@@ -62,20 +62,47 @@ def decode(b: bytes, hd: dict[int, str]) -> list[dict]:
             evs.append({"window": (round(start / 65535, 3), round(end / 65535, 3)), "cond": cond, "action": action,
                         "target": target, "chance": chance, "diff": diff, "flags": flags,
                         "raw": b[r:r + 0x14].hex()})
-        moves.append({"index": i, "id": mid, "anim": hd.get(h, hex(h)), "events": evs,
+        trans = []
+        for k in range(b[o + 0x14]):  # lista A1 (+6): transições (FUN_00207ef8)
+            e = o + a1 + k * 4
+            off, bit = struct.unpack_from("<Hh", b, e)
+            r = e + off
+            mask, start, target, end = struct.unpack_from("<IHhH", b, r)
+            trans.append({"bit": bit, "mask": mask, "window": (round(start / 65535, 3), round(end / 65535, 3)),
+                          "target": target, "trigger": b[r + 0x1C], "sub": b[r + 0x1D], "x1f": b[r + 0x1F],
+                          "diff": b[r + 0x21], "raw": b[r:r + 0x24].hex()})
+        moves.append({"index": i, "id": mid, "anim": hd.get(h, hex(h)), "events": evs, "trans": trans,
                       "fields": struct.unpack_from("<6H", b, o + 12)})
     return moves
 
 
+def load_all(hd: dict[int, str]) -> list[dict]:
+    """Os 7 CombatFile do CombatFileSet "Hero" (ids globais entre arquivos)."""
+    out = []
+    for n in range(7):
+        for m in decode(blob(ROOT / f"extracted/gow1/twk/CombatFile_{n:03d}.json"), hd):
+            m["file"] = n
+            out.append(m)
+    return out
+
+
 def main() -> None:
     hd = load_hashes()
-    moves = decode(blob(Path(sys.argv[1])), hd)
+    moves = load_all(hd) if sys.argv[1] == "--all" else decode(blob(Path(sys.argv[1])), hd)
     only = int(sys.argv[sys.argv.index("--move") + 1]) if "--move" in sys.argv else None
+    ids = [int(x) for x in sys.argv[sys.argv.index("--ids") + 1].split(",")] if "--ids" in sys.argv else None
     byid = {m["id"]: m["anim"] for m in moves}
     for m in moves:
         if only is not None and m["index"] != only:
             continue
-        print(f"#{m['index']} id={m['id']} {m['anim']} campos={m['fields']} eventos={len(m['events'])}")
+        if ids is not None and m["id"] not in ids:
+            continue
+        print(f"#{m['index']} id={m['id']} {m['anim']} campos={m['fields']} eventos={len(m['events'])} transições={len(m['trans'])}")
+        for t in m["trans"]:
+            print(f"    → {t['target']:4d} {byid.get(t['target'], '')!s:16s} gatilho {t['trigger']:#04x}/{t['sub']} janela {t['window']} "
+                  f"máscara {t['mask']:#07x} bit {t['bit']} dif {t['diff']}")
+        if "--events" not in sys.argv:
+            continue
         for e in m["events"]:
             tgt = byid.get(e["target"], "")
             print(f"    janela {e['window']} cond {e['cond']} ação {e['action']:3d} alvo {e['target']:4d} {tgt:16s} "

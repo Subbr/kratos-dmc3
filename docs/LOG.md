@@ -842,3 +842,23 @@
   `TWK_ForceFeedback_*`, `TWK_Concussion_*`). `tools/gow_combat.py` lista os eventos de cada golpe.
 - Ex.: `BLOCK360` (giro) tem o tipo 13 em 0,493–0,539 e 0,546–0,59 (os dois giros). Próximo: dar nome a cada tipo
   (funções chamadas no `switch`) e achar onde ficam as transições por botão (provavelmente as listas A1/A2).
+
+## 2026-10-24 — T85 (agente): grafo de combos do GoW1 decodificado e no motor
+- **Transições** (`FUN_00207ef8` do GoW1): golpe `+6` = lista, byte `+0x14` = quantidade; entrada (u16 deslocamento
+  relativo, s16 bit) → transição: `+0` máscara de estado, `+4`/`+8` janela, **`+6` golpe de destino** (−2 nenhum),
+  `+0x1C` gatilho (0x02 □, 0x03 △, 0x05 bloqueio, 0x06 magia, 0x08, 0x04 agarrão?, 0x0B fim → parado, 0x0C/0x13/0x14
+  cancelar), `+0x21` dificuldade. Cada transição vem em 2 janelas: antes do **ponto de corte** o botão fica guardado
+  (máscara bit 0 = 0), depois o golpe sai (bit 0 = 1). Ids globais nos 7 `CombatFile` (387 golpes: 000 básico/ar,
+  001 dano, 002 agarrões/finalizações, 003 magias/esquivas/Artemis, 004 COMBO3, 005 níveis, 006 chefes).
+- Combo básico real: COMBO3A (corte 0,275) → 3B (0,35) → 3C (0,475) → 3D (0,375) → 3E (0,45) → BRUTAL1; △: 3A→COMBO6A,
+  3B/3C/3D→COMBO7A, 3E→COMBO3F, COMBO7A→COMBO4D.
+- `tools/build_engine_moves.py` gera os golpes **do grafo** (raiz COMBO3A, □ e △; ramo aéreo fora por ora) com o corte
+  original; a DLL guarda □/△ apertados durante o golpe e os solta no corte. △ = botão de estilo (B) com o motor ligado.
+- Trava ao encadear para o índice 6 do grupo TAUNTS (o jogo trata índices de taunt; o Dante só tem 0–3): **um arquivo
+  por golpe** (`kratosMoveNN_pl000_00_2.pac`, sempre índice 0), a DLL troca o arquivo a cada golpe. O agarrão não
+  dispara mais durante os golpes do motor.
+- Resultado: 3/3 rodadas sem queda; golpes até COMBO3E e COMBO4D; COMBO3A→3B→3C acertou um Hell 3× (250→150→50→0) e o
+  empurrou 88→168→242 (reação nativa). Sem o motor, a mesma rotina 2/2 sem queda.
+- Limites do protótipo: 1º ataque da missão ainda é do Dante (prepara o acerto sintético); avanço do golpe provisório;
+  alcance do acerto aproximado (esfera à frente); só Hells confirmados (`vítima = inimigo + 0x32F8`); sem ar, agarrão,
+  magia e bloqueio no motor; COMBO7A volta ao parado em ~64% (fim do evento do DMC3).

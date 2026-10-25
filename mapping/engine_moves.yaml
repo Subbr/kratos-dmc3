@@ -1,8 +1,15 @@
-# Motor Kratos (D11): golpes tocados pela DLL no tempo original do GoW1 (60 fps), arquivo kratosMoves_pl000_00_2.pac
-# + KratosMoves.json. Índice = posição na lista. PROVISÓRIO até decodificar o TWK_CombatFile: cadeia (next = □,
-# nextHeavy = △), janela de botão (fração da animação), avanço (forward, osso 0) e ficha de dano do DMC3
-# (DamageData, RVA: 5C68C0 leve, 5C6960 finalizador que arremessa, 5C6C30 lança) são [HIPÓTESE].
-moves:
-  - {name: blades_1, anim: combo3A, forward: 40, next: 1, damage: 5C68C0, window: [0.15, 0.70]}
-  - {name: blades_2, anim: combo3B, forward: 40, next: 2, damage: 5C68C0, window: [0.15, 0.70]}
-  - {name: blades_3, anim: combo3C, forward: 60, next: -1, damage: 5C6960, window: [0.15, 0.80]}
+# Motor Kratos (D11): golpes gerados do grafo do próprio GoW1 (TWK_CombatFile, tools/gow_combat.py).
+# A partir de `roots`, segue as transições de □ (gatilho 0x02) e △ (0x03); a janela de cada transição é a do GoW1
+# (antes do ponto de corte o botão fica guardado; depois, o golpe sai). Saída: kratosMoves_pl000_00_2.pac +
+# KratosMoves.json. Fica para depois: grafo do ar, agarrão, magias e bloqueio.
+roots: [71]            # COMBO3A (□ a partir do parado; o grafo do parado está fora dos CombatFile — [HIPÓTESE])
+triggers: {light: 2, heavy: 3}
+# ficha de dano do DMC3 (DamageData, RVA) por golpe do GoW1; o resto usa `default`
+damage:
+  default: 5C68C0       # leve (combo da Rebellion 3/3)
+  heavy: 5C6960         # golpes de △: arremessa (finalizador 3/5)
+  BLOCKLAUNCHER: 5C6C30 # lança (High Time)
+# avanço do golpe no osso 0 (as animações do GoW1 são "no lugar") — [HIPÓTESE] até achar o deslocamento no GoW1
+forward: {default: 35, heavy: 60}
+# fora do protótipo: o motor usa o evento TAUNT do DMC3, que prende o Kratos no chão (o grafo do ar fica para depois)
+exclude_prefix: [AIR, COMBOJUMP]
