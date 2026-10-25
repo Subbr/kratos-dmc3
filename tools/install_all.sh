@@ -22,7 +22,8 @@ for pat in "${MANIFEST[@]}"; do
       --check) cmp -s "$src" "$dst" || { echo "difere: $n ($src)"; diff=$((diff + 1)); } ;;
       --restore) if [ -f "$B/$n" ]; then cp "$B/$n" "$dst"; else rm -f "$dst"; fi ;;
       install)
-        if [ -f "$dst" ] && [ ! -f "$B/$n" ] && [[ "$OURS" != *" $n "* ]] && ! cmp -s "$dst" "$src"; then
+        # kratosMove*: arquivos nossos (motor D11), não do Crimson — não viram "original"
+        if [ -f "$dst" ] && [ ! -f "$B/$n" ] && [[ "$OURS" != *" $n "* ]] && [[ "$n" != kratosMove* ]] && ! cmp -s "$dst" "$src"; then
           echo "sem backup de $n (original do Crimson?): copiando para $B" ; cp "$dst" "$B/$n"; (cd "$B" && sha256sum "$n" >> SHA256SUMS)
         fi
         cp "$src" "$dst" ;;

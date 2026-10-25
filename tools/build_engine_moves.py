@@ -79,7 +79,10 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         base = mot.Motion(bytearray(template.header))
         base.frames = float(frames - 1)
         fwd = float(conf["forward"].get(kind[mid], conf["forward"]["default"]))
-        base.tracks = [mot.Track.linear(ar.ROOT_MOTION_BONE, c, [0.0] * frames) for c in ("tx", "ty")]
+        # o retarget só escreve rotação nos ossos que têm trilha de rotação na base (anim_retarget.py): sem elas o
+        # corpo ficava na pose de repouso (Kratos em T no jogo, 2026-10-25)
+        base.tracks = [t for t in template.tracks if t.bone != ar.ROOT_MOTION_BONE and t.channel[0] == "r"]
+        base.tracks += [mot.Track.linear(ar.ROOT_MOTION_BONE, c, [0.0] * frames) for c in ("tx", "ty")]
         base.tracks.append(mot.Track.linear(ar.ROOT_MOTION_BONE, "tz",
                            [fwd * min(1.0, f / max(1, 0.4 * (frames - 1))) for f in range(frames)]))
         m = ar.retarget(g, name, body, cfg, frames, base, "natural")

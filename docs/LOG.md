@@ -862,3 +862,18 @@
 - Limites do protótipo: 1º ataque da missão ainda é do Dante (prepara o acerto sintético); avanço do golpe provisório;
   alcance do acerto aproximado (esfera à frente); só Hells confirmados (`vítima = inimigo + 0x32F8`); sem ar, agarrão,
   magia e bloqueio no motor; COMBO7A volta ao parado em ~64% (fim do evento do DMC3).
+
+## 2026-10-25 — T86 (agente): motor Kratos — Kratos em T nos golpes (corrigido)
+- LG (com `kratosEngine` ligado pela 1ª vez na config dele): no ataque o Kratos "abre os braços e fica parado
+  enquanto atravessa o chão e as lâminas acertam". Reproduzido pelo save (slot 2, M3): pose de repouso (T) durante
+  todo o golpe (`work/shots/e_y2_zoom.png`).
+- Teste A/B: com o combo3A antigo (`pl000_00_3` #3) dentro do `kratosMove00`, o Kratos anima → o jeito de tocar
+  (evento TAUNT) funciona; o defeito era o arquivo. `motionTimer` parado em 2.0 aparece nos dois casos (não indica nada).
+- Causa: `build_engine_moves.py` montava a motion base só com a raiz (osso 0); o `retarget` só escreve rotação nos ossos
+  que já têm trilha de rotação na base (`anim_retarget.py`), então os golpes saíam com 18 trilhas (sem rotação do
+  corpo). Correção: a base herda as trilhas de rotação do modelo → 78 trilhas, 20 ossos girando.
+- Resultado na rua vazia (M3): combo do GoW1 animado, cadeia COMBO3A → 3B → 3C → 3D → 3E, lâminas na corrente e volta à
+  postura (`work/shots/c_combo_zoom.png`). Os T83–T85 tinham sido validados só pelo log, sem olhar a imagem.
+- `install_all.sh`: os `kratosMove*` são nossos; não são mais copiados como "original do Crimson" (backups indevidos
+  removidos de `crimson_override`).
+- Config do LG restaurada (`kratosEngine` ligado, `virtualPad`/`logDamage` desligados, dano normal).
