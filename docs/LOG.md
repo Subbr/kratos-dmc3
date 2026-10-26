@@ -936,3 +936,21 @@
 - No jogo: combo avança sobre os inimigos (hits 3 → 7 → 12), esquiva leva o Kratos para longe (`work/shots/adv_full.png`,
   `ev_rsu_zoom.png`). Sem acerto durante a esquiva; lâminas na mão.
 - Pendente: invulnerabilidade na esquiva; magias e esquiva no ar (AIRDASH); agarrão pelo grafo (GRAB 200).
+
+## 2026-10-26 — T90 (agente): magias com a sequência e os efeitos do GoW1
+- LG: "precisa ser exatamente a mesma animação e efeitos do GoW1". DMC3 de PS2: já descartado na D11 (o código do
+  Kratos depende do motor inteiro do GoW1).
+- **Sequências da tabela do GoW1** (gatilho 0x0b = fim da animação), geradas por `build_engine_moves.py`
+  (`spells`, `anim_alias`, `spell_fx`, `spell_hit` em `mapping/engine_moves.yaml`): Zeus BOLTPULLOUT → BOLTTHROW
+  (→ BOLTTHROWL com outro X, gastando magia); Medusa PSENTHEAD → USEHEAD (`useHead01`) → PUTAWAYHEAD; Poseidon
+  AIRLIGHTNINGSTART (513, a do chão) → AIRLIGHTNINGLOOP → LIGHTNINGEXIT; Hades RAISETHEDEAD. A DLL encadeia no fim do
+  evento (`EngineChainEnd`); efeito no golpe marcado.
+- **Efeitos com os modelos e texturas do GoW1**: `R_LGHTN0` (singleBolt, lightningAttackMain, lightningRadius),
+  `R_MEDHD0` (MEWH = cabeça da Medusa, eyeBeam, medheadNuke), `R_RDEAD0` (dedRed). `tools/build_fx.py` → `.kfx`
+  (`mapping/magic_fx.yaml`; cor do PS2: 0x80 = 1,0 → ×2, ×4 com cor de material). `KratosFx.cpp`: renderizador D3D11
+  próprio no Present (câmera do DMC3 em `dmc3.exe+C8FBD0`, mistura soma/subtrai/recorte, UV animado). Bugs vistos:
+  matrizes do corpo vêm de `newModelData` (Crimson) quando `modelData` é nulo; o PS precisava do cbuffer.
+- No jogo (`work/shots/spells_fx.png`): raio na mão e arremessado até o inimigo; anel de raios e explosão do
+  Poseidon (atingiu 6); almas brancas do Hades (acertou 3); cabeça da Medusa na mão, olhar verde e anel (petrificou 6).
+- Flags de teste: `fxPreview` ("*" = todos, 3 s cada), `fxPreviewScale`, `fxGain`.
+- Pendente: pedra visual da Medusa nos inimigos; efeitos sem teste de profundidade (aparecem na frente de paredes).

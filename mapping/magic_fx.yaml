@@ -1,0 +1,18 @@
+# Modelos das magias do GoW1 (exportados pelo god_of_war_browser) → Crimson/kratos_fx/<nome>.kfx (tools/build_fx.py).
+# blend por material: opaque | add | sub | alpha (o glb não traz a mistura do GoW1; regra pelo nome, exceções aqui)
+models:
+  singleBolt: {wad: R_LGHTN0.WAD, tag: 145}   # raio de Zeus (na mão e voando)
+  attackMain: {wad: R_LGHTN0.WAD, tag: 93}    # descarga longa
+  radius: {wad: R_LGHTN0.WAD, tag: 179}       # anel de raios em volta (Poseidon's Rage)
+  medusaHead: {wad: R_MEDHD0.WAD, tag: 196}   # cabeça da Medusa (na mão)
+  eyeBeam: {wad: R_MEDHD0.WAD, tag: 96}       # olhar da Medusa
+  medheadNuke: {wad: R_MEDHD0.WAD, tag: 166}  # anel da cabeça
+  dedRed: {wad: R_RDEAD0.WAD, tag: 98}        # alma do Army of Hades
+blend:
+  default: add
+  MAT_MEWHead: opaque
+  MAT_subMat: sub
+  MAT_M02sfxLavaSubtractI: sub
+  MAT_M01sfxLavaSubtractI: sub
+# ganho extra por material sobre a regra do PS2 (0x80 = 1,0), se algum efeito ficar fraco/forte demais no DMC3
+gain: {}

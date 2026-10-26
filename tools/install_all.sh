@@ -37,6 +37,15 @@ case $mode in
   --check) cmp -s "$I/release/KratosMoves.json" "$J" || { echo "difere: KratosMoves.json"; diff=$((diff + 1)); } ;;
   --restore) rm -f "$J" ;;
 esac
+# efeitos das magias do GoW1 (KratosFx.cpp lê Crimson\kratos_fx\*.kfx)
+FX="Devil May Cry HD Collection/Crimson/kratos_fx"
+for f in "$I"/release/kratos_fx/*.kfx; do
+  case $mode in
+    --check) cmp -s "$f" "$FX/$(basename "$f")" || { echo "difere: $(basename "$f")"; diff=$((diff + 1)); } ;;
+    --restore) rm -f "$FX/$(basename "$f")" ;;
+    install) mkdir -p "$FX"; cp "$f" "$FX/" ;;
+  esac
+done
 # config do modo Kratos: instala a recomendada (config/KratosConfig.default.json) se ainda não houver (T75)
 CFG="Devil May Cry HD Collection/Crimson/configs/KratosConfig.json"
 [ "$mode" = install ] && [ ! -f "$CFG" ] && cp config/KratosConfig.default.json "$CFG" && echo "KratosConfig.json instalado (padrão)"

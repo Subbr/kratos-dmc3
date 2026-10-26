@@ -35,6 +35,7 @@ done
 # 4. motions do Kratos (mapping/motions.yaml)
 $PY tools/build_motions.py $B "$OUT" --model "$OUT/pl000.pac" >/dev/null
 # 4b. motor Kratos (D11): golpes do GoW1 no tempo original + tabela para a DLL (KratosMoves.json)
+$PY tools/build_fx.py $G/magic "$OUT/kratos_fx" >/dev/null
 $PY tools/build_engine_moves.py $B/pl000_00_2.pac "$OUT/pl000.pac" "$OUT/kratosMoves_pl000_00_2.pac" >/dev/null
 # 5. textos (T38)
 $PY tools/build_text.py $B/msg_eng.pac "$OUT/msg_eng.pac" >/dev/null

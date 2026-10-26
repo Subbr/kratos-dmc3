@@ -61,6 +61,7 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
     graph = {m["id"]: m for m in gow_combat.load_all(gow_combat.load_hashes())}
     g = Glb(ROOT / "extracted/gow1/hero0/hero_obj.glb")
     anims = {a["name"].split(" ")[-1].upper(): a["name"].split(" ")[-1] for a in g.j["animations"]}
+    anims.update({k: v for k, v in conf.get("anim_alias", {}).items() if v.upper() in anims})
     light, heavy = conf["triggers"]["light"], conf["triggers"]["heavy"]
     # fecho a partir das raízes, só golpes com animação no glb
     evades = conf.get("evades", {})
@@ -81,13 +82,24 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
             if tr and tr[0] not in kind:
                 kind[tr[0]] = k
                 todo.append(tr[0])
-    spells = {}
+    spells, end_next = {}, {}
+    stop = set(conf.get("spell_chain_stop", []))
     for sname, mid in conf.get("spells", {}).items():
-        if mid in graph and graph[mid]["anim"] in anims:
-            if mid not in order:
-                order.append(mid)
-                kind[mid] = "spell"
-            spells[sname] = mid
+        if mid not in graph or graph[mid]["anim"] not in anims:
+            continue
+        spells[sname] = mid
+        cur = mid
+        while cur is not None:  # sequência do GoW1: segue o gatilho "fim da animação" (0x0b)
+            if cur not in order:
+                order.append(cur)
+                kind[cur] = "spell"
+            nxt = next((t["target"] for t in graph[cur]["trans"] if t["trigger"] == 0x0B and t["target"] >= 0
+                        and t["target"] != cur and t["target"] in graph and graph[t["target"]]["anim"] not in stop
+                        and graph[t["target"]]["anim"] in anims and t["target"] not in end_next.values()
+                        and t["target"] != mid), None)
+            if nxt is not None:
+                end_next[cur] = nxt
+            cur = nxt
         cfg = kratos_fit.blade_cfg(yaml.safe_load((ROOT / "mapping/skeleton_kratos_dante.yaml").read_text(encoding="utf-8")))
     body = mod.Model.parse(pac.Pac.parse(model.read_bytes()).entries[1])
     _, parent = kratos_fit.dante_joints(body)
@@ -122,9 +134,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
                         mot.Track.linear(ar.ROOT_MOTION_BONE, "tz", root[1])]
         m = ar.retarget(g, name, body, cfg, frames, base, "natural")
         hit = ar.strike_frame(m, body, parent, frames)
-        sname = next((n for n, x in spells.items() if x == mid), None)
-        if sname in conf.get("spell_hit", {}):
-            hit = int(frames * conf["spell_hit"][sname])
+        if mv["anim"] in conf.get("spell_hit", {}):
+            hit = int(frames * conf["spell_hit"][mv["anim"]])
         blade_chain.add_blade_tracks(m, offsets, body, parent, reach=kind[mid] not in ("spell", "evade"))  # magia: lâminas na mão
         for b in offsets:
             for ch in ("sx", "sy", "sz"):
@@ -135,7 +146,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         info.append({"name": mv["anim"], "gowId": mid, "frames": frames, "hitFrame": hit,
                      "next": index.get(nl[0], -1) if nl else -1, "nextCut": nl[1] if nl else 1.0,
                      "nextHeavy": index.get(nh[0], -1) if nh else -1, "heavyCut": nh[1] if nh else 1.0,
-                     "damage": str(dmg)})
+                     "damage": str(dmg), "nextEnd": index.get(end_next.get(mid), -1),
+                     "spell": conf.get("spell_fx", {}).get(mv["anim"], ""), "kind": kind[mid]})
         print(f"#{index[mid]} {mv['anim']} (id {mid}, {frames} quadros, golpe {hit}) □→{info[-1]['next']}@{info[-1]['nextCut']} "
               f"△→{info[-1]['nextHeavy']}@{info[-1]['heavyCut']} dano {dmg}")
     p.entries = entries

@@ -36,6 +36,11 @@ class Glb:
             arr = arr.astype(np.float32) / np.iinfo(dt).max
         return arr
 
+    def buffer_view(self, idx: int) -> bytes:
+        bv = self.j["bufferViews"][idx]
+        start = bv.get("byteOffset", 0)
+        return self.bin[start:start + bv["byteLength"]]
+
     def local(self, i: int) -> np.ndarray:
         n = self.j["nodes"][i]
         if "matrix" in n:

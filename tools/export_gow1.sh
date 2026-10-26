@@ -27,6 +27,11 @@ for wad, name, dst in [("R_HERO0.WAD", "hero", "hero0/hero_obj.glb"), ("R_WPN0_0
     t = tags(wad)
     if name not in t: print("não achado:", wad, name); continue
     (out / dst).write_bytes(get(f"/action/{wad}/{t[name]}/gltf")); print(dst)
+# modelos das magias (mapping/magic_fx.yaml → tools/build_fx.py), pelo número da tag
+import yaml
+(out / "magic").mkdir(parents=True, exist_ok=True)
+for n, m in yaml.safe_load(pathlib.Path("mapping/magic_fx.yaml").read_text(encoding="utf-8"))["models"].items():
+    (out / "magic" / f"{n}.glb").write_bytes(get(f"/action/{m['wad']}/{m['tag']}/gltf")); print(f"magic/{n}.glb")
 # vozes (banco "Hero") e sons de combate (banco "GENERAL") do R_PERM
 t = tags("R_PERM.WAD")
 hero = json.loads(get(f"/json/pack/R_PERM.WAD/{t['Hero']}"))["Data"]

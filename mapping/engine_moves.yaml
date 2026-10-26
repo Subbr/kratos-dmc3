@@ -13,12 +13,18 @@ damage:
 forward: {default: 35, heavy: 60, spell: 0}
 # fora do protótipo: o motor usa o evento TAUNT do DMC3, que prende o Kratos no chão (o grafo do ar fica para depois)
 exclude_prefix: [AIR, COMBOJUMP]
-# magias (X = tiro do DMC3 com o motor ligado): golpe do GoW1 lançado no chão, um por arma de fogo (§7.1).
-# Ids nos CombatFile 003/005: BOLTTHROW 61, PSENTHEAD 81 (o USEHEAD 82 aponta para `useHead`, que no glb são
-# useHead00..02), RAISETHEDEAD 508, AIRLIGHTNINGSTART 506.
-spells: {zeus: 61, poseidon: 506, hades: 508, medusa: 81}
-# quadro do efeito (fração da animação); sem entrada = quadro de maior velocidade da mão (arremesso do raio)
-spell_hit: {poseidon: 0.45, hades: 0.5, medusa: 0.55}
+# magias (X = tiro do DMC3 com o motor ligado): a sequência inteira do GoW1, seguindo o gatilho "fim da animação"
+# (0x0b) da tabela a partir da 1ª animação (T90): Zeus BOLTPULLOUT 60 → BOLTTHROW; Medusa PSENTHEAD 81 → USEHEAD →
+# PUTAWAYHEAD; Poseidon AIRLIGHTNINGSTART 513 (versão do chão) → AIRLIGHTNINGLOOP → LIGHTNINGEXIT; Hades RAISETHEDEAD.
+spells: {zeus: 60, poseidon: 513, hades: 508, medusa: 81}
+# destinos de "fim" que encerram a sequência (voltam ao parado / Rage / queda / esquiva)
+spell_chain_stop: [IDLECOMBAT, BERSERKENTER, FALLV, BERFALLN, EVADEBACK, EVADEFRONT, EVADELEFT, EVADERIGHT]
+# animação da tabela → nome no glb quando difere (USEHEAD = mira; no glb são useHead00/01/02 = cima/meio/baixo)
+anim_alias: {USEHEAD: useHead01}
+# BOLTTHROWL = 2º arremesso (mão esquerda): só sai se o X for apertado de novo durante o BOLTTHROW, como no GoW1
+# golpe da sequência em que o efeito sai e em que fração da animação (sem fração = quadro de maior velocidade da mão)
+spell_fx: {BOLTTHROW: zeus, BOLTTHROWL: zeus, USEHEAD: medusa, AIRLIGHTNINGLOOP: poseidon, RAISETHEDEAD: hades}
+spell_hit: {USEHEAD: 0.25, AIRLIGHTNINGLOOP: 0.2, RAISETHEDEAD: 0.5}
 # esquivas (analógico direito, como no GoW1): golpes 514–517 do CombatFile 005, com as transições do GoW1 (□ → COMBO3A,
 # △ → COMBO6A, agarrão, magia). Deslocamento no osso 0 em [x, z] (sinal de x como o rolamento do Trickster, T21)
 evades: {front: 515, back: 514, left: 516, right: 517}
