@@ -877,3 +877,33 @@
 - `install_all.sh`: os `kratosMove*` são nossos; não são mais copiados como "original do Crimson" (backups indevidos
   removidos de `crimson_override`).
 - Config do LG restaurada (`kratosEngine` ligado, `virtualPad`/`logDamage` desligados, dano normal).
+
+## 2026-10-25 — T87 (agente): motor Kratos — pulo, ar, magias e acerto no chão
+- LG (com o combo de Y já bom): "o X, o pulo" e o resto quebrados. Visto no jogo (`tools/win/act.sh`, novo: aperta e
+  captura ao mesmo tempo): pulo do Dante (alto demais; 0/4 tocava `jumpDoubleAir` = cambalhota em todo pulo), Y no ar =
+  Helm Breaker (3/10, mergulho), X = mira das pistolas escondidas (8/5, 8/8).
+- **Grafo do ar do GoW1** (`gow_combat.py`, COMBOJUMP id 10): □ → AIRH1 → AIRH2 → AIRH3, △ → AIRV1, magia (0x06) →
+  AIRBOLTTHROW/AIRUSEHEAD/AIRLIGHTNINGSTART/AIRRAISETHEDEAD. No ar, com o motor: estilo Swordmaster forçado, Y vira o
+  botão de estilo (Aerial Rave, que paira e já toca airH1–3/airV1 em 13/7–10) e B vira ataque (Helm Breaker =
+  airImpale). No jogo: 13/7 → 13/8 → 13/9 acertando inimigos (contador 4 → 9 hits) com o Kratos pairando.
+- **Pulo** (log por quadro): evento 5 = preparação no chão (12–14 quadros), evento 6 = voo (`verticalPull` + 0x94
+  integrado com a gravidade + 0xA4 = −2,5 no Dante; −10 num quadro ao soltar o botão), evento 8 = aterrissagem. O jogo
+  roda a 120 fps (`fpsCap`). Escalar a velocidade na passagem 5 → 6 chega tarde (não sobe); a gravidade precisa ser
+  regravada em todo quadro do evento 5. `jumpScale` 0.55, `jumpGravityScale` 0.45 (KratosConfig). Motions: 0/4 =
+  `jumpUp`, 0/31 = `land` (é a aterrissagem correndo, não o pulo duplo).
+- **X = magia do GoW1** (CombatFile 003/005): E&I `BOLTTHROW` (Zeus, raio no inimigo à frente até 1500), Shotgun
+  `AIRLIGHTNINGSTART` (Poseidon, área), Artemis `RAISETHEDEAD` (Hades, até 3 inimigos), Spiral `PSENTHEAD` (Medusa).
+  `mapping/engine_moves.yaml` → `spells`/`spell_hit`; lâminas presas na mão nas magias. Gasto quando o golpe começa.
+  No jogo: `BOLTTHROW` animado, "magia 5 acertou 1".
+- **REA** (análise pronta em ~15 min): `FUN_1401e09d0` (troca de evento: + 0x3E08 ← tabela, + 0x3E10 = 0);
+  controlador do taunt `FUN_1401fe860` termina quando `FUN_1401ef8e0` (estado da motion) = 4 e chama
+  `FUN_1401e0030(ator, 10)` = volta ao neutro. O motor usa a mesma saída quando um golpe passa do fim (um ficou preso
+  com relógio 548 de 87).
+- **Acerto no chão zerado**: a cópia da colisão do 1º golpe guardava um dono antigo (o ator muda de endereço depois do
+  carregamento) → atacante sem vtable, acesso inválido em `dmc3+882DF` (função de dano `+88190`, `call [rax+0xC0]`).
+  Correção: dono = jogador atual. Combo no chão: 3, 3, 2, 1, 1 inimigos por golpe (`work/shots/full4_full.png`).
+  Alcance configurável (`engineReachFront` 380, `engineReachAround` 160).
+- Queda intermitente vista 1× ao entrar na missão (`Crimson.dll+0x9cc16d`, `c0000409`/7); não repetiu em 10+ entradas.
+  [HIPÓTESE] ligada ao ponteiro velho acima.
+- Pendente: o 1º ataque da missão ainda é do Dante (prepara a cópia da colisão); LT só troca se o save tiver outra
+  arma de fogo; magias no ar; bloqueio/parry e rolamento pelo motor.

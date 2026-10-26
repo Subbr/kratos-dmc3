@@ -15,7 +15,7 @@ pl000_00_0:   # BASE
   8:  {anim: evadeRight, timing: stretch}    # rolamento para a direita (osso 0 TX -350)
   # T65: o resto da base, pelas poses do Dante (work/shots/base_unmapped.png; escolhas aproximadas)
   3:  {anim: jumpAir, timing: stretch}       # início do pulo (log: 0/3 antes de 0/1)
-  4:  {anim: jumpDoubleAir, timing: stretch} # pulo com giro
+  4:  {anim: jumpUp, timing: stretch}        # o pulo (log T87: cada pulo = 0/4 → 0/31); antes jumpDoubleAir = cambalhota em todo pulo
   5:  {anim: jumpDoubleAir, timing: stretch}
   9:  {anim: jumpAir, timing: stretch}
   10: {anim: combatLand2, timing: stretch}   # aterrissagem agachada
@@ -27,6 +27,7 @@ pl000_00_0:   # BASE
   18: {anim: idleCombat, timing: stretch}
   19: {anim: idleCombat2, timing: stretch}   # parado (espreguiça)
   50: {anim: idleCombat, timing: stretch}
+  31: {anim: land, timing: stretch}          # aterrissagem correndo (T35; log T87)
 pl000_00_1:   # DAMAGE: reações a golpe do GoW1 (T65, work/shots/dmg_unmapped.png; stretch mantém duração e deslocamento)
   0:  {anim: hitFront, timing: stretch}      # golpe leve
   1:  {anim: hitLeft, timing: stretch}

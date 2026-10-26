@@ -1,5 +1,6 @@
 {
     "enabled": true,
+    "kratosEngine": true,
     "chainHitbox": true,
     "leftHitbox": true,
     "reachRadius": 4.0,

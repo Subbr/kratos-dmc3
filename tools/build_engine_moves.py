@@ -61,7 +61,14 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
             if tr and tr[0] not in kind:
                 kind[tr[0]] = k
                 todo.append(tr[0])
-    cfg = kratos_fit.blade_cfg(yaml.safe_load((ROOT / "mapping/skeleton_kratos_dante.yaml").read_text(encoding="utf-8")))
+    spells = {}
+    for sname, mid in conf.get("spells", {}).items():
+        if mid in graph and graph[mid]["anim"] in anims:
+            if mid not in order:
+                order.append(mid)
+                kind[mid] = "spell"
+            spells[sname] = mid
+        cfg = kratos_fit.blade_cfg(yaml.safe_load((ROOT / "mapping/skeleton_kratos_dante.yaml").read_text(encoding="utf-8")))
     body = mod.Model.parse(pac.Pac.parse(model.read_bytes()).entries[1])
     _, parent = kratos_fit.dante_joints(body)
     offsets = blade_chain.blade_offsets(body)
@@ -87,7 +94,10 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
                            [fwd * min(1.0, f / max(1, 0.4 * (frames - 1))) for f in range(frames)]))
         m = ar.retarget(g, name, body, cfg, frames, base, "natural")
         hit = ar.strike_frame(m, body, parent, frames)
-        blade_chain.add_blade_tracks(m, offsets, body, parent, reach=True)
+        sname = next((n for n, x in spells.items() if x == mid), None)
+        if sname in conf.get("spell_hit", {}):
+            hit = int(frames * conf["spell_hit"][sname])
+        blade_chain.add_blade_tracks(m, offsets, body, parent, reach=kind[mid] != "spell")  # magia: lâminas na mão
         for b in offsets:
             for ch in ("sx", "sy", "sz"):
                 m.tracks.append(mot.Track.hermite(b, ch, [1.0] * frames))
@@ -109,7 +119,9 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         single = pac.Pac.parse(base_pac.read_bytes())
         single.entries = [e]
         (out.parent / f"kratosMove{k:02d}_pl000_00_2.pac").write_bytes(single.build())
-    (out.parent / "KratosMoves.json").write_text(json.dumps({"moves": info}, indent=1), encoding="utf-8")
+    spell_index = {n: index[m] for n, m in spells.items()}
+    (out.parent / "KratosMoves.json").write_text(json.dumps({"moves": info, "spells": spell_index}, indent=1),
+                                                 encoding="utf-8")
     print(out)
 
 
