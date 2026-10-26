@@ -376,7 +376,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ## 12. Estado atual
 
 - **Data:** 2026-10-24. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T75).
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T87).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -429,6 +429,10 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   Backslide) com o Kratos (`build_motions.table_for`); título, LOAD e fundos dos menus com o Kratos e as Blades
   (`tools/render_menu_art.sh` + `build_menu_art.py`, bases `id900`/`id7008`/`id430–470` do Crimson); aura da pedra da
   Medusa. Release com 69 arquivos.
+- **T86–T87 (2026-10-25, motor Kratos D11 ligado na config do LG):** golpes do motor estavam em pose T (base sem
+  trilhas de rotação, corrigido); pulo do GoW1 (`jumpScale`/`jumpGravityScale`), combo aéreo AIRH1–3 pelo Aerial Rave,
+  X = magia do GoW1 (`spells` em `mapping/engine_moves.yaml`), trava de golpe preso (`FUN_1401e0030`, REA), acerto
+  sintético com o dono atual. `tools/win/act.sh` captura durante a ação. **Validar golpe pela imagem, não pelo log.**
 - **Config ao fechar a sessão (T78):** a do jogo = `config/KratosConfig.default.json`, **`virtualPad: false`** (o LG vai
   testar com controle; religar para testes do agente). Checklist do LG em `docs/playtest_lg.md`. Dano normal, Arcade
   desligado, `install_all --check` = 0.
