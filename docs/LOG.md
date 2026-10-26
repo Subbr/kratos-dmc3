@@ -907,3 +907,17 @@
   [HIPÓTESE] ligada ao ponteiro velho acima.
 - Pendente: o 1º ataque da missão ainda é do Dante (prepara a cópia da colisão); LT só troca se o save tiver outra
   arma de fogo; magias no ar; bloqueio/parry e rolamento pelo motor.
+
+## 2026-10-26 — T88 (agente): motor sem depender do 1º golpe, bloqueio (RB) e todas as magias
+- **Dependência do 1º golpe**: o motor inteiro saía cedo sem a cópia da colisão de um acerto real; agora só o combo no
+  chão espera por ela (o golpe nativo passa e já toca a `combo3A` do GoW1). Pulo, ar, bloqueio e magias funcionam
+  desde o começo. A cópia é descartada quando o ator do jogador muda (missão recarregada): a forma do golpe
+  (`col+0x110/+0x118`) aponta para arquivos da missão, e ponteiro velho = risco de queda.
+- **Bloqueio do GoW1 (R1 = RB)**: no chão, RB segurado → estilo Royalguard + botão de estilo (o GoW1 não tem trava no
+  alvo). No jogo: 24/0 (guarda) → 24/2 ×3 (bloqueio atingido, clarão azul) → 24/31 ao soltar (`work/shots/blk2_zoom.png`).
+  Estilo por situação: Swordmaster no ar, Royalguard bloqueando, o do save no resto.
+- **Magias pelo X** (com `testWeapons` e `disableRegularEnemyAttacks` do Crimson só no teste, porque golpe do inimigo
+  interrompe o lançamento, como no GoW1): Zeus acertou 1, Poseidon atingiu 5, Hades acertou 3, Medusa petrificou 6
+  (`work/shots/medusa_zoom.png`: clarão de pedra e inimigos congelados). Sem a cópia da colisão, Zeus e Hades tiram vida
+  direto (100 e 60 × multiplicador), como a área do Poseidon.
+- Config do LG restaurada (motor ligado, controle físico, dano e inimigos normais).
