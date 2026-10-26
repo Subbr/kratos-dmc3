@@ -921,3 +921,18 @@
   (`work/shots/medusa_zoom.png`: clarão de pedra e inimigos congelados). Sem a cópia da colisão, Zeus e Hades tiram vida
   direto (100 e 60 × multiplicador), como a área do Poseidon.
 - Config do LG restaurada (motor ligado, controle físico, dano e inimigos normais).
+
+## 2026-10-26 — T89 (agente): esquiva do GoW1 e deslocamento real dos golpes (zeroJoint)
+- **Esquiva** (CombatFile 005, ids 514–517) no motor pelo analógico direito, como no GoW1. As esquivas entram como raízes
+  do grafo, com as transições do GoW1 (□ → COMBO3A, △ → COMBO6A, agarrão, magias). Analógico no ator: raio + 0x74FA
+  (máx. 127; toque ≥ `evadeStickThreshold` 60), posição + 0x74F8 (cima 32768, baixo 0, esquerda ≈ 49152, direita ≈
+  16384); mundo = câmera (+ 0x3ED8) + posição + 32768; comparado com a rotação → frente/trás/esquerda/direita
+  (relativo à câmera, como no GoW1). Controle virtual: `rsu/rsd/rsl/rsr`.
+- **Deslocamento real do GoW1**: as animações do herói voltam à origem no quadril; o deslocamento do golpe fica na
+  junta **`zeroJoint`** do glb (fora da hierarquia do quadril): evadeFront −146 em z, dash −82, combo3A −24 (unidades
+  do GoW1). `build_engine_moves.zero_root` passa isso ao osso 0 (× 4,8, giro de 180°): COMBO3A 116, 3B 174, 3C 183,
+  3D 206, 3E 293, 3F 354, BRUTAL1 267, esquivas ~700 (trás 780), BOLTTHROW 0. Substitui o avanço chutado (35/60).
+  Eventos dos golpes não carregam velocidade (ação 3 = sons/efeitos por hash, 13/43 rastro, 9/15/28 tempos).
+- No jogo: combo avança sobre os inimigos (hits 3 → 7 → 12), esquiva leva o Kratos para longe (`work/shots/adv_full.png`,
+  `ev_rsu_zoom.png`). Sem acerto durante a esquiva; lâminas na mão.
+- Pendente: invulnerabilidade na esquiva; magias e esquiva no ar (AIRDASH); agarrão pelo grafo (GRAB 200).

@@ -19,3 +19,8 @@ exclude_prefix: [AIR, COMBOJUMP]
 spells: {zeus: 61, poseidon: 506, hades: 508, medusa: 81}
 # quadro do efeito (fração da animação); sem entrada = quadro de maior velocidade da mão (arremesso do raio)
 spell_hit: {poseidon: 0.45, hades: 0.5, medusa: 0.55}
+# esquivas (analógico direito, como no GoW1): golpes 514–517 do CombatFile 005, com as transições do GoW1 (□ → COMBO3A,
+# △ → COMBO6A, agarrão, magia). Deslocamento no osso 0 em [x, z] (sinal de x como o rolamento do Trickster, T21)
+evades: {front: 515, back: 514, left: 516, right: 517}
+root: {EVADEFRONT: [0, 380], EVADEBACK: [0, -380], EVADELEFT: [380, 0], EVADERIGHT: [-380, 0]}
+root_span: {evade: 0.75}

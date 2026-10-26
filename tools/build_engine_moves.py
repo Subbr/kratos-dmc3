@@ -39,6 +39,23 @@ def transition(move: dict, trigger: int) -> tuple[int, float] | None:
     return best
 
 
+def zero_root(g: Glb, anim: ar.KratosAnim, frames: int, scale: float) -> tuple[list[float], list[float]] | None:
+    """Deslocamento do GoW1 no chão: a junta `zeroJoint` do glb (fora da hierarquia do quadril) leva a translação do
+    golpe (evadeFront −146 em z, dash −82, combo3A −24; T89). Osso 0 = (posição − posição inicial) × escala, girada
+    180° em Y como o resto do esqueleto (kratos_fit.ROT_Y180)."""
+    node = next((i for i, n in enumerate(g.j["nodes"]) if n.get("name") == "zeroJoint"), None)
+    if node is None:
+        return None
+    p0 = anim._value(node, "translation", 0.0, [0, 0, 0])[:3]
+    xs, zs = [], []
+    for f in range(frames):
+        d = (anim._value(node, "translation", min(f / 60.0, anim.duration), [0, 0, 0])[:3] - p0) * scale
+        v = kratos_fit.ROT_Y180[:3, :3] @ d
+        xs.append(float(v[0]))
+        zs.append(float(v[2]))
+    return xs, zs
+
+
 def main(base_pac: Path, model: Path, out: Path) -> None:
     conf = yaml.safe_load((ROOT / "mapping/engine_moves.yaml").read_text(encoding="utf-8"))
     graph = {m["id"]: m for m in gow_combat.load_all(gow_combat.load_hashes())}
@@ -46,9 +63,12 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
     anims = {a["name"].split(" ")[-1].upper(): a["name"].split(" ")[-1] for a in g.j["animations"]}
     light, heavy = conf["triggers"]["light"], conf["triggers"]["heavy"]
     # fecho a partir das raízes, só golpes com animação no glb
-    order, kind, todo = [], {}, list(conf["roots"])
+    evades = conf.get("evades", {})
+    order, kind, todo = [], {}, list(conf["roots"]) + list(evades.values())
     for r in conf["roots"]:
         kind[r] = "light"
+    for r in evades.values():
+        kind[r] = "evade"
     while todo:
         mid = todo.pop(0)
         if mid in order or mid not in graph or graph[mid]["anim"] not in anims:
@@ -89,15 +109,23 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         # o retarget só escreve rotação nos ossos que têm trilha de rotação na base (anim_retarget.py): sem elas o
         # corpo ficava na pose de repouso (Kratos em T no jogo, 2026-10-25)
         base.tracks = [t for t in template.tracks if t.bone != ar.ROOT_MOTION_BONE and t.channel[0] == "r"]
-        base.tracks += [mot.Track.linear(ar.ROOT_MOTION_BONE, c, [0.0] * frames) for c in ("tx", "ty")]
-        base.tracks.append(mot.Track.linear(ar.ROOT_MOTION_BONE, "tz",
-                           [fwd * min(1.0, f / max(1, 0.4 * (frames - 1))) for f in range(frames)]))
+        # deslocamento no osso 0: golpes avançam `forward` em 40% da animação; esquivas andam `root` [x, z] em
+        # `root_span` da animação (as animações do GoW1 são "no lugar")
+        root = zero_root(g, anim, frames, float(cfg["scale"]))
+        if root is None:  # sem zeroJoint: avanço provisório
+            rx, rz = conf.get("root", {}).get(graph[mid]["anim"], [0.0, fwd])
+            span = conf.get("root_span", {}).get(kind[mid], 0.4)
+            ramp = [min(1.0, f / max(1, span * (frames - 1))) for f in range(frames)]
+            root = ([rx * r for r in ramp], [rz * r for r in ramp])
+        base.tracks += [mot.Track.linear(ar.ROOT_MOTION_BONE, "tx", root[0]),
+                        mot.Track.linear(ar.ROOT_MOTION_BONE, "ty", [0.0] * frames),
+                        mot.Track.linear(ar.ROOT_MOTION_BONE, "tz", root[1])]
         m = ar.retarget(g, name, body, cfg, frames, base, "natural")
         hit = ar.strike_frame(m, body, parent, frames)
         sname = next((n for n, x in spells.items() if x == mid), None)
         if sname in conf.get("spell_hit", {}):
             hit = int(frames * conf["spell_hit"][sname])
-        blade_chain.add_blade_tracks(m, offsets, body, parent, reach=kind[mid] != "spell")  # magia: lâminas na mão
+        blade_chain.add_blade_tracks(m, offsets, body, parent, reach=kind[mid] not in ("spell", "evade"))  # magia: lâminas na mão
         for b in offsets:
             for ch in ("sx", "sy", "sz"):
                 m.tracks.append(mot.Track.hermite(b, ch, [1.0] * frames))
@@ -120,7 +148,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         single.entries = [e]
         (out.parent / f"kratosMove{k:02d}_pl000_00_2.pac").write_bytes(single.build())
     spell_index = {n: index[m] for n, m in spells.items()}
-    (out.parent / "KratosMoves.json").write_text(json.dumps({"moves": info, "spells": spell_index}, indent=1),
+    evade_index = {n: index[m] for n, m in evades.items() if m in index}
+    (out.parent / "KratosMoves.json").write_text(json.dumps({"moves": info, "spells": spell_index, "evades": evade_index}, indent=1),
                                                  encoding="utf-8")
     print(out)
 
