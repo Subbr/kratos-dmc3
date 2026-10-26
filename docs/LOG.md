@@ -954,3 +954,18 @@
   Poseidon (atingiu 6); almas brancas do Hades (acertou 3); cabeça da Medusa na mão, olhar verde e anel (petrificou 6).
 - Flags de teste: `fxPreview` ("*" = todos, 3 s cada), `fxPreviewScale`, `fxGain`.
 - Pendente: pedra visual da Medusa nos inimigos; efeitos sem teste de profundidade (aparecem na frente de paredes).
+
+## 2026-10-26 — T91 (agente): pedra do GoW1 nos inimigos e profundidade dos efeitos
+- **Pedra**: pele de pedra do GoW1 `TXR_Maitext01Stone` (R_PERM tag 1804; recorte sem a tatuagem, espelhado 2×2 →
+  `Crimson\kratos_fx\stone.png`, `build_fx.stone_tile`). Tingir o modelo pelo jogo já tinha falhado (T55/T56); agora
+  pelo D3D11: ganchos no contexto (`Map`/`Unmap`/`UpdateSubresource`/`DrawIndexed`, vtable 14/15/48/12). O buffer de
+  constantes escrito com a posição de um inimigo petrificado (linha x, y, z, 1 a menos de 4 unidades = raiz do
+  esqueleto) fica marcado até a próxima escrita; os `DrawIndexed` com o DSV da cena que o usam no VS trocam a textura 0
+  pela pedra. Tolerância de 120 marcava o cenário; sem exigir o DSV da cena, o pós-processamento virava pedra.
+  No jogo: Hells petrificados cinza rachados, cenário e Kratos normais (`work/shots/fm_four.png`, `st_zoom.png`).
+  As foices (modelo à parte) não viram pedra.
+- **Profundidade dos efeitos**: o jogo desenha a cena no alvo 0 de `Devil3::sRender` (`dmc3.exe+C0B410`, D24S8
+  1920×1080, Z invertido: limpa com 0); no Present ela já foi apagada. A cópia é feita no 1º desenho depois da cena
+  (troca de DSV) e usada com `GREATER_EQUAL` e a projeção do Effekseer do Crimson (perto = dist × 30, longe = 1).
+  Teste: cabeça da Medusa atrás do Kratos fica escondida pelo corpo dele.
+- Flags: `fxDepth` (0/1/2), `fxDepthTarget`, `fxPreviewDistance`.

@@ -39,7 +39,7 @@ case $mode in
 esac
 # efeitos das magias do GoW1 (KratosFx.cpp lê Crimson\kratos_fx\*.kfx)
 FX="Devil May Cry HD Collection/Crimson/kratos_fx"
-for f in "$I"/release/kratos_fx/*.kfx; do
+for f in "$I"/release/kratos_fx/*.kfx "$I"/release/kratos_fx/stone.png; do
   case $mode in
     --check) cmp -s "$f" "$FX/$(basename "$f")" || { echo "difere: $(basename "$f")"; diff=$((diff + 1)); } ;;
     --restore) rm -f "$FX/$(basename "$f")" ;;

@@ -32,6 +32,9 @@ import yaml
 (out / "magic").mkdir(parents=True, exist_ok=True)
 for n, m in yaml.safe_load(pathlib.Path("mapping/magic_fx.yaml").read_text(encoding="utf-8"))["models"].items():
     (out / "magic" / f"{n}.glb").write_bytes(get(f"/action/{m['wad']}/{m['tag']}/gltf")); print(f"magic/{n}.glb")
+st = yaml.safe_load(pathlib.Path("mapping/magic_fx.yaml").read_text(encoding="utf-8"))["stone"]
+img = json.loads(get(f"/json/pack/{st['wad']}/{st['tag']}"))["Data"]["Images"][0]["Image"]
+(out / "magic" / "Maitext01Stone.png").write_bytes(base64.b64decode(img)); print("magic/Maitext01Stone.png")
 # vozes (banco "Hero") e sons de combate (banco "GENERAL") do R_PERM
 t = tags("R_PERM.WAD")
 hero = json.loads(get(f"/json/pack/R_PERM.WAD/{t['Hero']}"))["Data"]

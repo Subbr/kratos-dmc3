@@ -16,3 +16,5 @@ blend:
   MAT_M01sfxLavaSubtractI: sub
 # ganho extra por material sobre a regra do PS2 (0x80 = 1,0), se algum efeito ficar fraco/forte demais no DMC3
 gain: {}
+# pedra da Medusa nos inimigos: pele de pedra do GoW1 (R_PERM tag 1804, TXR_Maitext01Stone) sem a tatuagem
+stone: {wad: R_PERM.WAD, tag: 1804, crop: [0.5, 0.0, 1.0, 0.45]}

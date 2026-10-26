@@ -83,6 +83,24 @@ def main() -> None:
     dst.mkdir(parents=True, exist_ok=True)
     for name in conf["models"]:
         print(convert(src / f"{name}.glb", dst / f"{name}.kfx", conf["blend"], conf.get("gain", {}), scale))
+    stone_tile(src / "Maitext01Stone.png", dst / "stone.png", conf["stone"]["crop"])
+
+
+def stone_tile(png: Path, out: Path, crop: list[float]) -> None:
+    """Pedra da Medusa nos inimigos (T91): pele de pedra do GoW1 (TXR_Maitext01Stone, R_PERM) sem a tatuagem do
+    Kratos (recorte `crop` em fração), espelhada 2×2 para repetir sem emenda sobre as UVs do inimigo."""
+    from PIL import Image
+    im = Image.open(png).convert("RGB")
+    w, h = im.size
+    c = im.crop((int(w * crop[0]), int(h * crop[1]), int(w * crop[2]), int(h * crop[3])))
+    cw, ch = c.size
+    tile = Image.new("RGB", (cw * 2, ch * 2))
+    tile.paste(c, (0, 0))
+    tile.paste(c.transpose(Image.FLIP_LEFT_RIGHT), (cw, 0))
+    tile.paste(c.transpose(Image.FLIP_TOP_BOTTOM), (0, ch))
+    tile.paste(c.transpose(Image.ROTATE_180), (cw, ch))
+    tile.save(out)
+    print(f"{out.name}: {tile.size}")
 
 
 if __name__ == "__main__":
