@@ -91,3 +91,10 @@ Ferramenta: REA 6.7.0 + Ghidra 12.1.4 (`tools/rea_bridge.py` + `tools/rea_q.sh`,
   funciona nos Hells (7/7 sem exceção, M3). Em outros inimigos `vítima = inimigo + 0x32F8` é errado (exceção em
   `dmc3+87C43` na M5): falta achar o objeto da vítima por tipo.
 - status: confirmado (logs T92)
+
+## Despacho dos acertos para qualquer inimigo (T93)
+- endereço: `FUN_14005a6f0` (pares de colisão): para a colisão da vítima `c`, alvo = `*(c+0x308) + 8` se não nulo,
+  senão `*(c+0x300) + 0xD0`; chama `(*alvo)[1](alvo, colisão do golpe, c)`. Hells: `c+0x308` = inimigo + 0x32F0 →
+  87B90. Tipo 32 (M5): `c+0x308` nulo → inimigo + 0xD0 → `FUN_14004c9e0` (mesma lógica de 87B90, recebedor em alvo −
+  0x70). Pilha do dano nativo no tipo 32: `E293C ← 4CA88 ← 5A7D2 ← 5A8A7 ← 5B16B`.
+- hash: `e454272e…dd082`; status: confirmado (M5 20/20 sem exceção; antes 15 exceções com inimigo + 0x32F8).

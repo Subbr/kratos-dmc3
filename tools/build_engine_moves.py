@@ -89,9 +89,20 @@ def windows(move: dict, action: int) -> list[list[float]]:
 def main(base_pac: Path, model: Path, out: Path) -> None:
     conf = yaml.safe_load((ROOT / "mapping/engine_moves.yaml").read_text(encoding="utf-8"))
     graph = {m["id"]: m for m in gow_combat.load_all(gow_combat.load_hashes())}
-    g = Glb(ROOT / "extracted/gow1/hero0/hero_obj.glb")
-    anims = {a["name"].split(" ")[-1].upper(): a["name"].split(" ")[-1] for a in g.j["animations"]}
-    anims.update({k: v for k, v in conf.get("anim_alias", {}).items() if v.upper() in anims})
+    # glb do herói + os das finalizações (grupos externos do ANM do herói nos WADs dos inimigos, T93); a 1ª que tiver
+    # a animação vale
+    glbs = [Glb(ROOT / "extracted/gow1" / f) for f in conf.get("glbs", ["hero0/hero_obj.glb"]) if (ROOT / "extracted/gow1" / f).exists()]
+    anims, owner = {}, {}
+    for gi, gg in enumerate(glbs):
+        for a in gg.j["animations"]:
+            short = a["name"].split(" ")[-1]
+            if short.upper() not in anims:
+                anims[short.upper()] = short
+                owner[short.upper()] = gi
+    for k, v in conf.get("anim_alias", {}).items():
+        if v.upper() in anims:
+            anims[k] = v
+            owner[k] = owner[v.upper()]
     excluded = tuple(conf.get("exclude_prefix", []))
     neutral_anims, fall_anims = set(conf["neutral_anims"]), set(conf["fall_anims"])
     evades = conf.get("evades", {})
@@ -130,7 +141,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         if mid in order or special(mid) is not None or not usable(mid):
             continue
         order.append(mid)
-        kind.setdefault(mid, "heavy" if graph[mid]["anim"] in conf.get("heavy", []) else "light")
+        grab = graph[mid]["anim"].startswith(tuple(conf.get("grab_prefix", [])))
+        kind.setdefault(mid, "grab" if grab else "heavy" if graph[mid]["anim"] in conf.get("heavy", []) else "light")
         for t in edges(graph[mid]):
             if t["target"] not in order:
                 todo.append(t["target"])
@@ -173,7 +185,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
     for mid in order:
         mv = graph[mid]
         name = anims[mv["anim"]]
-        reach = kind[mid] not in ("spell", "evade")
+        g = glbs[owner[mv["anim"]]]
+        reach = kind[mid] not in ("spell", "evade", "grab")
         anim = ar.KratosAnim(g, name)
         frames = max(int(anim.duration * 60) + 1, 2)
         base = mot.Motion(bytearray(template.header))

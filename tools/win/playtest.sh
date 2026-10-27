@@ -29,7 +29,8 @@ def crimson(d):
     d["Arcade"].update({"enable": True, "mission": int(sys.argv[1]), "mode": 1, "weapons": [0, 2, 5, 8]})
     d["BossRush"]["enable"] = sys.argv[2] == "1"
 edit("CrimsonConfig", crimson)
-edit("KratosConfig", lambda d: d.update({"logDamage": True, "virtualPad": True}))  # a config do LG volta no fim
+edit("KratosConfig", lambda d: d.update({"logDamage": True, "virtualPad": True,
+                                         **({"kratosEngine": False} if __import__("os").environ.get("ENGINE") == "0" else {})}))  # a config do LG volta no fim
 def gameplay(d):
     d["Cheats"]["Damage"]["playerReceivedDmgMult"] = 0.0
 edit("CrimsonConfigGameplay", gameplay)
@@ -45,11 +46,12 @@ phase() {  # phase <nome> <teclas>
 }
 if [ "${BOSS:-0}" = 1 ]; then
   # chefe: trava + frente + ataque (Stinger) fecha a distância; combos, Medusa, agarrão e DT, em ciclos
-  STING="+n +w wait:120 i:80 wait:600 -w -n"
+  # com o motor (RB = L1, bloqueio): avança andando e o combo vira para o chefe (FaceNearestEnemy)
+  STING="w:700 wait:100 i:80 wait:600"
   CMB="i:50 wait:220 i:50 wait:220 i:50 wait:700"
-  phase 0_start "wait:2000 +n j:80 wait:500 j:80 wait:500 j:80 wait:500 j:80 wait:500 -n" &&
+  phase 0_start "wait:2000 j:80 wait:500 j:80 wait:500 j:80 wait:500 j:80 wait:500" &&
   phase 1_sting "$STING $CMB $STING $CMB" &&
-  phase 2_magic "q:200 wait:900 q:200 wait:900 q:200 wait:900 +n j:80 wait:1200 j:80 wait:1200 -n" &&
+  phase 2_magic "q:200 wait:900 q:200 wait:900 q:200 wait:900 j:80 wait:1200 j:80 wait:1200" &&
   phase 3_grab "$STING $CMB tab:100 wait:1500 $STING tab:100 wait:1500" &&
   phase 4_dt "u:150 wait:1200 $STING $CMB $STING $CMB u:150 wait:800" &&
   phase 5_air "$STING k:80 wait:250 i:80 wait:1200 $STING $CMB" &&
@@ -83,6 +85,14 @@ elif [ "${ROUTINE:-}" = gow1air ]; then
   tools/win/act.sh "k:80 wait:180 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 24 90 gow1_air >/dev/null &&
   tools/win/act.sh "k:80 wait:180 l:50 wait:1500" 16 90 gow1_air2 >/dev/null &&
   phase 1_end "wait:500"
+elif [ "${ROUTINE:-}" = gow1grab ]; then
+  # agarrão do GoW1 (T93): ○ = tab no esquema "dmc3"; GRAB → MAISKB00 → ○ MAISKB03 → □ MAISKB02 (finalização)
+  phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
+  phase 1_walk "w:700 wait:300 i:50 wait:250 i:50 wait:250 i:50 wait:900 i:50 wait:250 i:50 wait:250 i:50 wait:900" &&
+  tools/win/act.sh "tab:50 wait:1100 tab:50 wait:700 tab:50 wait:700 i:50 wait:2600" 28 120 gow1_grab >/dev/null &&
+  phase 2_walk "i:50 wait:250 i:50 wait:250 i:50 wait:900 i:50 wait:250 i:50 wait:900" &&
+  tools/win/act.sh "tab:50 wait:1100 l:50 wait:2400" 20 120 gow1_grab2 >/dev/null &&
+  phase 2_end "wait:500"
 elif [ "${ROUTINE:-}" = moves ]; then
   # golpes que o Crimson toca de arquivos próprios (T76): sprint, troca de estilo parado, taunt e Drive
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&   # o 1º avanço dispara a cena dos inimigos

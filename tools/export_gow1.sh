@@ -61,6 +61,21 @@ for name, tid in t.items():
     if not re.match(r"TXR_HUD\d+$", name): continue
     imgs = (json.loads(get(f"/json/pack/R_PERM.WAD/{tid}")).get("Data") or {}).get("Images") or []
     if imgs: (out / "hud" / f"{name}.png").write_bytes(base64.b64decode(imgs[0]["Image"]))
+# finalizações do agarrão (T93): o ANM do herói tem grupos "externos" (maiSka, maiMin...) cujos dados ficam nos WADs
+# dos inimigos (ANM_MAI*). Só o gowb com o carregador ?anm=WAD:tag (vendor/god_of_war_browser, docs/formats/gow-wad.md)
+# exporta o Kratos com eles; sem ele, segue sem finalizações
+(out / "finishers").mkdir(parents=True, exist_ok=True)
+hero = tags("R_HERO0.WAD")["hero"]
+for wad, anm, dst in [("R_SKA.WAD", "ANM_MAISKA", "maiSka.glb")]:
+    try:
+        tid = tags(wad)[anm]
+        data = get(f"/action/R_HERO0.WAD/{hero}/gltf?anm={wad}:{tid}")
+        if b"maiSka" in data or len(data) > 10_400_000:
+            (out / "finishers" / dst).write_bytes(data); print("finishers/" + dst)
+        else:
+            print("gowb sem o carregador de ANM externo: finalizações não exportadas")
+    except Exception as e:
+        print("finalizações:", e)
 print("ok")
 PY
 # pelo nome do processo: "pkill -f" casaria com a linha de comando deste próprio shell

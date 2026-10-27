@@ -375,7 +375,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Data:** 2026-10-27 (T92). **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
+- **Data:** 2026-10-27 (T93). **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
   5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T91).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
@@ -444,14 +444,17 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   chão/ar/Rage); golpes aéreos por cima da queda do DMC3 (TAUNT não pega no ar); bloqueio/parry (PARRY02) e
   invulnerabilidade (ação 28) descartando o dano em `dmc3+88190`; acerto pelas lâminas (`bladeHits`); colisão montada do
   zero (sem 1º golpe do Dante, só Hells). Controles `controls` "dmc3"/"gow". Rotinas `ROUTINE=gow1`/`gow1air` do playtest.
+- **T93 (2026-10-27):** acerto com reação em qualquer inimigo (despacho do jogo `FUN_14005a6f0`: alvo = colisão+0x308
+  ou dono+0xD0) e pelas **esferas de dano reais** (gancho de colisão; chefes incluídos); **agarrão do GoW1** com as
+  finalizações do legionário (`extracted/gow1/finishers/maiSka.glb`, gowb modificado localmente — `docs/formats/gow-wad.md`).
 - **Config ao fechar a sessão (T91):** a do jogo = a do LG: `kratosEngine: true`, **`virtualPad: false`**,
   `logDamage`/`testWeapons` desligados, dano e inimigos normais (Crimson), `install_all --check` = 0. Para testes do
   agente: religar `virtualPad`/`logDamage`, `playerReceivedDmgMult 0` (e `disableRegularEnemyAttacks` para magias) e
   restaurar no fim. `tools/win/act.sh` captura durante a ação; validar golpe/efeito **pela imagem**.
 - **Pendências (por prioridade):**
-  1. **Combate (T92 resolveu ar, bloqueio/parry, ramos, invulnerabilidade, 1º golpe, lâminas):** objeto da vítima
-     por tipo de inimigo (acerto com reação só nos Hells; outros = dano direto); agarrão 0x11 + finalizações (extrair
-     animações dos WADs dos inimigos); confirmar 0x08 = R1; decidir controles "gow" (D5) e nível das lâminas (D4).
+  1. **Combate (T92–T93 resolveram ar, bloqueio/parry, ramos, invulnerabilidade, 1º golpe, lâminas, vítima por tipo,
+     agarrão):** finalizações dos outros inimigos do GoW1 (R_MIN, R_SIR, R_HAR, R_CY*) e pose do inimigo preso;
+     prioridade das transições do GoW1; confirmar 0x08 = R1; decidir controles "gow" (D5) e nível das lâminas (D4).
   2. **Regras do GoW1:** Rage (dano ×1,75–3 da `TWK_Player`, como enche); golpes por nível de arma (D4); magia por
      orbs azuis (D3).
   3. **Visual:** foices não viram pedra; tempo dos efeitos pelos eventos da tabela (hoje a olho); rastro das lâminas;

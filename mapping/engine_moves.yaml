@@ -8,7 +8,12 @@
 #   0x0B fim da animação; com destino EVADE* = analógico direito   0x0C/0x13 analógico esquerdo (cancela andando)
 #   0x10 golpe recebido no bloqueio (BLOCKREACTION / PARRY02)   0x11 agarrão pegou (finalização por inimigo)
 #   0x0E morte, 0x14/0x16 [HIPÓTESE], fora do motor
-triggers_used: [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x0B, 0x0C, 0x10, 0x13]
+triggers_used: [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x0B, 0x0C, 0x10, 0x11, 0x13]
+# animações: glb do herói e glb das finalizações (Kratos com o grupo externo do ANM do herói guardado no WAD do
+# inimigo; tools/export_gow1.sh com o gowb modificado, docs/formats/gow-wad.md). maiSka = legionário (MAISKB00…06)
+glbs: [hero0/hero_obj.glb, finishers/maiSka.glb]
+# golpes de agarrão: inimigo preso na mão, sem acerto das lâminas (o dano vem do próprio agarrão, KratosMode.cpp)
+grab_prefix: [GRAB, MAISK]
 # tabela do parado (o GoW1 não tem um golpe "parado" com □: a da aterrissagem COMBATLAND2 é a mesma do chão livre)
 ground_root: 97        # COMBATLAND2
 air_root: 10           # COMBOJUMP (□ AIRH1, △ AIRV1, R1 AIRDASH, L1 AIRBLOCK, magias no ar)

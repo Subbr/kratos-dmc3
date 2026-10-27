@@ -995,3 +995,30 @@
 - M3 e M5 sem queda; config do LG restaurada (`install_all --check` = 0).
 - Pendente: objeto da vítima por tipo de inimigo; agarrão (0x11) e finalizações (animações nos WADs dos inimigos);
   gatilho 0x08 = R1 a confirmar; nível das lâminas pela loja (D4); escolha do esquema de controles (D5).
+
+## 2026-10-27 — T93 (agente): acerto com reação em qualquer inimigo e agarrão do GoW1
+- **Alvo do acerto por tipo**: os golpes nativos nos inimigos da M5 (tipo 32) nem passam pela entrada 87B90 (pilha do
+  dano: `E293C ← 4CA88 ← 5A7D2`). REA `FUN_14005a6f0` (despacho dos pares de colisão): alvo = `*(colisão da vítima +
+  0x308) + 8` ou, se nulo, `dono + 0xD0`; entrada = função 1 da vtable do alvo (Hells 87B90; tipo 32 `FUN_14004c9e0`,
+  que chama o recebedor em alvo − 0x70). O acerto sintético faz o mesmo despacho.
+- Resultado: M5 20/20 acertos com colisão montada sem exceção (antes 15 exceções), sangue e 50 hits na captura
+  (`work/shots/playtest/m05_2_combo.png`); M2 20/20; M3 sem regressão. M7/M9/M12/M16 sem queda (a rotina padrão não
+  chegou aos inimigos).
+- **Finalizações do GoW1**: as animações do Kratos nas finalizações são grupos externos do ANM do herói guardados nos
+  WADs dos inimigos (`docs/formats/gow-wad.md`). gowb modificado localmente → `extracted/gow1/finishers/maiSka.glb`
+  (legionário: maiskb00–06, airThrow1). `build_engine_moves.py` aceita vários glb (`glbs`) e o gatilho 0x11.
+- **Agarrão do GoW1 no motor**: ○ → GRAB; no quadro do golpe, inimigo à frente até `grabRange` → gatilho 0x11 →
+  MAISKB00 (pega) → MAISKB01 (segura, laço até `grabHoldSeconds`) → ○ MAISKB03 (soco, dano) / □ MAISKB02, △ MAISKB05
+  (finalizações: golpe forte + morte pela função de dano) / ✕ solta. Chefes: GRABREJECT. Inimigo parado (velocidade
+  0, como a pedra) e preso entre as mãos. No jogo (M3): GRAB → MAISKB00 → MAISKB01 → MAISKB03 ×2 → MAISKB02 →
+  finalização (`work/shots/gow1_grab_zoom.png`; o Kratos ficou meio atrás de um pilar na captura).
+- **Acerto pelas esferas de dano reais**: o gancho de colisão guarda as esferas de cada inimigo (`hitboxPos` +0x130,
+  raio +0x140, sem DamageData = não é de ataque); a lâmina testa o segmento mão → lâmina contra elas (+ `bladeThickness`)
+  e acerta com a própria colisão como vítima. Hells raio 50, M5 40–60, Cerberus 70/100/450. Cerberus: 89 acertos, 57
+  com dano, barra caindo (`work/shots/playtest/b03_6_more.png`); antes, 0 (o centro dele fica a 600–1700 do Kratos).
+- R2 solto antes de a magia sair não cancela mais a sequência ([HIPÓTESE]: o GoW1 escolhe por prioridade, não pela
+  ordem da lista; prioridade ainda não decodificada).
+- Rotina de chefe do playtest sem RB (agora é o bloqueio); `ROUTINE=gow1grab`. M2, M3, M5, M7, M9, M12, M16, M19 e
+  chefes da M3/M10 sem queda; nenhuma exceção nas últimas rodadas.
+- Pendente: finalizações dos outros inimigos do GoW1 (R_MIN, R_SIR, R_HAR, R_CY*…) — hoje todos usam as do legionário;
+  pose do inimigo preso (posição aproximada, não a do par de animações do GoW1); prioridade das transições.
