@@ -375,8 +375,8 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Data:** 2026-10-24. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
-  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T87).
+- **Data:** 2026-10-27. **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
+  5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T91).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
 - **Instalado no override (`data/dmc3/GData.afs/`):** `pl000.pac` = `work/install/kratos_v10` (24 ossos; lâminas e
@@ -433,18 +433,28 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   trilhas de rotação, corrigido); pulo do GoW1 (`jumpScale`/`jumpGravityScale`), combo aéreo AIRH1–3 pelo Aerial Rave,
   X = magia do GoW1 (`spells` em `mapping/engine_moves.yaml`), trava de golpe preso (`FUN_1401e0030`, REA), acerto
   sintético com o dono atual. `tools/win/act.sh` captura durante a ação. **Validar golpe pela imagem, não pelo log.**
-- **Config ao fechar a sessão (T78):** a do jogo = `config/KratosConfig.default.json`, **`virtualPad: false`** (o LG vai
-  testar com controle; religar para testes do agente). Checklist do LG em `docs/playtest_lg.md`. Dano normal, Arcade
-  desligado, `install_all --check` = 0.
+- **T88–T91 (2026-10-26):** motor não depende mais do 1º golpe (só o combo no chão espera a cópia da colisão);
+  bloqueio no RB (Royalguard forçado); esquivas do GoW1 no analógico direito (514–517); **deslocamento real dos golpes
+  pela junta `zeroJoint`** do glb (`build_engine_moves.zero_root`); magias = sequências inteiras da tabela (gatilho
+  0x0b) com **efeitos originais do GoW1** (`tools/build_fx.py` → `Crimson\kratos_fx\*.kfx`, renderizador
+  `KratosFx.cpp` no Present, câmera `dmc3.exe+C8FBD0`); **pedra da Medusa** com `TXR_Maitext01Stone` por ganchos D3D11
+  (buffer de constantes com a posição do inimigo → troca da textura 0, só com o DSV da cena); **efeitos com
+  profundidade** (cópia do alvo 0 de `dmc3.exe+C0B410` no fim da cena, Z invertido, `GREATER_EQUAL`).
+- **Config ao fechar a sessão (T91):** a do jogo = a do LG: `kratosEngine: true`, **`virtualPad: false`**,
+  `logDamage`/`testWeapons` desligados, dano e inimigos normais (Crimson), `install_all --check` = 0. Para testes do
+  agente: religar `virtualPad`/`logDamage`, `playerReceivedDmgMult 0` (e `disableRegularEnemyAttacks` para magias) e
+  restaurar no fim. `tools/win/act.sh` captura durante a ação; validar golpe/efeito **pela imagem**.
 - **Pendências (por prioridade):**
-  1. **LG, de ouvido/olho:** volume e taxa das vozes (22050 Hz [HIPÓTESE]); voz do Dante sumiu? (canal COMMON mudo);
-     sons de Rage/Poseidon [HIPÓTESE pelo nome]; alcance/dano (`reachRadius 4`); visual dos golpes e do HUD.
-  2. **Visual das magias:** pedra da Medusa (o tingimento do jogo não vale para inimigos, T56); almas do Army of Hades.
-  3. **Menus nativos:** título, LOAD e fundos feitos (T77); faltam as cartas da loja nativa (`id741`–`id760`, a loja
-     usada é a do Crimson) e o retrato da tela STATUS (não localizado).
-  4. **Texto:** diálogos da história (`mNN_*_msg_*`) — junto com a Fase 9.
-  5. **Decisões do LG:** D2–D5 provisórias em `docs/decisoes.md`; D6 (cutscenes).
-  6. **Fase 9 (cutscenes) e o pacote público da Fase 10** (DLL + scripts, sem o repositório inteiro).
+  1. **Combate ainda no DMC3:** combo aéreo pela tabela (hoje Aerial Rave), AIRDASH e magias no ar; bloqueio/parry e
+     contra-ataques da tabela (hoje Royalguard); agarrão GRAB + finalizações; golpes de ramo (DASH, BRUTAL3, COMBO4A/5A);
+     invulnerabilidade na esquiva; 1º ataque da missão ainda nativo; acerto por área à frente (não pelas lâminas).
+  2. **Regras do GoW1:** Rage (dano ×1,75–3 da `TWK_Player`, como enche); golpes por nível de arma (D4); magia por
+     orbs azuis (D3).
+  3. **Visual:** foices não viram pedra; tempo dos efeitos pelos eventos da tabela (hoje a olho); rastro das lâminas;
+     testar motor/pedra em outros inimigos e chefes (só Hells da M3).
+  4. **LG:** sensação do motor (combo, pulo, esquiva, magias); vozes/sons; D2–D6.
+  5. **Fora do combate:** cartas da loja nativa (`id741`–`id760`) e retrato do STATUS; diálogos (`mNN_*_msg_*`);
+     Fase 9 (cutscenes) e pacote público da Fase 10.
 - **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/`, em segundo
   plano (`virtualPad`, T25), sem tomar o teclado nem a tela do LG; pedir teste ao LG só quando a automação não
   alcançar. Juntar mudanças por teste.
