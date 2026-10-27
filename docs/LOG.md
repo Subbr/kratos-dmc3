@@ -969,3 +969,29 @@
   (troca de DSV) e usada com `GREATER_EQUAL` e a projeção do Effekseer do Crimson (perto = dist × 30, longe = 1).
   Teste: cabeça da Medusa atrás do Kratos fica escondida pelo corpo dele.
 - Flags: `fxDepth` (0/1/2), `fxDepthTarget`, `fxPreviewDistance`.
+
+## 2026-10-27 — T92 (agente): motor com a tabela inteira do GoW1 (ar, bloqueio/parry, invulnerabilidade, lâminas)
+- **Gerador** (`build_engine_moves.py`, `mapping/engine_moves.yaml`): fecha o grafo a partir das raízes do chão
+  (COMBATLAND2), ar (COMBOJUMP) e Rage (BERLAND/COMBOJUMP 590) seguindo **todos** os gatilhos; 110 golpes em 78
+  arquivos (mesma animação = um arquivo). Por golpe: todas as transições (destino, gatilho, modo do botão, janela,
+  flags chão/ar/Rage/alvo/execução, nível da lâmina), janelas de invulnerabilidade (ação 28) e o deslocamento x/y/z da
+  zeroJoint por quadro. Semântica decodificada no ELF: `docs/formats/gow-combat.md`.
+- **DLL** (`KratosMode.cpp`): interpretador genérico (aperto/soltura/segurar, botão guardado antes do ponto de corte e
+  solto na janela que executa ou no fim, fim de animação, cancelamento pelo analógico, nível `bladeLevel`, magia
+  equipada no R2, ○ = agarrão ou COMBO5A em quem não se agarra). Controles `controls`: "dmc3" (padrão, como antes) ou
+  "gow" (□ X, △ Y, ○ B, ✕ A, L1 LB, R1 RB, R2 RT).
+- **Ar**: o DMC3 troca o TAUNT pela queda (evento 9) quando o Kratos está no ar; o golpe toca por cima da queda, sem
+  gravidade, com o deslocamento aplicado pela DLL; no fim, a queda do DMC3 aterrissa. No jogo: pulo → AIRH1 → AIRH2 →
+  AIRH3; AIRV1 com giro e pancada (`work/shots/gow1_air2_full.png`).
+- **Defesa**: golpes no Kratos passam pela função de dano `88190` (não pela entrada 87B90): descartados nas janelas da
+  ação 28 (esquivas, magias, PARRY02...) e de frente nos golpes de bloqueio → gatilho 0x10. No jogo: "bloqueou",
+  PARRY01 → **PARRY02** (invulnerável) → □ → BRUTAL1; o atacante leva um golpe forte (cambaleia).
+- **Tabela no jogo** (M3): COMBO3A→3B→3C→3D→3E (botões guardados), COMBO6A→COMBO3E, PARRY01→BLOCK (laço segurando),
+  BLOCK→BLOCK360 (L1+□), BLOCK→BLOCKLAUNCHER (L1+✕), esquivas, DASH (R1), BOLTPULLOUT (R2).
+- **Acerto pelas lâminas** (`bladeHits`): segmento mão → lâmina (ossos 9→23, 13→4) em movimento contra uma esfera no
+  peito de cada inimigo; um acerto por inimigo a cada 0,25 s.
+- **1º golpe**: não depende mais de um golpe do Dante: a colisão é montada do zero (Hells: 7/7 ok, com reação). Outros
+  inimigos ainda caem no dano direto (vítima por tipo pendente; M5 sem queda, exceções protegidas).
+- M3 e M5 sem queda; config do LG restaurada (`install_all --check` = 0).
+- Pendente: objeto da vítima por tipo de inimigo; agarrão (0x11) e finalizações (animações nos WADs dos inimigos);
+  gatilho 0x08 = R1 a confirmar; nível das lâminas pela loja (D4); escolha do esquema de controles (D5).

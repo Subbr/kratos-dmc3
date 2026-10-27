@@ -29,3 +29,21 @@ Fonte: ISO NTSC-U `SCUS_973.99`, lidos pelo god_of_war_browser (`/json/pack/<WAD
 - Os métodos de `0x2BA0B0` (`FUN_00237228`, `FUN_00243500`, `FUN_0024cab8`, `FUN_0024cc20`, `FUN_0024cd58`) são de
   carga/referência do recurso, não o interpretador. **Próximo passo:** achar quem consome o ponteiro dos dados (a
   máquina de estados do herói).
+
+## Transições e eventos — semântica (T92, ELF do GoW1 no Ghidra)
+- **Gatilho → botão**: tabela de bytes em `0x2C0AE8` do ELF (`FUN_002072a0`): `[-1, 6, 7, 4, 5, 2, 0, 9, 3, 1, 10, -1…]`.
+  Pelo uso na tabela: 0x01 ✕ (COMBO4D → COMBOJUMP, L1+✕ → BLOCKLAUNCHER, pulos de parede), 0x02 □, 0x03 △, 0x04 ○
+  (GRAB), 0x05 L1 (bloqueio), 0x06 R2 (magia), 0x08 R1 [HIPÓTESE] (DASH, AIRDASH, BRUTAL3). Sem botão: 0x0B fim da
+  animação (com destino EVADE* = analógico direito), 0x0C/0x13 analógico esquerdo > 0,5 (cancela andando), 0x0E vida
+  ≤ 0, 0x10 golpe recebido no bloqueio, 0x11 agarrão pegou (destino por tipo de inimigo, `+0xA4`), 0x12/0x14/0x16.
+- **Modo do botão** (`+0x1D`): 1 apertou, 2 soltou, 3/4 segurando, 5 solto.
+- **Máscara** (`+0`, `FUN_002079d8` com o estado de `FUN_00207220`): bit 0 = janela que executa (sem ele o botão fica
+  guardado); 0x2 chão, 0x4 ar; 0x200 qualquer arma, 0x100 sem 0x200 = só Artemis, nenhum = só Blades; 0x400 exige
+  alvo; 0x2000 exige Rage, 0x8000 ignora Rage (sem os dois = fora da Rage); 0x80000/0x100000 bit 0x10 do herói.
+- **Nível** (`+0x21`, "dif" no `gow_combat.py`): comparado com o byte global `0x302D3D` = nível da arma. Ex.: L1+□
+  BLOCK360 nível 2, L1+△ BLOCKFORWARDFLIP 3, L1+✕ BLOCKLAUNCHER 1, L1+○ IMPALESLAMCHARGE 4, BRUTAL3 3, AIRDASH 1.
+- **Ação 28** dos eventos (`FUN_00205488`, caso 0x1B): liga o bit 4 em `herói+0xC` (`FUN_00243160`). Aparece nas
+  esquivas (0–0,598), nas magias (inteiras), PARRY02, COMBO7A/COMBO4D/AIRIMPALE e nas finalizações → invulnerável
+  [HIPÓTESE pelo padrão; não achamos o leitor do bit].
+- O parado com □ não está na tabela: a de COMBATLAND2 (97) serve de raiz no chão e a de COMBOJUMP (10) no ar.
+- `zeroJoint` do glb também leva a altura: blockLauncher sobe 83 (× 4,8), comboJump sobe e cai, airImpale desce 191.

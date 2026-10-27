@@ -64,6 +64,25 @@ elif [ "${ROUTINE:-}" = engine ]; then
   tools/win/burst.sh "w:500 i:50 wait:300 i:50 wait:300 l:50 wait:1800" 16 130 engine_combo2 >/dev/null &&
   phase 3_wait "wait:300" &&
   for k in 1 2 3 4 5 6; do phase 4_loop$k "i:50 wait:300 i:50 wait:300 i:50 wait:900 l:50 wait:300 i:50 wait:300 l:50 wait:1200" || break; done
+elif [ "${ROUTINE:-}" = gow1 ]; then
+  # motor com a tabela inteira do GoW1 (T92), botões "dmc3": □ i, △ l, ✕ k, ○ tab, L1 n, R1 e, R2 j, esquiva rs*
+  phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
+  phase 1_prime "i:50 wait:1500 w:600 i:50 wait:800 i:50 wait:1200" &&
+  tools/win/burst.sh "i:50 wait:250 i:50 wait:250 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 16 150 gow1_combo >/dev/null &&
+  phase 2_heavy "l:50 wait:300 l:50 wait:1500" &&
+  tools/win/burst.sh "k:80 wait:180 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 16 150 gow1_air >/dev/null &&
+  phase 3_block "+n wait:3500 -n wait:500" &&
+  tools/win/burst.sh "+n wait:300 i:50 wait:2500 -n wait:300" 16 180 gow1_l1sq >/dev/null &&
+  tools/win/burst.sh "+n wait:300 k:50 wait:500 -n i:50 wait:300 i:50 wait:1500" 16 150 gow1_launch >/dev/null &&
+  phase 4_evade "rsu:100 wait:900 rsl:100 wait:900 rsd:100 wait:900" &&
+  phase 5_dash "e:80 wait:1500 w:400" &&
+  phase 6_magic "j:80 wait:3000" &&
+  phase 7_end "i:50 wait:250 i:50 wait:250 l:50 wait:1500"
+elif [ "${ROUTINE:-}" = gow1air ]; then
+  phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
+  tools/win/act.sh "k:80 wait:180 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 24 90 gow1_air >/dev/null &&
+  tools/win/act.sh "k:80 wait:180 l:50 wait:1500" 16 90 gow1_air2 >/dev/null &&
+  phase 1_end "wait:500"
 elif [ "${ROUTINE:-}" = moves ]; then
   # golpes que o Crimson toca de arquivos próprios (T76): sprint, troca de estilo parado, taunt e Drive
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&   # o 1º avanço dispara a cena dos inimigos

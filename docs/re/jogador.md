@@ -72,3 +72,22 @@ Ferramenta: REA 6.7.0 + Ghidra 12.1.4 (`tools/rea_bridge.py` + `tools/rea_q.sh`,
    `tools/rea_q.sh xrefs '{"address": "0x14030f850"}'`, `search_bytes`, `read_bytes`, `batch_decompile`.
 - A versão npm (6.7.0) não tem `rea mcp --http`; não carrega PDB externo (o FakePDB do Crimson não é usado).
 - Desmonte rápido sem REA: capstone no venv (ver LOG, crash do T15).
+
+## Golpes do motor no ar e acertos (T92)
+- hash do executável: `e454272e…dd082`
+- `FUN_1401e09d0(ator, evento)`: grava o próximo evento (+0x3E08 ← tabela 0x140589FA0) e chama `FUN_1401e0a20`, que já
+  troca o evento (+0x3E00) e o estado (+0x3E64 ← tabela do evento). Controladores dos eventos na vtable do jogador a
+  partir de `0x1404DF9E0` (evento 18 TAUNT = `FUN_1401fe860`, 17 ATTACK = `FUN_1401fdf10`).
+- **TAUNT no ar não pega**: com o ator no ar o evento vira 9 no mesmo quadro (log por passo), mesmo limpando o bit 2
+  de +0x3E64. O air taunt do Crimson (`SetAirTauntAsm.asm`) usa o evento 17 com ação 0xC2. Solução do motor: o golpe
+  toca por cima da queda (motion no grupo TAUNTS, `verticalPull` e gravidade 0) e a DLL aplica o deslocamento.
+- `FUN_1401fb540(ator, 3)` (controlador do TAUNT): soma x, y e z do osso 0 (vfunc 0x188 do modelo), girados pela
+  rotação do ator, à posição — no chão os golpes do GoW1 sobem (BLOCKLAUNCHER) sem gravidade.
+- **Entrada de acerto `87B90`**: só os golpes do jogador nos inimigos passam por ela (nenhuma chamada com o Kratos de
+  vítima); o recebedor dos Hells é `dmc3+88070` (repassa à vfunc 1). Os golpes no jogador chegam em `88190` (dano +
+  reação): descartar lá = invulnerabilidade/bloqueio.
+- A colisão do golpe é de um conjunto reaproveitado (a mesma memória depois serve a um inimigo, dono +0x300 trocado).
+  Colisão **montada do zero** (id, contato, dono, +0xD0 = ator + 0x7250, DamageData; forma +0x110/+0x118 vazia)
+  funciona nos Hells (7/7 sem exceção, M3). Em outros inimigos `vítima = inimigo + 0x32F8` é errado (exceção em
+  `dmc3+87C43` na M5): falta achar o objeto da vítima por tipo.
+- status: confirmado (logs T92)

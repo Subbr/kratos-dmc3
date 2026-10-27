@@ -1,32 +1,49 @@
 # Motor Kratos (D11): golpes gerados do grafo do próprio GoW1 (TWK_CombatFile, tools/gow_combat.py).
-# A partir de `roots`, segue as transições de □ (gatilho 0x02) e △ (0x03); a janela de cada transição é a do GoW1
-# (antes do ponto de corte o botão fica guardado; depois, o golpe sai). Saída: kratosMoves_pl000_00_2.pac +
-# KratosMoves.json. Fica para depois: grafo do ar, agarrão, magias e bloqueio.
-roots: [71]            # COMBO3A (□ a partir do parado; o grafo do parado está fora dos CombatFile — [HIPÓTESE])
-triggers: {light: 2, heavy: 3}
+# O gerador fecha o grafo a partir das raízes seguindo TODAS as transições (T92) e exporta cada uma com gatilho, modo do
+# botão, janela, chão/ar/Rage e nível da lâmina; a DLL interpreta a tabela (KratosMode.cpp, EngineStep).
+#
+# Gatilhos do GoW1 (+0x1C da transição; tabela gatilho → botão em 0x2C0AE8 do ELF, FUN_002072a0):
+#   0x01 ✕ (pulo: COMBO4D → COMBOJUMP, L1+✕ → BLOCKLAUNCHER)   0x02 □   0x03 △   0x04 ○ (agarrão)
+#   0x05 L1 (bloqueio)   0x06 R2 (magia)   0x08 R1 [HIPÓTESE] (DASH, AIRDASH, BRUTAL3)
+#   0x0B fim da animação; com destino EVADE* = analógico direito   0x0C/0x13 analógico esquerdo (cancela andando)
+#   0x10 golpe recebido no bloqueio (BLOCKREACTION / PARRY02)   0x11 agarrão pegou (finalização por inimigo)
+#   0x0E morte, 0x14/0x16 [HIPÓTESE], fora do motor
+triggers_used: [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x0B, 0x0C, 0x10, 0x13]
+# tabela do parado (o GoW1 não tem um golpe "parado" com □: a da aterrissagem COMBATLAND2 é a mesma do chão livre)
+ground_root: 97        # COMBATLAND2
+air_root: 10           # COMBOJUMP (□ AIRH1, △ AIRV1, R1 AIRDASH, L1 AIRBLOCK, magias no ar)
+rage_ground_root: 559  # BERLAND (Rage of the Gods: BERCOMBO*)
+rage_air_root: 590     # COMBOJUMP da Rage
+# animações que não são golpe: voltar ao parado (DMC3) ou cair/aterrissar pelo DMC3
+neutral_anims: [IDLECOMBAT, IDLECOMBAT2, STANDIDLE, BERSERKIDLE]
+fall_anims: [COMBATLAND2, HIGHFALLLAND, FALLV, BERLAND, BERFALLN, COMBATFALL, AIRIMPALELAND, BERAIRV2LAND]
+# fora do motor: reações a dano, morte, paredes, cordas, nado, congelado, entrada/saída da Rage (é o DT do DMC3),
+# pulos de locomoção e agarrões ligados a um inimigo do GoW1 (as animações deles ficam nos WADs dos inimigos)
+exclude_prefix: [HIT, DEATH, WALL, ROPE, SWIM, FREEZE, FROZEN, KICKBOX, BERSERKENTER, BERSERKEXIT, BERAIRENTER,
+                 PARRYHIT, JUMP, LAND]
 # ficha de dano do DMC3 (DamageData, RVA) por golpe do GoW1; o resto usa `default`
 damage:
   default: 5C68C0       # leve (combo da Rebellion 3/3)
   heavy: 5C6960         # golpes de △: arremessa (finalizador 3/5)
   BLOCKLAUNCHER: 5C6C30 # lança (High Time)
-# avanço do golpe no osso 0 (as animações do GoW1 são "no lugar") — [HIPÓTESE] até achar o deslocamento no GoW1
-forward: {default: 35, heavy: 60, spell: 0}
-# fora do protótipo: o motor usa o evento TAUNT do DMC3, que prende o Kratos no chão (o grafo do ar fica para depois)
-exclude_prefix: [AIR, COMBOJUMP]
-# magias (X = tiro do DMC3 com o motor ligado): a sequência inteira do GoW1, seguindo o gatilho "fim da animação"
-# (0x0b) da tabela a partir da 1ª animação (T90): Zeus BOLTPULLOUT 60 → BOLTTHROW; Medusa PSENTHEAD 81 → USEHEAD →
-# PUTAWAYHEAD; Poseidon AIRLIGHTNINGSTART 513 (versão do chão) → AIRLIGHTNINGLOOP → LIGHTNINGEXIT; Hades RAISETHEDEAD.
+  COMBO6A: 5C6960
+  COMBO7A: 5C6960
+  COMBO3F: 5C6960
+  BRUTAL1: 5C6960
+  AIRV1: 5C6960
+heavy: [COMBO6A, COMBO7A, COMBO4D, COMBO3F, BRUTAL1, BRUTAL3, AIRV1, BERCOMBOV1, BERCOMBOV2, BERCOMBOV3, BERCOMBOV4]
+# magias (R2 do GoW1 = X/tiro do DMC3 com o motor ligado): a sequência inteira do GoW1, seguindo o gatilho "fim da
+# animação" (0x0b) da tabela (T90): Zeus BOLTPULLOUT 60 → BOLTTHROW; Medusa PSENTHEAD 81 → USEHEAD → PUTAWAYHEAD;
+# Poseidon AIRLIGHTNINGSTART 513 (versão do chão) → AIRLIGHTNINGLOOP → LIGHTNINGEXIT; Hades RAISETHEDEAD.
 spells: {zeus: 60, poseidon: 513, hades: 508, medusa: 81}
-# destinos de "fim" que encerram a sequência (voltam ao parado / Rage / queda / esquiva)
-spell_chain_stop: [IDLECOMBAT, BERSERKENTER, FALLV, BERFALLN, EVADEBACK, EVADEFRONT, EVADELEFT, EVADERIGHT]
+# no ar (COMBOJUMP → 0x06): AIRBOLTTHROW 63, AIRUSEHEAD 84, AIRLIGHTNINGSTART 506, AIRRAISETHEDEAD 509
+air_spells: {zeus: 63, poseidon: 506, hades: 509, medusa: 84}
 # animação da tabela → nome no glb quando difere (USEHEAD = mira; no glb são useHead00/01/02 = cima/meio/baixo)
 anim_alias: {USEHEAD: useHead01}
-# BOLTTHROWL = 2º arremesso (mão esquerda): só sai se o X for apertado de novo durante o BOLTTHROW, como no GoW1
 # golpe da sequência em que o efeito sai e em que fração da animação (sem fração = quadro de maior velocidade da mão)
-spell_fx: {BOLTTHROW: zeus, BOLTTHROWL: zeus, USEHEAD: medusa, AIRLIGHTNINGLOOP: poseidon, RAISETHEDEAD: hades}
-spell_hit: {USEHEAD: 0.25, AIRLIGHTNINGLOOP: 0.2, RAISETHEDEAD: 0.5}
-# esquivas (analógico direito, como no GoW1): golpes 514–517 do CombatFile 005, com as transições do GoW1 (□ → COMBO3A,
-# △ → COMBO6A, agarrão, magia). Deslocamento no osso 0 em [x, z] (sinal de x como o rolamento do Trickster, T21)
+spell_fx: {BOLTTHROW: zeus, BOLTTHROWL: zeus, USEHEAD: medusa, AIRLIGHTNINGLOOP: poseidon, RAISETHEDEAD: hades,
+           AIRBOLTTHROW: zeus, AIRUSEHEAD: medusa, AIRRAISETHEDEAD: hades}
+spell_hit: {USEHEAD: 0.25, AIRLIGHTNINGLOOP: 0.2, RAISETHEDEAD: 0.5, AIRUSEHEAD: 0.3, AIRRAISETHEDEAD: 0.5}
+# esquivas (analógico direito, como no GoW1): golpes 514–517 do CombatFile 005; na Rage, 586–589
 evades: {front: 515, back: 514, left: 516, right: 517}
-root: {EVADEFRONT: [0, 380], EVADEBACK: [0, -380], EVADELEFT: [380, 0], EVADERIGHT: [-380, 0]}
-root_span: {evade: 0.75}
+rage_evades: {front: 586, back: 587, left: 588, right: 589}
