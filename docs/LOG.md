@@ -1058,3 +1058,30 @@
   na **soltura** (`ator + 0x74E6`, barra ≥ 3000). Injetando a soltura: DT ligado, motor no moveset da Rage
   (BERCOMBOH1 → H2, sons SND_BERZBLADE_*), Kratos dourado (`work/shots/playtest/m03_9_rage.png`).
 - M3 com todos os golpes no esquema novo (combo, △, L1+□/✕, R1, R2, ar, esquivas) sem queda.
+
+## 2026-10-28 — T97 (agente): seleção de magia pelo motor e lâminas na defesa
+- LG: "não consegui selecionar as magias". A escolha passava pela arma de fogo equipada no DMC3 (no máximo duas).
+  Agora o motor guarda a magia (`selectedSpell`): direcional escolhe qualquer magia liberada no save
+  (`SessionData::weaponAndStyleUnlocks` Shotgun/Artemis/Spiral; E&I sempre) e LT passa para a próxima. No jogo: as quatro
+  pelo direcional e o LT ciclando.
+- "A defesa está estranha, as lâminas saem da mão e voltam": a corrente heurística (blade_chain, por velocidade da mão)
+  esticava nos golpes de bloqueio; `blades_in_hand` no engine_moves.yaml.
+
+## 2026-10-28 — T98 (agente): o Kratos do GoW1 desenhado pela DLL
+- Decisão com o LG (2026-10-28): "maior refino possível, última tentativa". Causa raiz da torção e das lâminas: o Kratos
+  vestido no esqueleto de 24 ossos do Dante. Agora o DMC3 segue com o Dante (colisão, física, câmera, inimigos), mas os
+  desenhos dele na cena são pulados (gancho de DrawIndexed, buffer de constantes com a raiz do ator, `SetHiddenTargets`;
+  a sombra continua) e a DLL desenha o Kratos original: `tools/build_body.py` → `Crimson\kratos_body\kratos.kbd`
+  (132 nós, 111 juntas da pele, 20 malhas com cor por vértice, 3 texturas, lâmina, 251 animações com os quadros-chave
+  originais); `KratosFx.cpp` amostra a animação, mistura as trocas (`bodyBlendSeconds`), deforma na CPU e desenha
+  no Present com a profundidade da cena. Animação: a do golpe do motor; fora dele, locomoção do GoW1 pelo estado do
+  DMC3 (idleCombat, walkBlend1/2, jumpAir, combatFall, land; na Rage, as BER). Flag `bodyRender`.
+- No jogo (M3): Kratos do GoW1 com textura e tatuagem certas, sem o Dante por baixo, combos com as animações originais
+  (`work/shots/body_zoom.png`, `gow1_combo_sheet.png`).
+- Lâminas: presas a `r/lWeapIH` (na mão). No GoW1 (`FUN_001fa8a8`) cada lâmina tem 3 estados (costas, na mão, fora da
+  mão) escolhidos pela distância de uma junta marcadora até a mão (< 5,6) e até as costas; fora da mão a lâmina é a
+  matriz dessa junta com amortecimento (`Blade Damping`, `Blade Scale Out Hand`, tabela por nível em `0x302940`). As
+  juntas `r/lWeapOH`/`ChainW` ficam na origem da raiz e só giram nos dados exportados; a translação delas vem de dados
+  que o gowb não lê (ANM do herói: tipo 5 e seis fluxos do tipo 10) — a decodificar.
+- Pendente: corrente/lâminas fora da mão; acerto pelas juntas do Kratos (hoje ainda pelos ossos do Dante invisível);
+  rastro roxo da espada escondida do Dante; efeitos das lâminas (FXC/PTC); sensação de movimento; reação dos inimigos.
