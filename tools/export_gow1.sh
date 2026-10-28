@@ -41,10 +41,8 @@ hero = json.loads(get(f"/json/pack/R_PERM.WAD/{t['Hero']}"))["Data"]
 for s in hero["Sounds"]:
     (out / "sound/hero" / f"{s['Name']}.wav").write_bytes(get(f"/action/R_PERM.WAD/{t['Hero']}/wav?snd={s['Name']}"))
 gen = json.loads(get(f"/json/pack/R_PERM.WAD/{t['GENERAL']}"))["Data"]
-want = ["WHOOSH", "CHAIN", "BLADE", "SWORDHIT", "SWORD_", "ENEMY_GETHIT", "PICKUPS_ORBS", "MEDUSA", "BOLT_HIT",
-        "BERZBLADE", "IG_MAGICOUT", "ROCKHIT", "FOOTSTEP_STONE"]
+# o banco GENERAL inteiro (T95): os eventos dos golpes (ação 3/29 da tabela de combate) pedem sons por nome
 for s in gen["Sounds"]:
-    if not any(w in s["Name"] for w in want): continue
     seen, k = set(), 0
     for c in gen["Bank"]["BankSounds"][s["StreamId"]]["Commands"]:
         r = c.get("SampleRef")
@@ -61,6 +59,10 @@ for name, tid in t.items():
     if not re.match(r"TXR_HUD\d+$", name): continue
     imgs = (json.loads(get(f"/json/pack/R_PERM.WAD/{tid}")).get("Data") or {}).get("Images") or []
     if imgs: (out / "hud" / f"{name}.png").write_bytes(base64.b64decode(imgs[0]["Image"]))
+# HUD do GoW1 (T94): filme FLP_HUD e a malha HUD_0 do R_PERM, para tools/build_hud.py
+(out / "flp").mkdir(parents=True, exist_ok=True)
+for name, dst in (("FLP_HUD", "FLP_HUD.json"), ("HUD_0", "HUD_0.json")):
+    (out / "flp" / dst).write_bytes(get(f"/json/pack/R_PERM.WAD/{t[name]}")); print("flp/" + dst)
 # finalizações do agarrão (T93): o ANM do herói tem grupos "externos" (maiSka, maiMin...) cujos dados ficam nos WADs
 # dos inimigos (ANM_MAI*). Só o gowb com o carregador ?anm=WAD:tag (vendor/god_of_war_browser, docs/formats/gow-wad.md)
 # exporta o Kratos com eles; sem ele, segue sem finalizações

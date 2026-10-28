@@ -375,7 +375,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Data:** 2026-10-27 (T93). **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
+- **Data:** 2026-10-27 (T95). **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
   5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T91).
 - **Build travada:** Steam 2018 + Crimson 0.5a, exe ASLR off `e454272e…dd082` (D10). Crimson.dll do jogo = **nosso
   fork** (`dll/crimson`, branch `kratos`, tag base V0.5a); original em `work/backup/crimson_override/Crimson.dll.release-0.5a`.
@@ -447,6 +447,9 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **T93 (2026-10-27):** acerto com reação em qualquer inimigo (despacho do jogo `FUN_14005a6f0`: alvo = colisão+0x308
   ou dono+0xD0) e pelas **esferas de dano reais** (gancho de colisão; chefes incluídos); **agarrão do GoW1** com as
   finalizações do legionário (`extracted/gow1/finishers/maiSka.glb`, gowb modificado localmente — `docs/formats/gow-wad.md`).
+- **T94–T95 (2026-10-27):** HUD = filme original do GoW1 (`FLP_HUD`) tocado pela DLL (`KratosHud.cpp`, VM ActionScript;
+  `tools/build_hud.py`, `tools/flp_player.py`, `docs/formats/gow-flp.md`); sons de cada golpe pela tabela do GoW1
+  (`PlayGowSound`, `Crimson\sound\kratos\sfx`). Próximo: partículas das lâminas (`FXC_*`/`PTC_*`, a decodificar).
 - **Config ao fechar a sessão (T91):** a do jogo = a do LG: `kratosEngine: true`, **`virtualPad: false`**,
   `logDamage`/`testWeapons` desligados, dano e inimigos normais (Crimson), `install_all --check` = 0. Para testes do
   agente: religar `virtualPad`/`logDamage`, `playerReceivedDmgMult 0` (e `disableRegularEnemyAttacks` para magias) e

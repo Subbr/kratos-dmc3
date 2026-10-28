@@ -80,6 +80,20 @@ def zero_root(g: Glb, anim: ar.KratosAnim, frames: int, scale: float) -> tuple[l
     return xs, ys, zs
 
 
+def event_name(e: dict, hd: dict[int, str]) -> str | None:
+    """nome do evento (+0: hash do som, script ou junta; dicionário do gowb)"""
+    h = struct.unpack_from("<I", bytes.fromhex(e["raw"]), 0)[0]
+    return hd.get(h)
+
+
+def sounds(move: dict, hd: dict[int, str]) -> tuple[list, list]:
+    """sons do golpe pela tabela do GoW1 (T95): ação 3 = toca no início da janela; ação 29 = som do acerto no inimigo
+    enquanto a janela vale (SND_ENEMY_GETHIT_S/L)"""
+    sfx = [[e["window"][0], n] for e in move["events"] if e["action"] == 3 and (n := event_name(e, hd))]
+    hit = [[e["window"][0], e["window"][1], n] for e in move["events"] if e["action"] == 29 and (n := event_name(e, hd))]
+    return sorted(sfx), hit
+
+
 def windows(move: dict, action: int) -> list[list[float]]:
     """Janelas (fração da animação) dos eventos de uma ação: 28 = invulnerável (esquivas 0–0,6, finalizações
     inteiras; FUN_00205488 liga o bit 4 do herói, [HIPÓTESE] pelo padrão dos dados)."""
@@ -88,7 +102,8 @@ def windows(move: dict, action: int) -> list[list[float]]:
 
 def main(base_pac: Path, model: Path, out: Path) -> None:
     conf = yaml.safe_load((ROOT / "mapping/engine_moves.yaml").read_text(encoding="utf-8"))
-    graph = {m["id"]: m for m in gow_combat.load_all(gow_combat.load_hashes())}
+    hashes = gow_combat.load_hashes()
+    graph = {m["id"]: m for m in gow_combat.load_all(hashes)}
     # glb do herói + os das finalizações (grupos externos do ANM do herói nos WADs dos inimigos, T93); a 1ª que tiver
     # a animação vale
     glbs = [Glb(ROOT / "extracted/gow1" / f) for f in conf.get("glbs", ["hero0/hero_obj.glb"]) if (ROOT / "extracted/gow1" / f).exists()]
@@ -218,6 +233,7 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
                      "damage": str(dmg),
                      "kind": kind[mid], "spell": conf.get("spell_fx", {}).get(mv["anim"], ""), "air": air,
                      "rise": round(max(root[1]), 1), "invuln": windows(mv, 28), "trans": trans,
+                     "sfx": sounds(mv, hashes)[0], "hitSfx": sounds(mv, hashes)[1],
                      # deslocamento por quadro (osso 0): no ar a DLL aplica sozinha (o evento de queda do DMC3 não aplica)
                      "root": [[round(root[0][f], 1), round(root[1][f], 1), round(root[2][f], 1)] for f in range(frames)]})
         print(f"#{index[mid]} {mv['anim']} (id {mid}, {frames} quadros, golpe {hit}, {kind[mid]}) "

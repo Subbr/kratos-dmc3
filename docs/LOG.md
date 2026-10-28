@@ -1022,3 +1022,30 @@
   chefes da M3/M10 sem queda; nenhuma exceção nas últimas rodadas.
 - Pendente: finalizações dos outros inimigos do GoW1 (R_MIN, R_SIR, R_HAR, R_CY*…) — hoje todos usam as do legionário;
   pose do inimigo preso (posição aproximada, não a do par de animações do GoW1); prioridade das transições.
+
+## 2026-10-27 — T94 (agente): HUD do GoW1 tocado do filme original (FLP_HUD)
+- LG: "o seletor das magias não está aparecendo; exatamente o mesmo layout do HUD do GoW1". O HUD antigo era redesenhado
+  à mão com as texturas. O HUD do GoW1 é um filme estilo Flash (`R_PERM.WAD` `FLP_HUD`, 393 timelines, 194 texturas,
+  889 scripts ActionScript) sobre a malha `HUD_0`. Formato e contrato com o jogo: `docs/formats/gow-flp.md`.
+- `tools/build_hud.py` (FLP + malha → `hud.json` + PNGs), `tools/flp_player.py` (player de referência: lista de
+  exibição + VM; prévias PNG fora do jogo) e `KratosHud.cpp` (o mesmo player na DLL, ImGui com UV repetido). Flag
+  `hudFlp` (padrão ligado, com `gowHud`); sem o `hud.json`, o desenho antigo.
+- Achados pelo player: quadro-chave começa no quadro dado (o gowb lê ao contrário); eventos começam em −1; variáveis do
+  jogo caem na raiz; magia atualiza com evento ≥ 2; moldura da vida/magia = 100 + 25·nível; orbs com capacidade 300.
+- O seletor do GoW1 é o ícone da magia no medalhão (`MainMeter/PickUps`, `PS2_PickUp_Event` 5/7/9/11). No jogo (M3):
+  lâmina com vida verde e magia azul, ícone da magia equipada no medalhão (Zeus, Hades), capacete da Rage no canto
+  inferior direito, "N HITS" à direita (`work/shots/playtest/m03_2_heavy.png`, `m03_5_magic.png`).
+- Pendente: escala do texto dinâmico ([HIPÓTESE] `Unk014`), nível da vida pela vida máxima do DMC3 ([HIPÓTESE]
+  6000 → 20000), conferir de olho com o GoW1 (o LG).
+
+## 2026-10-27 — T95 (agente): sons dos golpes pela tabela do GoW1
+- Os eventos de cada golpe (`TWK_CombatFile`) nomeiam o som por hash: ação 3 = toca no início da janela, ação 29 = som
+  do acerto no inimigo por janela (SND_ENEMY_GETHIT_S/L). 58 de 82 nomes estão no banco GENERAL; `SND_HERO_*VOC*` =
+  vozes do banco Hero (H_ATTKS/H_ATTKL/H_DMG); 14 hashes sem nome em nenhum banco do R_PERM/armas (ficam mudos).
+- `build_engine_moves.py` grava `sfx`/`hitSfx` por golpe; `export_gow1.sh` exporta o banco GENERAL inteiro;
+  `install_sounds.sh` → `Crimson\sound\kratos\sfx\<NOME>_<n>.wav` (607 arquivos); `PlayGowSound(nome)` na DLL.
+- No jogo (M3): 64 sons da tabela na rodada (whooshes por golpe, vozes de ataque, acerto leve/forte, quedas).
+- Próximo: efeitos visuais das lâminas — emissores `FXC_*`/`PTC_*` dos WADs `R_WPN0_*` (chamas `PTC_flame*`, faíscas
+  `FXC_BDEsparkemit`, luz `Left/RightBladeLight`, texturas `fireSplotch`/`splash`/`sparkle3`); o gowb não lê esses
+  formatos (servidor de partículas do ELF: `renParticleSvr`/`EmitterServer`, a decodificar no Ghidra). Eventos 8
+  (`SCR_PLAYEFFECT`, `SCR_CONCUSSIONBURST`, `SCR_FLASHSPRITE`) e 13/41–43 (juntas `L/RMETATARSAL`) também.

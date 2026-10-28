@@ -42,3 +42,16 @@ mkdir -p "$S/cut"
 cut $S/all/A01HL17_VPK.wav 0 5.3 $S/cut/boss_hades.wav     # "Foul beast! I will send you back to the depths of Hades!"
 cut $S/all/A08HL02A_VAG.wav 5.1 2.2 $S/cut/boss_demons.wav # "I will put these demons down!"
 put boss_start $S/cut/boss_hades.wav $S/cut/boss_demons.wav
+# T95: sons dos golpes pelo nome que a tabela de combate do GoW1 pede (evento 3/29): banco GENERAL inteiro em sfx\
+# e as vozes do banco Hero com os nomes de evento (SND_HERO_ATTKVOC_SHORT = H_ATTKS1–4 etc.)
+X="$D/sfx"; mkdir -p "$X"
+cp $S/general/*.wav "$X/"
+alias_voice() {  # alias_voice <nome do evento> <arquivos do banco Hero>
+  local n=0 e=$1; shift
+  for f in "$@"; do [ -f "$f" ] && cp "$f" "$X/${e}_$n.wav" && n=$((n + 1)); done
+}
+for e in SND_HERO_ATTKVOC_SHORT SND_HERO_ATKVOC_SHORT_A; do alias_voice $e $S/hero/H_ATTKS[1-4].wav; done
+for e in SND_HERO_ATTKVOC_LONG SND_HERO_ATKVOC_LONG_A; do alias_voice $e $S/hero/H_ATTKL[12].wav; done
+for e in SND_HERO_GETHITVOC SND_HERO_GETHITVOC_A; do alias_voice $e $S/hero/H_DMG[1-6].wav; done
+alias_voice SND_HERO_DIEVOC $S/hero/DIEVOC1.wav
+echo "sfx: $(ls "$X" | wc -l)"
