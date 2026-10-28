@@ -4,7 +4,8 @@
 #
 # Gatilhos do GoW1 (+0x1C da transição; tabela gatilho → botão em 0x2C0AE8 do ELF, FUN_002072a0):
 #   0x01 ✕ (pulo: COMBO4D → COMBOJUMP, L1+✕ → BLOCKLAUNCHER)   0x02 □   0x03 △   0x04 ○ (agarrão)
-#   0x05 L1 (bloqueio)   0x06 R2 (magia)   0x08 R1 [HIPÓTESE] (DASH, AIRDASH, BRUTAL3)
+#   0x05 L1 (bloqueio)   0x06 R2 (magia)   0x08 R1 (DASH = Hermes Rush, AIRDASH = Hermes Stomp, R1×3 = Hermes Fury;
+#   confirmado pela lista de golpes do próprio HUD do GoW1, FLP_HUD, T95)
 #   0x0B fim da animação; com destino EVADE* = analógico direito   0x0C/0x13 analógico esquerdo (cancela andando)
 #   0x10 golpe recebido no bloqueio (BLOCKREACTION / PARRY02)   0x11 agarrão pegou (finalização por inimigo)
 #   0x0E morte, 0x14/0x16 [HIPÓTESE], fora do motor

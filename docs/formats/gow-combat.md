@@ -33,7 +33,9 @@ Fonte: ISO NTSC-U `SCUS_973.99`, lidos pelo god_of_war_browser (`/json/pack/<WAD
 ## Transições e eventos — semântica (T92, ELF do GoW1 no Ghidra)
 - **Gatilho → botão**: tabela de bytes em `0x2C0AE8` do ELF (`FUN_002072a0`): `[-1, 6, 7, 4, 5, 2, 0, 9, 3, 1, 10, -1…]`.
   Pelo uso na tabela: 0x01 ✕ (COMBO4D → COMBOJUMP, L1+✕ → BLOCKLAUNCHER, pulos de parede), 0x02 □, 0x03 △, 0x04 ○
-  (GRAB), 0x05 L1 (bloqueio), 0x06 R2 (magia), 0x08 R1 [HIPÓTESE] (DASH, AIRDASH, BRUTAL3). Sem botão: 0x0B fim da
+  (GRAB), 0x05 L1 (bloqueio), 0x06 R2 (magia), 0x08 R1 (DASH, AIRDASH, BRUTAL3). Confirmado pela lista de golpes do
+  HUD do GoW1 (FLP_HUD, T95): Hermes Rush = R1, Hermes Stomp (ar) = R1, Hermes Fury = R1×3, Cyclone of Chaos = L1+□,
+  Rising Helios = L1+△, Lance of the Furies = L1+○, Apollo's Ascension = L1+✕, Achilles Flip = analógico direito + ✕. Sem botão: 0x0B fim da
   animação (com destino EVADE* = analógico direito), 0x0C/0x13 analógico esquerdo > 0,5 (cancela andando), 0x0E vida
   ≤ 0, 0x10 golpe recebido no bloqueio, 0x11 agarrão pegou (destino por tipo de inimigo, `+0xA4`), 0x12/0x14/0x16.
 - **Modo do botão** (`+0x1D`): 1 apertou, 2 soltou, 3/4 segurando, 5 solto.
