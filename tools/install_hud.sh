@@ -18,3 +18,7 @@ cp $S/TXR_HUD004.png "$D/rage_cap.png"   # voluta dourada do medidor de Rage
 cp $S/TXR_HUD003.png "$D/rage_bar.png"   # barra de ouro do medidor de Rage
 cp $S/TXR_HUD036.png "$D/boss_cap.png"   # ponta de lança dourada da barra do chefe (T69)
 cp $S/TXR_HUD037.png "$D/boss_bar.png"   # barra de pedra do chefe
+# T94: HUD tocado do filme original (FLP_HUD + malha HUD_0 do R_PERM, exportados pelo gowb em extracted/gow1/flp)
+if [ -f extracted/gow1/flp/FLP_HUD.json ]; then
+  tools/.venv/bin/python -I tools/build_hud.py extracted/gow1/flp "$D/flp" >/dev/null && echo "flp: $(ls "$D/flp" | wc -l) arquivos"
+fi
