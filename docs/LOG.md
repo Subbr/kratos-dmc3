@@ -1049,3 +1049,12 @@
   `FXC_BDEsparkemit`, luz `Left/RightBladeLight`, texturas `fireSplotch`/`splash`/`sparkle3`); o gowb não lê esses
   formatos (servidor de partículas do ELF: `renParticleSvr`/`EmitterServer`, a decodificar no Ghidra). Eventos 8
   (`SCR_PLAYEFFECT`, `SCR_CONCUSSIONBURST`, `SCR_FLASHSPRITE`) e 13/41–43 (juntas `L/RMETATARSAL`) também.
+
+## 2026-10-27 — T96 (agente): controles do GoW1 (D5)
+- LG: "vamos deixar os mesmos controles do gow1". `controls` = "gow" por padrão e na config do LG; rotinas do playtest
+  convertidas (□ j, △ i, ○ l, ✕ k, L1 u, R1 n, R2 e, tecla nova `rage` = L3+R3 no controle virtual).
+- Direcional escolhe a magia (CHANGE_GUN injetado até a arma dela): direita → Medusa no jogo (PSENTHEAD).
+- Rage em L3 + R3: injetar segurado/apertado do DT não funcionava; o REA mostrou que `FUN_1401e7500` liga/desliga o DT
+  na **soltura** (`ator + 0x74E6`, barra ≥ 3000). Injetando a soltura: DT ligado, motor no moveset da Rage
+  (BERCOMBOH1 → H2, sons SND_BERZBLADE_*), Kratos dourado (`work/shots/playtest/m03_9_rage.png`).
+- M3 com todos os golpes no esquema novo (combo, △, L1+□/✕, R1, R2, ar, esquivas) sem queda.

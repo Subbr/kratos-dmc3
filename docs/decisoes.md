@@ -49,9 +49,16 @@
 - **Em uso:** loja do Crimson (Customize) com os nomes do GoW1 (`renameUi`, T38); nenhum nível próprio das Blades.
   Magias sobem com os níveis das armas de fogo da loja (T74: +50% de dano por nível; Medusa +1,5 s).
 
-## D5 — Controles (PROVISÓRIA, agente — aguardando o LG)
-- **Em uso:** botões do DMC3 (§7.4 opção a). Agarrão no taunt (Back), magias nas armas de fogo (X; LT troca),
-  Rage no DT (LB).
+## D5 — Controles: os mesmos do GoW1 (2026-10-27, LG)
+- **Escolha:** "vamos deixar os mesmos controles do gow1". `"controls": "gow"` (padrão no código e na config do LG):
+  □ X, △ Y, ○ B (agarrão), ✕ A (pulo), L1 LB (bloqueio e combinações), R1 RB (Hermes Rush/Stomp/Fury), R2 RT (magia),
+  direcional = escolhe a magia, L3 + R3 = Rage of the Gods, analógico direito = esquiva. LT continua trocando a magia
+  em ciclo (troca de arma de fogo do DMC3).
+- **Evidência dos botões:** lista de golpes do HUD do GoW1 (FLP_HUD, T95) e tabela de gatilhos do ELF (gow-combat.md).
+- **Como:** o motor lê os botões do GoW1 e apaga do DMC3 os que usa; direcional = apertos de CHANGE_GUN injetados até a
+  arma da magia; L3 + R3 = soltura injetada do botão de DT (o DMC3 liga o DT na soltura, `FUN_1401e7500`, REA T96).
+- **[HIPÓTESE]:** ordem do direcional (cima Poseidon, direita Medusa, baixo Zeus, esquerda Hades), `dpadSpells`.
+- **Limite:** o DMC3 equipa no máximo as armas de fogo do save/loja; magia não equipada não é escolhida.
 
 ## D11 — Motor de combate do GoW1 dentro do DMC3 (2026-10-24, LG)
 - **Problema:** até o T79 o Kratos é o DMC3 com pele do GoW1 — cada animação do GoW1 foi encaixada num golpe do Dante e

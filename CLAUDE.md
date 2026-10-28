@@ -457,7 +457,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Pendências (por prioridade):**
   1. **Combate (T92–T93 resolveram ar, bloqueio/parry, ramos, invulnerabilidade, 1º golpe, lâminas, vítima por tipo,
      agarrão):** finalizações dos outros inimigos do GoW1 (R_MIN, R_SIR, R_HAR, R_CY*) e pose do inimigo preso;
-     prioridade das transições do GoW1; confirmar 0x08 = R1; decidir controles "gow" (D5) e nível das lâminas (D4).
+     prioridade das transições do GoW1; nível das lâminas (D4); ordem do direcional das magias.
   2. **Regras do GoW1:** Rage (dano ×1,75–3 da `TWK_Player`, como enche); golpes por nível de arma (D4); magia por
      orbs azuis (D3).
   3. **Visual:** foices não viram pedra; tempo dos efeitos pelos eventos da tabela (hoje a olho); rastro das lâminas;
@@ -468,5 +468,5 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 - **Como trabalhar (LG, 2026-10-22):** o agente implementa **e roda os testes sozinho** com `tools/win/`, em segundo
   plano (`virtualPad`, T25), sem tomar o teclado nem a tela do LG; pedir teste ao LG só quando a automação não
   alcançar. Juntar mudanças por teste.
-- **Decisões tomadas:** D1 (Blades no slot Rebellion), D7, D8, D9, D10. **Pendentes:** D2–D6.
+- **Decisões tomadas:** D1 (Blades no slot Rebellion), D5 (controles do GoW1, T96), D7, D8, D9, D10. **Pendentes:** D2–D4, D6.
 - **REA:** instalado (`vendor/rea_cli`, CLI 6.7.0) e usado via ponte stdio (docs/re/jogador.md).

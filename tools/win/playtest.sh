@@ -30,7 +30,8 @@ def crimson(d):
     d["BossRush"]["enable"] = sys.argv[2] == "1"
 edit("CrimsonConfig", crimson)
 edit("KratosConfig", lambda d: d.update({"logDamage": True, "virtualPad": True,
-                                         **({"kratosEngine": False} if __import__("os").environ.get("ENGINE") == "0" else {})}))  # a config do LG volta no fim
+                                         **({"kratosEngine": False} if __import__("os").environ.get("ENGINE") == "0" else {}),
+                                         **({"testDevilTrigger": True} if __import__("os").environ.get("TESTDT") == "1" else {})}))  # a config do LG volta no fim
 def gameplay(d):
     d["Cheats"]["Damage"]["playerReceivedDmgMult"] = 0.0
 edit("CrimsonConfigGameplay", gameplay)
@@ -47,70 +48,72 @@ phase() {  # phase <nome> <teclas>
 if [ "${BOSS:-0}" = 1 ]; then
   # chefe: trava + frente + ataque (Stinger) fecha a distância; combos, Medusa, agarrão e DT, em ciclos
   # com o motor (RB = L1, bloqueio): avança andando e o combo vira para o chefe (FaceNearestEnemy)
-  STING="w:700 wait:100 i:80 wait:600"
-  CMB="i:50 wait:220 i:50 wait:220 i:50 wait:700"
-  phase 0_start "wait:2000 j:80 wait:500 j:80 wait:500 j:80 wait:500 j:80 wait:500" &&
+  STING="w:700 wait:100 j:80 wait:600"
+  CMB="j:50 wait:220 j:50 wait:220 j:50 wait:700"
+  phase 0_start "wait:2000 e:80 wait:500 e:80 wait:500 e:80 wait:500 e:80 wait:500" &&
   phase 1_sting "$STING $CMB $STING $CMB" &&
-  phase 2_magic "q:200 wait:900 q:200 wait:900 q:200 wait:900 j:80 wait:1200 j:80 wait:1200" &&
-  phase 3_grab "$STING $CMB tab:100 wait:1500 $STING tab:100 wait:1500" &&
-  phase 4_dt "u:150 wait:1200 $STING $CMB $STING $CMB u:150 wait:800" &&
-  phase 5_air "$STING k:80 wait:250 i:80 wait:1200 $STING $CMB" &&
+  phase 2_magic "q:200 wait:900 q:200 wait:900 q:200 wait:900 e:80 wait:1200 e:80 wait:1200" &&
+  phase 3_grab "$STING $CMB l:100 wait:1500 $STING l:100 wait:1500" &&
+  phase 4_dt "rage:150 wait:1200 $STING $CMB $STING $CMB rage:150 wait:800" &&
+  phase 5_air "$STING k:80 wait:250 j:80 wait:1200 $STING $CMB" &&
   phase 6_more "$STING $CMB $STING $CMB $STING $CMB" &&
   phase 7_end "$STING $CMB wait:1500"
 elif [ "${ROUTINE:-}" = engine ]; then
   # motor Kratos (D11): 1º ataque prepara o acerto sintético (golpe do Dante), depois combos do motor com capturas
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
-  phase 1_prime "i:50 wait:1500 w:600 wait:300" &&
-  tools/win/burst.sh "i:50 wait:300 i:50 wait:300 i:50 wait:300 i:50 wait:300 i:50 wait:1500" 20 130 engine_combo >/dev/null &&
+  phase 1_prime "j:50 wait:1500 w:600 wait:300" &&
+  tools/win/burst.sh "j:50 wait:300 j:50 wait:300 j:50 wait:300 j:50 wait:300 j:50 wait:1500" 20 130 engine_combo >/dev/null &&
   phase 2_after "wait:300" &&
-  tools/win/burst.sh "w:500 i:50 wait:300 i:50 wait:300 l:50 wait:1800" 16 130 engine_combo2 >/dev/null &&
+  tools/win/burst.sh "w:500 j:50 wait:300 j:50 wait:300 i:50 wait:1800" 16 130 engine_combo2 >/dev/null &&
   phase 3_wait "wait:300" &&
-  for k in 1 2 3 4 5 6; do phase 4_loop$k "i:50 wait:300 i:50 wait:300 i:50 wait:900 l:50 wait:300 i:50 wait:300 l:50 wait:1200" || break; done
+  for k in 1 2 3 4 5 6; do phase 4_loop$k "j:50 wait:300 j:50 wait:300 j:50 wait:900 i:50 wait:300 j:50 wait:300 i:50 wait:1200" || break; done
 elif [ "${ROUTINE:-}" = gow1 ]; then
-  # motor com a tabela inteira do GoW1 (T92), botões "dmc3": □ i, △ l, ✕ k, ○ tab, L1 n, R1 e, R2 j, esquiva rs*
+  # motor com a tabela inteira do GoW1 (T92), botões do GoW1 (D5): □ j, △ i, ✕ k, ○ l, L1 u, R1 n, R2 e, esquiva rs*
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
-  phase 1_prime "i:50 wait:1500 w:600 i:50 wait:800 i:50 wait:1200" &&
-  tools/win/burst.sh "i:50 wait:250 i:50 wait:250 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 16 150 gow1_combo >/dev/null &&
-  phase 2_heavy "l:50 wait:300 l:50 wait:1500" &&
-  tools/win/burst.sh "k:80 wait:180 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 16 150 gow1_air >/dev/null &&
-  phase 3_block "+n wait:3500 -n wait:500" &&
-  tools/win/burst.sh "+n wait:300 i:50 wait:2500 -n wait:300" 16 180 gow1_l1sq >/dev/null &&
-  tools/win/burst.sh "+n wait:300 k:50 wait:500 -n i:50 wait:300 i:50 wait:1500" 16 150 gow1_launch >/dev/null &&
+  phase 1_prime "j:50 wait:1500 w:600 j:50 wait:800 j:50 wait:1200" &&
+  tools/win/burst.sh "j:50 wait:250 j:50 wait:250 j:50 wait:250 j:50 wait:250 j:50 wait:1500" 16 150 gow1_combo >/dev/null &&
+  phase 2_heavy "i:50 wait:300 i:50 wait:1500" &&
+  tools/win/burst.sh "k:80 wait:180 j:50 wait:250 j:50 wait:250 j:50 wait:1500" 16 150 gow1_air >/dev/null &&
+  phase 3_block "+u wait:3500 -u wait:500" &&
+  tools/win/burst.sh "+u wait:300 j:50 wait:2500 -u wait:300" 16 180 gow1_l1sq >/dev/null &&
+  tools/win/burst.sh "+u wait:300 k:50 wait:500 -u j:50 wait:300 j:50 wait:1500" 16 150 gow1_launch >/dev/null &&
   phase 4_evade "rsu:100 wait:900 rsl:100 wait:900 rsd:100 wait:900" &&
-  phase 5_dash "e:80 wait:1500 w:400" &&
-  phase 6_magic "j:80 wait:3000" &&
-  phase 7_end "i:50 wait:250 i:50 wait:250 l:50 wait:1500"
+  phase 5_dash "n:80 wait:1500 w:400" &&
+  phase 6_magic "e:80 wait:3000" &&
+  phase 7_end "j:50 wait:250 j:50 wait:250 i:50 wait:1500" &&
+  phase 8_dpad "right:100 wait:700 e:80 wait:3000 down:100 wait:700 e:80 wait:2500" &&
+  phase 9_rage "rage:150 wait:2000 j:50 wait:250 j:50 wait:1500"
 elif [ "${ROUTINE:-}" = gow1air ]; then
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
-  tools/win/act.sh "k:80 wait:180 i:50 wait:250 i:50 wait:250 i:50 wait:1500" 24 90 gow1_air >/dev/null &&
-  tools/win/act.sh "k:80 wait:180 l:50 wait:1500" 16 90 gow1_air2 >/dev/null &&
+  tools/win/act.sh "k:80 wait:180 j:50 wait:250 j:50 wait:250 j:50 wait:1500" 24 90 gow1_air >/dev/null &&
+  tools/win/act.sh "k:80 wait:180 i:50 wait:1500" 16 90 gow1_air2 >/dev/null &&
   phase 1_end "wait:500"
 elif [ "${ROUTINE:-}" = gow1grab ]; then
-  # agarrão do GoW1 (T93): ○ = tab no esquema "dmc3"; GRAB → MAISKB00 → ○ MAISKB03 → □ MAISKB02 (finalização)
+  # agarrão do GoW1 (T93): ○ = l (B); GRAB → MAISKB00 → ○ MAISKB03 → □ MAISKB02 (finalização)
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&
-  phase 1_walk "w:700 wait:300 i:50 wait:250 i:50 wait:250 i:50 wait:900 i:50 wait:250 i:50 wait:250 i:50 wait:900" &&
-  tools/win/act.sh "tab:50 wait:1100 tab:50 wait:700 tab:50 wait:700 i:50 wait:2600" 28 120 gow1_grab >/dev/null &&
-  phase 2_walk "i:50 wait:250 i:50 wait:250 i:50 wait:900 i:50 wait:250 i:50 wait:900" &&
-  tools/win/act.sh "tab:50 wait:1100 l:50 wait:2400" 20 120 gow1_grab2 >/dev/null &&
+  phase 1_walk "w:700 wait:300 j:50 wait:250 j:50 wait:250 j:50 wait:900 j:50 wait:250 j:50 wait:250 j:50 wait:900" &&
+  tools/win/act.sh "l:50 wait:1100 l:50 wait:700 l:50 wait:700 j:50 wait:2600" 28 120 gow1_grab >/dev/null &&
+  phase 2_walk "j:50 wait:250 j:50 wait:250 j:50 wait:900 j:50 wait:250 j:50 wait:900" &&
+  tools/win/act.sh "l:50 wait:1100 i:50 wait:2400" 20 120 gow1_grab2 >/dev/null &&
   phase 2_end "wait:500"
 elif [ "${ROUTINE:-}" = moves ]; then
   # golpes que o Crimson toca de arquivos próprios (T76): sprint, troca de estilo parado, taunt e Drive
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&   # o 1º avanço dispara a cena dos inimigos
   phase 1_sprint "+w wait:4000" &&                          # captura ainda correndo (sprint do Crimson, 0/20)
   phase 2_style "-w wait:1200 up:100 wait:1500 right:100 wait:1500 down:100 wait:1500 left:100 wait:1500" &&
-  phase 3_taunt "tab:100 wait:2500 tab:100 wait:2500" &&
-  phase 4_drive "+n +w wait:120 i:80 wait:200 -w s:100 w:100 i:80 wait:1800 -n i:50 wait:200 s:100 w:100 i:80 wait:1800" &&
-  phase 5_back "q:200 wait:600 +n s:150 l:80 wait:1500 -n" &&
-  phase 6_end "w:1500 wait:300 i:50 wait:220 i:50 wait:1500"
+  phase 3_taunt "l:100 wait:2500 l:100 wait:2500" &&
+  phase 4_drive "+u +w wait:120 j:80 wait:200 -w s:100 w:100 j:80 wait:1800 -u j:50 wait:200 s:100 w:100 j:80 wait:1800" &&
+  phase 5_back "q:200 wait:600 +u s:150 i:80 wait:1500 -u" &&
+  phase 6_end "w:1500 wait:300 j:50 wait:220 j:50 wait:1500"
 else
 phase 0_start "wait:500" &&
 phase 1_walk "w:2500 wait:300 d:800 wait:300" &&
-phase 2_combo "i:50 wait:220 i:50 wait:220 i:50 wait:700 i:50 wait:220 i:50 wait:700 i:50 wait:700 i:50 wait:220 i:50 wait:220 i:50 wait:900" &&
-phase 3_air "k:80 wait:250 i:80 wait:1500 k:80 wait:250 l:60 wait:300 l:60 wait:300 l:60 wait:1500" &&
-phase 4_block "l:2500 wait:300 tab:100 wait:1500" &&
-phase 5_magic "q:200 wait:900 j:80 wait:1500 q:200 wait:900 j:80 wait:600 j:80 wait:1500" &&
-phase 6_dt "u:150 wait:1500 i:50 wait:220 i:50 wait:220 i:50 wait:1200 u:150 wait:800" &&
-phase 7_end "w:2000 wait:300 i:50 wait:220 i:50 wait:220 i:50 wait:1500"
+phase 2_combo "j:50 wait:220 j:50 wait:220 j:50 wait:700 j:50 wait:220 j:50 wait:700 j:50 wait:700 j:50 wait:220 j:50 wait:220 j:50 wait:900" &&
+phase 3_air "k:80 wait:250 j:80 wait:1500 k:80 wait:250 i:60 wait:300 i:60 wait:300 i:60 wait:1500" &&
+phase 4_block "u:2500 wait:300 l:100 wait:1500" &&
+phase 5_magic "q:200 wait:900 e:80 wait:1500 q:200 wait:900 e:80 wait:600 e:80 wait:1500" &&
+phase 6_dt "rage:150 wait:1500 j:50 wait:220 j:50 wait:220 j:50 wait:1200 rage:150 wait:800" &&
+phase 7_end "w:2000 wait:300 j:50 wait:220 j:50 wait:220 j:50 wait:1500"
 fi
 [ "$(alive)" = True ] || [ "$status" != ok ] || status="caiu no fim"
 c() { grep -c "$1" "$LOG" 2>/dev/null || true; }
