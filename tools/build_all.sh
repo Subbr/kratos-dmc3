@@ -37,6 +37,8 @@ $PY tools/build_motions.py $B "$OUT" --model "$OUT/pl000.pac" >/dev/null
 # 4b. motor Kratos (D11): golpes do GoW1 no tempo original + tabela para a DLL (KratosMoves.json)
 $PY tools/build_fx.py $G/magic "$OUT/kratos_fx" >/dev/null
 $PY tools/build_engine_moves.py $B/pl000_00_2.pac "$OUT/pl000.pac" "$OUT/kratosMoves_pl000_00_2.pac" >/dev/null
+# 4c. Kratos do GoW1 desenhado pela DLL (T98): esqueleto, malhas, lâminas e animações originais
+$PY tools/build_body.py $G/hero0/hero_obj.glb $G/weapons/maiblade.glb "$OUT/kratos_body/kratos.kbd" >/dev/null
 # 5. textos (T38)
 $PY tools/build_text.py $B/msg_eng.pac "$OUT/msg_eng.pac" >/dev/null
 # 6. artes dos menus com o Kratos (T59, T77; renders de tools/render_menu_art.sh, que precisa do Blender)

@@ -37,6 +37,13 @@ case $mode in
   --check) cmp -s "$I/release/KratosMoves.json" "$J" || { echo "difere: KratosMoves.json"; diff=$((diff + 1)); } ;;
   --restore) rm -f "$J" ;;
 esac
+# Kratos do GoW1 desenhado pela DLL (T98)
+KB="Devil May Cry HD Collection/Crimson/kratos_body"
+case $mode in
+  install) mkdir -p "$KB" && cp "$I/release/kratos_body/kratos.kbd" "$KB/" ;;
+  --check) cmp -s "$I/release/kratos_body/kratos.kbd" "$KB/kratos.kbd" || { echo "difere: kratos.kbd"; diff=$((diff + 1)); } ;;
+  --restore) rm -rf "$KB" ;;
+esac
 # efeitos das magias do GoW1 (KratosFx.cpp lê Crimson\kratos_fx\*.kfx)
 FX="Devil May Cry HD Collection/Crimson/kratos_fx"
 for f in "$I"/release/kratos_fx/*.kfx "$I"/release/kratos_fx/stone.png; do

@@ -229,7 +229,8 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         dmg = conf["damage"].get(mv["anim"], conf["damage"].get(kind[mid], conf["damage"]["default"]))
         trans = [e for e in (encode(t) for t in edges(mv)) if e is not None]
         air = any(t["mask"] & 4 for t in mv["trans"]) and not any(t["mask"] & 2 for t in mv["trans"])
-        info.append({"name": mv["anim"], "gowId": mid, "file": files[(name, reach)], "frames": frames, "hitFrame": hit,
+        info.append({"name": mv["anim"], "anim": name, "gowId": mid, "file": files[(name, reach)], "frames": frames,
+                     "hitFrame": hit,
                      "damage": str(dmg),
                      "kind": kind[mid], "spell": conf.get("spell_fx", {}).get(mv["anim"], ""), "air": air,
                      "rise": round(max(root[1]), 1), "invuln": windows(mv, 28), "trans": trans,
