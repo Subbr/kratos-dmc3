@@ -81,7 +81,7 @@ elif [ "${ROUTINE:-}" = gow1 ]; then
   phase 5_dash "n:80 wait:1500 w:400" &&
   phase 6_magic "e:80 wait:3000" &&
   phase 7_end "j:50 wait:250 j:50 wait:250 i:50 wait:1500" &&
-  phase 8_dpad "right:100 wait:700 e:80 wait:3000 down:100 wait:700 e:80 wait:2500" &&
+  phase 8_dpad "right:100 wait:700 e:80 wait:3000 down:100 wait:700 e:80 wait:2500 up:100 wait:300 left:100 wait:300 q:100 wait:300" &&
   phase 9_rage "rage:150 wait:2000 j:50 wait:250 j:50 wait:1500"
 elif [ "${ROUTINE:-}" = gow1air ]; then
   phase 0_start "w:1200 wait:9000 enter:100 wait:3000" &&

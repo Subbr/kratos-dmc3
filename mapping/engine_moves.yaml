@@ -13,6 +13,9 @@ triggers_used: [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x0B, 0x0C, 0x10, 0x11
 # animações: glb do herói e glb das finalizações (Kratos com o grupo externo do ANM do herói guardado no WAD do
 # inimigo; tools/export_gow1.sh com o gowb modificado, docs/formats/gow-wad.md). maiSka = legionário (MAISKB00…06)
 glbs: [hero0/hero_obj.glb, finishers/maiSka.glb]
+# lâminas presas na mão (sem a corrente esticada): bloqueio e parry (T97: no bloqueio as lâminas saíam e voltavam)
+blades_in_hand: [BLOCK, PARRY01, PARRY02, BLOCKREACTION, BLOCKBREAK, AIRBLOCK, BERBLOCKPARRY, BERBLOCKIDLE,
+                 BERBLOCKHIT01, BERBLOCKEXIT]
 # golpes de agarrão: inimigo preso na mão, sem acerto das lâminas (o dano vem do próprio agarrão, KratosMode.cpp)
 grab_prefix: [GRAB, MAISK]
 # tabela do parado (o GoW1 não tem um golpe "parado" com □: a da aterrissagem COMBATLAND2 é a mesma do chão livre)

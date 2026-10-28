@@ -201,7 +201,7 @@ def main(base_pac: Path, model: Path, out: Path) -> None:
         mv = graph[mid]
         name = anims[mv["anim"]]
         g = glbs[owner[mv["anim"]]]
-        reach = kind[mid] not in ("spell", "evade", "grab")
+        reach = kind[mid] not in ("spell", "evade", "grab") and mv["anim"] not in conf.get("blades_in_hand", [])
         anim = ar.KratosAnim(g, name)
         frames = max(int(anim.duration * 60) + 1, 2)
         base = mot.Motion(bytearray(template.header))
