@@ -5,7 +5,7 @@ from pathlib import Path
 
 p = Path(__file__).resolve().parent.parent / ".claude" / "settings.json"
 cfg = json.loads(p.read_text(encoding="utf-8"))
-game = "/mnt/d/Code/god1_dmc3/Devil May Cry HD Collection"
+game = str(p.parent.parent / "Devil May Cry HD Collection")
 protected = ["*", "data/*", "data/dmc1/**", "data/dmc2/**", "data/dmclauncher/**",
              "data/dmc3/*", "data/dmc3/Video/**", "data/dmc3/afs/**"]
 deny = [d for d in cfg["permissions"]["deny"] if game not in d]

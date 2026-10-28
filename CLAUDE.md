@@ -2,6 +2,10 @@
 
 > Arquivo de instruções do projeto para o Claude Code. Leia inteiro no início de cada sessão.
 > Atualize a seção **Estado atual** (no fim) sempre que concluir uma tarefa ou tomar uma decisão.
+>
+> **Repositório público (2026-10-28):** novo colaborador começa por `README.md`, `docs/INSTALACAO.md` (`./install.sh`),
+> `docs/STATUS.md` (estágio e pendências) e `docs/AGENTES.md` (como trabalhar gastando poucos tokens). Mantenha
+> `docs/STATUS.md` em dia junto com a seção 12.
 
 ---
 
@@ -374,6 +378,11 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 ---
 
 ## 12. Estado atual
+
+- **Publicação (2026-10-28):** `install.sh` na raiz (checa pré-requisitos → `tools/prepare_bases.sh` com
+  `config/bases.sha256` → export → build → install → DLL); `config/paths.env` calcula `PROJECT_ROOT` sozinho; fork
+  do Crimson = submódulo `dll/crimson` (github.com/Subbr/DMC3-Crimson, branch `kratos`); gowb modificado =
+  github.com/Subbr/god_of_war_browser, branch `kratos` (o usuário compila). Histórico do git limpo do `God of War.7z`.
 
 - **Data:** 2026-10-27 (T95). **Fases:** 0–2 concluídas; 3 (visual) e 4 (armas) funcionais com polimento pendente;
   5 (animações) e 6 (código, fork do Crimson) em andamento. Detalhe de cada teste em `docs/LOG.md` (T1…T91).

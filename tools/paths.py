@@ -9,12 +9,14 @@ _VAR = re.compile(r"\$\{(\w+)\}")
 
 
 def load(env_file: Path = ROOT / "config" / "paths.env") -> dict[str, str]:
-    values: dict[str, str] = {}
+    values: dict[str, str] = {"PROJECT_ROOT": str(ROOT)}
     for raw in env_file.read_text(encoding="utf-8").splitlines():
         line = raw.split("#", 1)[0].strip()
         if not line or "=" not in line:
             continue
         key, value = line.split("=", 1)
+        if key.strip() == "PROJECT_ROOT":  # calculado pela posição do repo (o .env usa $(...) do bash)
+            continue
         value = value.strip().strip('"')
         values[key.strip()] = _VAR.sub(lambda m: values.get(m.group(1), ""), value)
     return values

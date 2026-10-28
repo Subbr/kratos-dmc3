@@ -27,5 +27,4 @@ __pycache__/
 *.7z
 *.nbz
 
-# fork do Crimson: repositório próprio (branch kratos); vira submódulo quando existir o fork no GitHub
-dll/crimson/
+.claude/

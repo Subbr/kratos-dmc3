@@ -1,0 +1,4 @@
+[submodule "dll/crimson"]
+	path = dll/crimson
+	url = https://github.com/Subbr/DMC3-Crimson.git
+	branch = kratos
