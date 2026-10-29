@@ -23,6 +23,7 @@ def tags(wad):
     return {n["Tag"]["Name"]: n["Tag"]["Id"] for n in nodes}
 # modelos: (WAD, tag, arquivo)
 for wad, name, dst in [("R_HERO0.WAD", "hero", "hero0/hero_obj.glb"), ("R_WPN0_0.WAD", "maiblade", "weapons/maiblade.glb"),
+                       ("R_WPN0_0.WAD", "maigodblade", "weapons/maigodblade.glb"),
                        ("ATHN08C.WAD", "athenablade", "weapons/athenablade.glb")]:
     t = tags(wad)
     if name not in t: print("não achado:", wad, name); continue
@@ -54,6 +55,17 @@ for s in gen["Sounds"]:
 (out / "sound/magic").mkdir(parents=True, exist_ok=True)
 for name in ("POSMAG06.VAG", "RAGEMIME.VAG"):
     (out / "sound/magic" / name.replace(".VAG", ".wav")).write_bytes(get(f"/dump/pack/{name}/wav"))
+# vozes soltas na ISO usadas por tools/install_sounds.sh (T79)
+(out / "sound/all").mkdir(parents=True, exist_ok=True)
+for name in ("STAINVOC.VAG", "PUSHGRNT.VAG", "A01HL17.VPK", "A08HL02A.VAG"):
+    (out / "sound/all" / (name.replace(".", "_") + ".wav")).write_bytes(get(f"/dump/pack/{name}/wav"))
+# tabelas de combate do GoW1 (D11, docs/formats/gow-combat.md) para tools/gow_combat.py
+(out / "twk").mkdir(parents=True, exist_ok=True)
+for name, tid in t.items():
+    if re.match(r"TWK_(CombatFile_\d+|CombatFileSet_000|Player)$", name):
+        (out / "twk" / f"{name[4:]}.json").write_bytes(get(f"/json/pack/R_PERM.WAD/{tid}"))
+(out / "twk" / "goHero.json").write_bytes(get(f"/json/pack/R_HERO0.WAD/{tags('R_HERO0.WAD')['TWK_goHero']}"))
+print("twk ok")
 # HUD: TXR_HUD* (PNG embutido no JSON de cada textura)
 for name, tid in t.items():
     if not re.match(r"TXR_HUD\d+$", name): continue

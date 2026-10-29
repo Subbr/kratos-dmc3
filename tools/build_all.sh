@@ -11,6 +11,13 @@ B=work/backup/crimson_override; U=extracted/dmc3/unpacked; G=extracted/gow1
 GLB=$G/hero0/hero_obj.glb; BLADE=$G/weapons/maiblade.glb
 FIT="--left-weapon $BLADE --both-hands --blade-bones --flip-edge"
 unpack() { [ -d "$U/$2" ] || $PY tools/pac.py unpack "$1" "$U/$2" >/dev/null; }
+# Dante original do jogo (sem Crimson): esqueleto de referência de tools/build_motions.py
+if [ ! -d "$U/pl000" ]; then
+  source config/paths.env; mkdir -p "$U"
+  $PY -c 'import sys, zipfile; open(sys.argv[3], "wb").write(zipfile.ZipFile(sys.argv[1]).read(sys.argv[2]))' \
+    "$DMC3_NBZ" GData.afs/pl000.pac "$U/pl000.pac"
+  unpack "$U/pl000.pac" pl000; rm -f "$U/pl000.pac"
+fi
 
 # 1. corpo e roupas do Kratos (T3–T10, T41–T42)
 unpack $B/pl000.pac crimson_pl000
