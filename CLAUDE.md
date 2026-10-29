@@ -379,8 +379,10 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
 
 ## 12. Estado atual
 
-- **Publicação (2026-10-28):** `install.sh` na raiz (checa pré-requisitos → `tools/prepare_bases.sh` com
-  `config/bases.sha256` → export → build → install → DLL); `config/paths.env` calcula `PROJECT_ROOT` sozinho; fork
+- **Publicação (2026-10-28):** usuário final = `setup.ps1` (Windows puro, sem WSL: uv + Go em
+  `%LOCALAPPDATA%\KratosDMC3`). **Fonte única da instalação = `tools/kratos_install.py`** (bases com `config/bases.sha256`,
+  export, build, install, check, restore, sounds, hud); `build_all.sh`, `install_all.sh`, `export_gow1.sh`,
+  `prepare_bases.sh`, `install_sounds.sh`, `install_hud.sh` são atalhos para ele; `install.sh` = caminho de dev no WSL; `config/paths.env` calcula `PROJECT_ROOT` sozinho; fork
   do Crimson = submódulo `dll/crimson` (github.com/Subbr/DMC3-Crimson, branch `kratos`); gowb modificado =
   github.com/Subbr/god_of_war_browser, branch `kratos` (o usuário compila). Histórico do git limpo do `God of War.7z`.
 
@@ -436,7 +438,7 @@ D5 (controles), D6 (cutscenes). **Tomadas:** D7, D8, D9 (ver `docs/decisoes.md`)
   Sparda): todas com o Kratos (`work/install/kratos_costumes_v1`).
 - **T76–T78 (2026-10-24, 2ª sessão):** cópias de motion do Crimson (sprint, troca de estilo, taunts, Drive, Quick Drive,
   Backslide) com o Kratos (`build_motions.table_for`); título, LOAD e fundos dos menus com o Kratos e as Blades
-  (`tools/render_menu_art.sh` + `build_menu_art.py`, bases `id900`/`id7008`/`id430–470` do Crimson); aura da pedra da
+  (renders do Blender em `kratos_install.render_menu_art` + `build_menu_art.py`, bases `id900`/`id7008`/`id430–470` do Crimson); aura da pedra da
   Medusa. Release com 69 arquivos.
 - **T86–T87 (2026-10-25, motor Kratos D11 ligado na config do LG):** golpes do motor estavam em pose T (base sem
   trilhas de rotação, corrigido); pulo do GoW1 (`jumpScale`/`jumpGravityScale`), combo aéreo AIRH1–3 pelo Aerial Rave,

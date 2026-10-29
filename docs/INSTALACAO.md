@@ -3,30 +3,26 @@
 Nenhum arquivo da Sony ou da Capcom vem no repositório. O `install.sh` **gera tudo na sua máquina**, a partir do
 **seu** Devil May Cry HD Collection e da **sua** ISO do God of War. Tempo total: ~10 min depois dos pré-requisitos.
 
-## Jeito rápido (recomendado)
+## Jeito rápido (recomendado, só Windows)
 
-1. **WSL**, uma vez só: PowerShell **como administrador** → `wsl --install` → reiniciar → abrir "Ubuntu" no menu
-   Iniciar e criar usuário/senha.
-2. **PowerShell normal** → colar:
+1. Abra o **PowerShell** (menu Iniciar → "PowerShell", não precisa ser administrador) e cole:
    ```powershell
    irm https://raw.githubusercontent.com/Subbr/kratos-dmc3/main/setup.ps1 | iex
    ```
-3. Siga as janelas: o instalador do Crimson (se faltar; escolha a pasta do jogo e abra o jogo uma vez) e o
-   seletor da ISO. O resto é automático: Python, Go e ffmpeg são baixados sem `sudo` para dentro de
-   `~/kratos-dmc3`, o mod é gerado e instalado **na pasta do jogo da Steam** (originais guardados em
-   `~/kratos-dmc3/work/backup`).
-4. Abra o DMC3 pela Steam. Rodar o comando de novo **atualiza** o mod.
+2. Siga as janelas: o instalador do Crimson (se faltar; escolha a pasta do jogo e abra o jogo uma vez) e o
+   seletor da ISO. O resto é automático (10–15 min na primeira vez): o código do mod, o Python (via `uv`) e o Go
+   (para compilar o extrator do GoW1) vão para `%LOCALAPPDATA%\KratosDMC3`; os arquivos do Kratos são gerados
+   ali e instalados **na pasta do jogo da Steam** (originais guardados em `%LOCALAPPDATA%\KratosDMC3\work\backup`).
+3. Abra o DMC3 pela Steam. Rodar o comando de novo pergunta se quer **atualizar** ou **desinstalar**.
 
-Já tem WSL e prefere o terminal? `curl -fsSL https://raw.githubusercontent.com/Subbr/kratos-dmc3/main/tools/bootstrap.sh | bash -s -- "C:\caminho\Devil May Cry HD Collection" "C:\caminho\gow1.iso"`
-
-O resto deste documento é a instalação **manual / de desenvolvedor** (cópia do jogo dentro do repo, DLL compilada
-localmente).
+O resto deste documento é o caminho de **desenvolvedor** (WSL, cópia do jogo dentro do repo, testes automáticos).
+A lógica de instalação é a mesma nos dois: `tools/kratos_install.py`.
 
 ## 1. Pré-requisitos
 
 | O quê | Detalhe |
 |---|---|
-| Windows 10/11 + **WSL 2** (Ubuntu) | os scripts rodam no WSL; o jogo roda no Windows |
+| Windows 10/11 + **WSL 2** (Ubuntu) | ferramentas de desenvolvimento e testes automáticos (`tools/win/`) |
 | **Devil May Cry HD Collection** (Steam) | build de 2018 (a atual da Steam) |
 | **DMC3 Crimson 0.5a** | [releases do Crimson](https://github.com/berthrage/DMC3-Crimson/releases) — instalar e abrir o jogo uma vez antes. O instalador do Crimson já troca o `dmc3.exe` pelo exe sem ASLR que o mod exige (hash em `docs/ambiente.md`) |
 | ISO do **God of War** (PS2, NTSC-U `SCUS_973.99`) | feita do seu disco |
