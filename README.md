@@ -43,16 +43,18 @@ Army of Hades · Rage of the Gods · HUD, sons e vozes do GoW1 · controles do G
 > ⚠️ **Nenhum arquivo da Sony ou da Capcom está neste repositório.** O instalador gera tudo a partir do jogo e da
 > ISO que **você** possui. Não peça nem compartilhe arquivos extraídos.
 
-Você precisa de: DMC HD Collection (Steam) + [Crimson 0.5a](https://github.com/berthrage/DMC3-Crimson/releases) +
-ISO do God of War NTSC-U (`SCUS_973.99`) + WSL 2 no Windows.
+Você precisa de: **Devil May Cry HD Collection** (Steam), a **ISO do God of War** NTSC-U (`SCUS_973.99`) feita do
+seu disco e o **WSL** no Windows (uma vez: `wsl --install` no PowerShell como administrador e reiniciar).
 
-```bash
-git clone --recursive https://github.com/Subbr/kratos-dmc3.git && cd kratos-dmc3
-cp -r "/mnt/c/Program Files (x86)/Steam/steamapps/common/Devil May Cry HD Collection" .
-mkdir -p iso && cp /caminho/gow1.iso iso/gow1.iso
-# compilar o extrator do GoW1 (ver docs/INSTALACAO.md, passo 3), depois:
-./install.sh
+**Instalação em um comando** — abra o PowerShell e cole:
+
+```powershell
+irm https://raw.githubusercontent.com/Subbr/kratos-dmc3/main/setup.ps1 | iex
 ```
+
+O instalador acha o jogo na Steam, instala o [Crimson 0.5a](https://github.com/berthrage/DMC3-Crimson) se faltar,
+pede a ISO, gera tudo a partir dos **seus** arquivos (~15 min na primeira vez) e instala no jogo. Depois é só abrir o
+DMC3 pela Steam. Desinstalar: `wsl -e bash -c "cd ~/kratos-dmc3 && ./install.sh --restore"`.
 
 Passo a passo completo, controles e solução de problemas: **[`docs/INSTALACAO.md`](docs/INSTALACAO.md)**.
 Desinstalar: `./install.sh --restore`.

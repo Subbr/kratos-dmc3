@@ -3,6 +3,25 @@
 Nenhum arquivo da Sony ou da Capcom vem no repositório. O `install.sh` **gera tudo na sua máquina**, a partir do
 **seu** Devil May Cry HD Collection e da **sua** ISO do God of War. Tempo total: ~10 min depois dos pré-requisitos.
 
+## Jeito rápido (recomendado)
+
+1. **WSL**, uma vez só: PowerShell **como administrador** → `wsl --install` → reiniciar → abrir "Ubuntu" no menu
+   Iniciar e criar usuário/senha.
+2. **PowerShell normal** → colar:
+   ```powershell
+   irm https://raw.githubusercontent.com/Subbr/kratos-dmc3/main/setup.ps1 | iex
+   ```
+3. Siga as janelas: o instalador do Crimson (se faltar; escolha a pasta do jogo e abra o jogo uma vez) e o
+   seletor da ISO. O resto é automático: Python, Go e ffmpeg são baixados sem `sudo` para dentro de
+   `~/kratos-dmc3`, o mod é gerado e instalado **na pasta do jogo da Steam** (originais guardados em
+   `~/kratos-dmc3/work/backup`).
+4. Abra o DMC3 pela Steam. Rodar o comando de novo **atualiza** o mod.
+
+Já tem WSL e prefere o terminal? `curl -fsSL https://raw.githubusercontent.com/Subbr/kratos-dmc3/main/tools/bootstrap.sh | bash -s -- "C:\caminho\Devil May Cry HD Collection" "C:\caminho\gow1.iso"`
+
+O resto deste documento é a instalação **manual / de desenvolvedor** (cópia do jogo dentro do repo, DLL compilada
+localmente).
+
 ## 1. Pré-requisitos
 
 | O quê | Detalhe |
@@ -11,8 +30,7 @@ Nenhum arquivo da Sony ou da Capcom vem no repositório. O `install.sh` **gera t
 | **Devil May Cry HD Collection** (Steam) | build de 2018 (a atual da Steam) |
 | **DMC3 Crimson 0.5a** | [releases do Crimson](https://github.com/berthrage/DMC3-Crimson/releases) — instalar e abrir o jogo uma vez antes. O instalador do Crimson já troca o `dmc3.exe` pelo exe sem ASLR que o mod exige (hash em `docs/ambiente.md`) |
 | ISO do **God of War** (PS2, NTSC-U `SCUS_973.99`) | feita do seu disco |
-| Python 3.12, `unzip`, `git` no WSL | `sudo apt install python3 python3-venv unzip git` |
-| Go ≥ 1.22 no WSL | para compilar o god_of_war_browser (passo 3) |
+| `git` e `curl` no WSL | já vêm no Ubuntu; Python 3.12, Go e ffmpeg o `install.sh` baixa sozinho (sem sudo) |
 | (opcional) VS 2022 Build Tools + CMake | só para compilar a DLL; senão use a DLL pronta da página de Releases |
 | (opcional) Blender 5.x | só para regerar as artes dos menus; sem ele o build pula essa parte |
 
@@ -32,7 +50,7 @@ em `config/paths.env`.
 ## 3. Compilar o god_of_war_browser (extrator do GoW1)
 
 Usamos um fork com duas mudanças (animações das finalizações). Ele não tem licença, então não distribuímos
-binário: compile você mesmo.
+binário. O `install.sh` clona e compila sozinho (baixa o Go se faltar); à mão seria:
 
 ```bash
 git clone -b kratos https://github.com/Subbr/god_of_war_browser.git vendor/god_of_war_browser
@@ -42,7 +60,8 @@ git clone -b kratos https://github.com/Subbr/god_of_war_browser.git vendor/god_o
 ## 4. Instalar
 
 ```bash
-./install.sh                                   # compila a DLL se houver MSVC
+./install.sh                                   # baixa a DLL da página de Releases
+KRATOS_BUILD_DLL=1 ./install.sh                # ou compila com o MSVC (precisa do submódulo dll/crimson)
 KRATOS_DLL=~/Downloads/Crimson.dll ./install.sh   # ou usa a DLL baixada da página de Releases
 ```
 
