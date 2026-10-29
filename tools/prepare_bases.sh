@@ -16,7 +16,8 @@ while read -r sum name; do
   if [ -f "$src" ] && [ "$(sha256sum < "$src" | cut -c1-64)" = "$sum" ]; then
     cp "$src" "$dst"; ok=$((ok + 1)); continue
   fi
-  if unzip -p "$DMC3_NBZ" "GData.afs/$name" > "$dst.tmp" 2>/dev/null && [ "$(sha256sum < "$dst.tmp" | cut -c1-64)" = "$sum" ]; then
+  if tools/.venv/bin/python -I -c 'import sys, zipfile; sys.stdout.buffer.write(zipfile.ZipFile(sys.argv[1]).read(sys.argv[2]))' \
+       "$DMC3_NBZ" "GData.afs/$name" > "$dst.tmp" 2>/dev/null && [ "$(sha256sum < "$dst.tmp" | cut -c1-64)" = "$sum" ]; then
     mv "$dst.tmp" "$dst"; ok=$((ok + 1)); continue
   fi
   rm -f "$dst.tmp"; echo "FALTA ou hash diferente: $name"; bad=$((bad + 1))

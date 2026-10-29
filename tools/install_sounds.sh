@@ -36,7 +36,7 @@ put hades $S/general/SND_RAISEDEAD_SHOT_0.wav
 put grab $S/all/PUSHGRNT_VAG.wav $S/general/SND_KICKCHARGEVO_LP_0.wav $S/general/SND_MAI_STRUGGLEVO_LP_3.wav
 # falas do Kratos no começo da luta com chefe, recortadas do áudio original (sem gerar nada; regra 5)
 cut() {  # cut <origem> <início s> <duração s> <destino>
-  ffmpeg -v error -y -i "$1" -ss "$2" -t "$3" -ac 1 -af "afade=t=out:st=$(echo "$3 - 0.25" | bc):d=0.25" "$4"
+  ffmpeg -v error -y -i "$1" -ss "$2" -t "$3" -ac 1 -af "afade=t=out:st=$(awk "BEGIN{print $3 - 0.25}"):d=0.25" "$4"
 }
 mkdir -p "$S/cut"
 cut $S/all/A01HL17_VPK.wav 0 5.3 $S/cut/boss_hades.wav     # "Foul beast! I will send you back to the depths of Hades!"
