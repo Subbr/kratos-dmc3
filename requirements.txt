@@ -4,3 +4,4 @@ pillow==13.0.0
 PyYAML==6.0.3
 capstone==5.0.9
 pytest==9.1.1
+imageio-ffmpeg==0.6.0

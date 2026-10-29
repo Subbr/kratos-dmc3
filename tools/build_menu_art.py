@@ -14,10 +14,11 @@ from PIL import Image, ImageFilter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pac  # noqa: E402
+import paths  # noqa: E402
 import tex  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-NBZ = ROOT / "Devil May Cry HD Collection/data/dmc3/dmc3-0.nbz"
+NBZ = paths.get("DMC3_NBZ")
 CRIMSON = ROOT / "work/backup/crimson_override"  # artes que o Crimson já troca (título, LOAD, menus): base = a dele
 RENDERS = ROOT / "work/install/menu_art/renders"
 FONT = Path("/mnt/c/Windows/Fonts/georgiaz.ttf")  # serifa negrito itálico, perto da fonte dos nomes do DMC3

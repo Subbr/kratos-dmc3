@@ -1,7 +1,9 @@
-"""Lê config/paths.env (formato KEY=valor com ${VAR} e comentários #)."""
+"""Lê config/paths.env (formato KEY=valor com ${VAR} e comentários #). Variável de ambiente com o mesmo nome
+substitui o valor do arquivo (o instalador do Windows passa DMC_HD_DIR e GOW1_ISO assim)."""
 from __future__ import annotations
 
 import re
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -17,7 +19,7 @@ def load(env_file: Path = ROOT / "config" / "paths.env") -> dict[str, str]:
         key, value = line.split("=", 1)
         if key.strip() == "PROJECT_ROOT":  # calculado pela posição do repo (o .env usa $(...) do bash)
             continue
-        value = value.strip().strip('"')
+        value = os.environ.get(key.strip()) or value.strip().strip('"')
         values[key.strip()] = _VAR.sub(lambda m: values.get(m.group(1), ""), value)
     return values
 
